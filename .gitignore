@@ -25,3 +25,46 @@
 /client-app/npm-debug.log*
 /client-app/yarn-debug.log*
 /client-app/yarn-error.log*
+
+# ASP.NET Core specific ignores
+/JobHuntX/bin/
+/JobHuntX/obj/
+/JobHuntX/*.user
+/JobHuntX/*.suo
+/JobHuntX/*.userosscache
+/JobHuntX/*.sln.docstates
+
+# Logs
+/JobHuntX/logs/
+/JobHuntX/*.log
+/JobHuntX/*.tlog
+
+# Visual Studio specific ignores
+/JobHuntX/.vs/
+/JobHuntX/.vscode/
+
+# Rider specific ignores
+/JobHuntX/.idea/
+
+# Build artifacts
+/JobHuntX/*.dll
+/JobHuntX/*.exe
+/JobHuntX/*.pdb
+/JobHuntX/*.cache
+/JobHuntX/*.ilk
+/JobHuntX/*.lib
+/JobHuntX/*.obj
+/JobHuntX/*.o
+/JobHuntX/*.lo
+/JobHuntX/*.slo
+/JobHuntX/*.class
+/JobHuntX/*.csproj.user
+/JobHuntX/*.csproj.nuget.g.props
+/JobHuntX/*.csproj.nuget.g.targets
+
+# Dependency directories
+/JobHuntX/packages/
+/JobHuntX/.nuget/
+
+# Generated files
+/JobHuntX/*.generated.cs
