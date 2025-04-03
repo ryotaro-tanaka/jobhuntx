@@ -19,6 +19,6 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_URLS=http://+:5000 # dotnet watch 環境ではProgram.cs実行タイミングでこの環境変数を読み取れない
       - DOTNET_USE_POLLING_FILE_WATCHER=1  # WSLで変更検知を有効化
     command: ["dotnet", "watch", "run", "--project", "JobHuntX/JobHuntX.csproj"]
