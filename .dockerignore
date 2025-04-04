@@ -1,5 +1,4 @@
 # Node.js関連
-node_modules
 client-app/node_modules
 client-app/build
 client-app/.env*
@@ -8,18 +7,18 @@ client-app/yarn-debug.log*
 client-app/yarn-error.log*
 
 # .NET関連
-bin
-obj
-*.user
-*.suo
-*.log
-*.tlog
-.vs
-.idea
-*.dll
-*.exe
-*.pdb
-*.cache
+JobHuntX.API/bin
+JobHuntX.API/obj
+JobHuntX.API/*.user
+JobHuntX.API/*.suo
+JobHuntX.API/*.log
+JobHuntX.API/*.tlog
+JobHuntX.API/.vs
+JobHuntX.API/.idea
+JobHuntX.API/*.dll
+JobHuntX.API/*.exe
+JobHuntX.API/*.pdb
+JobHuntX.API/*.cache
 
 # Git関連
 .git
@@ -27,4 +26,4 @@ obj
 
 # その他
 *.DS_Store
-# *.env
+*.env
