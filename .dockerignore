@@ -26,4 +26,4 @@ JobHuntX.API/*.cache
 
 # その他
 *.DS_Store
-*.env
+# *.env
