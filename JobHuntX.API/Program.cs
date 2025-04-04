@@ -16,10 +16,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// var logger = app.Logger;
-// logger.LogInformation("hoge");
-// logger.LogInformation($"ASPNETCORE_URLS: {Environment.GetEnvironmentVariable("ASPNETCORE_URLS")}");
-
 // Program.csの読み込みタイミングではdocker-compose.ymlで指定した環境変数を取得できない。
 // docker-compose.ymlでdotnet watch runではく、dotnet runを実行する必要があるが、
 // その場合、開発効率が落ちるのでここでは直接http://+:5000を指定する。
@@ -31,6 +27,7 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
+app.MapGet("/", () => "Welcome to JobHuntX.API!");
 app.MapGet("/weatherforecast", () =>
 {
     var forecast =  Enumerable.Range(1, 5).Select(index =>
