@@ -20,17 +20,14 @@ JobHuntXは、ASP.NET CoreとReactを使用して開発された求人情報ス�
     ```bash
     git clone https://github.com/your-repository/JobHuntX.git
     ```
-2. バックエンドのセットアップ:
+2. Docker Composeを使用してアプリケーションを起動します:
     ```bash
-    cd backend
-    dotnet restore
-    dotnet run
+    cd JobHuntX
+    docker-compose up --build
     ```
-3. フロントエンドのセットアップ:
-    ```bash
-    cd frontend
-    npm install
-    npm start
+3. アプリケーションが起動したら、ブラウザで以下のURLにアクセスしてください:
+    ```
+    http://localhost:3000
     ```
 
 ## ライセンス
