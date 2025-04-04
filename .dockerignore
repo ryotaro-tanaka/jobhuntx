@@ -1,5 +1,30 @@
+# Node.js関連
 node_modules
+client-app/node_modules
+client-app/build
+client-app/.env*
+client-app/npm-debug.log*
+client-app/yarn-debug.log*
+client-app/yarn-error.log*
+
+# .NET関連
 bin
 obj
-# .git
-# .env
+*.user
+*.suo
+*.log
+*.tlog
+.vs
+.idea
+*.dll
+*.exe
+*.pdb
+*.cache
+
+# Git関連
+.git
+.gitignore
+
+# その他
+*.DS_Store
+# *.env
