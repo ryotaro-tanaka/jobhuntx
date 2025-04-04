@@ -15,7 +15,7 @@ services:
     image: mcr.microsoft.com/dotnet/aspnet:8.0
     working_dir: /app
     volumes:
-      - ./JobHuntX:/app
+      - ./JobHuntX.API:/app
     ports:
       - "5000:5000"
     environment:

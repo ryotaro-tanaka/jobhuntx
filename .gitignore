@@ -27,44 +27,44 @@
 /client-app/yarn-error.log*
 
 # ASP.NET Core specific ignores
-/JobHuntX/bin/
-/JobHuntX/obj/
-/JobHuntX/*.user
-/JobHuntX/*.suo
-/JobHuntX/*.userosscache
-/JobHuntX/*.sln.docstates
+/JobHuntX.API/bin/
+/JobHuntX.API/obj/
+/JobHuntX.API/*.user
+/JobHuntX.API/*.suo
+/JobHuntX.API/*.userosscache
+/JobHuntX.API/*.sln.docstates
 
 # Logs
-/JobHuntX/logs/
-/JobHuntX/*.log
-/JobHuntX/*.tlog
+/JobHuntX.API/logs/
+/JobHuntX.API/*.log
+/JobHuntX.API/*.tlog
 
 # Visual Studio specific ignores
-/JobHuntX/.vs/
-/JobHuntX/.vscode/
+/JobHuntX.API/.vs/
+/JobHuntX.API/.vscode/
 
 # Rider specific ignores
-/JobHuntX/.idea/
+/JobHuntX.API/.idea/
 
 # Build artifacts
-/JobHuntX/*.dll
-/JobHuntX/*.exe
-/JobHuntX/*.pdb
-/JobHuntX/*.cache
-/JobHuntX/*.ilk
-/JobHuntX/*.lib
-/JobHuntX/*.obj
-/JobHuntX/*.o
-/JobHuntX/*.lo
-/JobHuntX/*.slo
-/JobHuntX/*.class
-/JobHuntX/*.csproj.user
-/JobHuntX/*.csproj.nuget.g.props
-/JobHuntX/*.csproj.nuget.g.targets
+/JobHuntX.API/*.dll
+/JobHuntX.API/*.exe
+/JobHuntX.API/*.pdb
+/JobHuntX.API/*.cache
+/JobHuntX.API/*.ilk
+/JobHuntX.API/*.lib
+/JobHuntX.API/*.obj
+/JobHuntX.API/*.o
+/JobHuntX.API/*.lo
+/JobHuntX.API/*.slo
+/JobHuntX.API/*.class
+/JobHuntX.API/*.csproj.user
+/JobHuntX.API/*.csproj.nuget.g.props
+/JobHuntX.API/*.csproj.nuget.g.targets
 
 # Dependency directories
-/JobHuntX/packages/
-/JobHuntX/.nuget/
+/JobHuntX.API/packages/
+/JobHuntX.API/.nuget/
 
 # Generated files
-/JobHuntX/*.generated.cs
+/JobHuntX.API/*.generated.cs
