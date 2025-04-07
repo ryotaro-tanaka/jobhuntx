@@ -32,5 +32,3 @@ JobHuntXは、ASP.NET CoreとReactを使用して開発された求人情報ス�
 
 ## ライセンス
 このプロジェクトは、[MITライセンス](./LICENSE)の下で提供されています。
-
-test
