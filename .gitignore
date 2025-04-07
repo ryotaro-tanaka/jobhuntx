@@ -1,5 +1,6 @@
 # development notes
 /note.md
+/.vscode
 
 # ##
 # client-app specific ignores
@@ -42,6 +43,8 @@
 # vercel
 /client-app/**/.vercel
 
+# automatically added by pnpm install
+/client-app/.gitignore
 
 # ##
 # ASP.NET Core specific ignores
