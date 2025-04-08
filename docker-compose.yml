@@ -1,15 +1,18 @@
 version: '3.8'
 services:
   frontend:
-    image: node:18
+    # image: node:18
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
     working_dir: /app
     volumes:
       - ./client-app:/app
     ports:
-      - "3000:3000"
+      - "5173:5173" # Vite
     environment:
-      - CHOKIDAR_USEPOLLING=true  # WSLでホットリロードを有効にする
-    command: ["npm", "start"]  # npm install は明示的に実行するほうが良い
+      - CHOKIDAR_USEPOLLING=true  # hot reload = true on WSL
+    command: ["pnpm", "run", "dev"]  # issue: pnpm install を明示的にローカル環境で実行している
 
   backend:
     image: mcr.microsoft.com/dotnet/sdk:8.0
