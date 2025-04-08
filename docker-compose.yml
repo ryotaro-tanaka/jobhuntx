@@ -1,7 +1,6 @@
 version: '3.8'
 services:
   frontend:
-    # image: node:18
     build:
       context: .
       dockerfile: ./docker/frontend/Dockerfile
@@ -12,7 +11,7 @@ services:
       - "5173:5173" # Vite
     environment:
       - CHOKIDAR_USEPOLLING=true  # hot reload = true on WSL
-    command: ["pnpm", "run", "dev"]  # issue: pnpm install を明示的にローカル環境で実行している
+    command: ["pnpm", "run", "dev"]
 
   backend:
     image: mcr.microsoft.com/dotnet/sdk:8.0
