@@ -1,9 +1,10 @@
 import logo from 'assets/logo.svg'
+import logoWide from 'assets/logo-wide.svg'
 
 function FixedHeader() {
   return (
     <div className="fixed top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-white border-b border-gray-300 shadow-md">
-      <img src={logo} alt="JobHuntX Logo" className="h-10" />
+      <img src={logoWide} alt="JobHuntX Logo" className="h-10" />
       <div className="flex items-center space-x-2">
         <input
           type="text"
