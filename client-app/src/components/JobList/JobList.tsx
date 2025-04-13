@@ -10,7 +10,7 @@ const jobs = [
   { id: 9, title: 'AI Researcher', company: 'DeepMind Labs', location: 'Remote' },
 ]
 
-function JobList() {
+function JobList({ onJobClick }: { onJobClick: () => void }) {
   return (
     <div>
       <h2 className="text-xl font-semibold text-gray-800">Job Listings</h2>
@@ -18,7 +18,8 @@ function JobList() {
         {jobs.map((job) => (
           <li
             key={job.id}
-            className="p-4 border border-gray-200 rounded-md shadow-sm hover:shadow-md"
+            className="p-4 border border-gray-200 rounded-md shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-100"
+            onClick={onJobClick}
           >
             <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
             <p className="text-sm text-gray-600">{job.company}</p>
