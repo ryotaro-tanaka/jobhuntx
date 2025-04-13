@@ -17,7 +17,7 @@ function App() {
   return (
     <div className="relative overflow-hidden bg-white">
       <FixedHeader />
-      <div className="pt-20 p-4">
+      <div className="pt-32 p-4">
         <JobList onJobClick={handleJobClick} />
       </div>
       {isJobDetailVisible && (
