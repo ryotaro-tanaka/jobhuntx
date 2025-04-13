@@ -1,6 +1,7 @@
 # development notes
 /note.md
 /.vscode
+.env
 
 # ##
 # client-app specific ignores
