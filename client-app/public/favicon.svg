@@ -1,3 +1,9 @@
-<svg width="410" height="410" viewBox="0 0 410 410" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M205 410C318.218 410 410 318.218 410 205C410 91.7816 318.218 0 205 0C91.7816 0 0 91.7816 0 205C0 318.218 91.7816 410 205 410ZM205 360C290.604 360 360 290.604 360 205C360 119.396 290.604 50 205 50C119.396 50 50 119.396 50 205C50 290.604 119.396 360 205 360Z" fill="#4F46E5" />
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 (丸みのある正方形) -->
+  <rect x="10" y="10" width="180" height="180" rx="40" fill="#4f46e5" />
+  
+  <!-- 中央のレーダー風アイコン -->
+  <circle cx="100" cy="100" r="45" stroke="#FFFFFF" stroke-width="6" fill="none" />
+  <line x1="100" y1="100" x2="140" y2="100" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" />
+  <circle cx="140" cy="100" r="5" fill="#FFFFFF" />
 </svg>
