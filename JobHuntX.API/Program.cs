@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen();
 
 // Add CORS policy
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
@@ -26,6 +27,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+// 開発環境なら Swagger を使う
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -71,8 +73,12 @@ var sampleJobs = new List<Job>
 app.MapGet("/api/jobs", () =>
 {
     return Results.Ok(sampleJobs);
-});
+})
+    .Produces<List<Job>>(StatusCodes.Status200OK) // Add Produces hint
+    .WithOpenApi(); // 明示的にOpenAPI定義へ
 
-app.MapGet("/", () => "Welcome to JobHuntX.API!");
+app.MapGet("/", () => "Welcome to JobHuntX.API!")
+    .Produces<string>(StatusCodes.Status200OK) // Add Produces hint
+    .WithOpenApi(); // 明示的にOpenAPI定義へ
 
 app.Run();
