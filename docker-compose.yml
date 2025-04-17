@@ -23,6 +23,4 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:5000 # dotnet watch 環境ではProgram.cs実行タイミングでこの環境変数を読み取れない
       - DOTNET_USE_POLLING_FILE_WATCHER=1  # WSLで変更検知を有効化
-      # - ASPNETCORE_ENVIRONMENT=Development
-      # - VITE_API_BASE_URL=http://localhost:5000
     command: ["dotnet", "watch", "run", "--project", "JobHuntX.API/JobHuntX.API.csproj"]
