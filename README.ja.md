@@ -12,7 +12,7 @@
 # JobHuntX
 
 ## 概要
-JobHuntXは、ASP.NET CoreとReactを使用して開発された求人情報スクレイピングアプリケーションです。このプロジェクトは、複数の求人サイトから情報を収集し、効率的に求人情報を管理・検索できるツールを提供することを目的としています。
+JobHuntX は、ASP.NET Core と React を使用して開発された求人情報スクレイピングアプリケーションです。このプロジェクトは、複数の求人サイトから情報を収集し、求人情報を効率的に管理・検索するためのツールを提供します。
 
 ## 主な機能
 - 求人情報のスクレイピング
@@ -20,19 +20,24 @@ JobHuntXは、ASP.NET CoreとReactを使用して開発された求人情報ス�
 - ユーザーフレンドリーなインターフェース
 
 ## セットアップ
-1. リポジトリをクローンします。
+1. リポジトリをクローンします:
     ```bash
     git clone https://github.com/your-repository/JobHuntX.git
     ```
-2. Docker Composeを使用してアプリケーションを起動します:
+2. API クライアントを生成します:
     ```bash
-    cd JobHuntX
+    cd JobHuntX/JobHuntX.API
+    dotnet nswag run nswag.json
+    ```
+3. Docker Compose を使用してアプリケーションを起動します:
+    ```bash
+    cd ../
     docker-compose up --build
     ```
-3. アプリケーションが起動したら、ブラウザで以下のURLにアクセスしてください:
+4. アプリケーションが起動したら、以下の URL にブラウザでアクセスします:
     ```
     http://localhost:5173
     ```
 
 ## ライセンス
-このプロジェクトは、[MITライセンス](./LICENSE)の下で提供されています。
+このプロジェクトは [MIT ライセンス](./LICENSE) の下で提供されています。
