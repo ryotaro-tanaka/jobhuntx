@@ -11,8 +11,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
   </ItemGroup>
 
-  <Target Name="NSwagAfterBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet nswag run $(ProjectDir)nswag.json" />
-  </Target>
+  <!-- <Target Name="NSwagAfterBuild" AfterTargets="Build">
+    <Exec Command="dotnet nswag run $(ProjectDir)nswag.json" StandardOutputImportance="High" StandardErrorImportance="High" />
+  </Target> -->
 
 </Project>

@@ -12,16 +12,19 @@ function JobDetail({ job }: { job: Job }) {
       <h2 className="text-xl font-bold">{job.title}</h2>
       <p className="mt-2 text-gray-600">{job.company}</p>
       <p className="mt-2 text-sm text-gray-500">
-        {job.location?.map((loc, index) => (
-          <span key={index}>
-            {loc.type ? `${loc.type}` : ''}
-            {loc.city ? `, ${loc.city}` : ''}
-            {loc.country ? `, ${loc.country}` : ''}
+        {job.location && (
+          <span>
+            {job.location.type ? `${job.location.type}` : ''}
+            {job.location.city ? `, ${job.location.city}` : ''}
+            {job.location.country ? `, ${job.location.country}` : ''}
           </span>
-        ))}
+        )}
       </p>
       <p className="mt-4">{job.description}</p>
       <p className="mt-4 text-sm text-gray-500">
+        Posted by: {job.posterName || 'Unknown'}
+      </p>
+      <p className="mt-1 text-sm text-gray-500">
         Posted on: {job.postedDate ? new Date(job.postedDate).toLocaleDateString() : 'N/A'}
       </p>
     </div>

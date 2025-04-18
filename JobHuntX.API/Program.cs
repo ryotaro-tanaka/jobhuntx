@@ -64,7 +64,7 @@ var sampleJobs = new List<Job>
                       "JavaScript, modern frontend frameworks, and experience with state management libraries " +
                       "such as Redux or Context API. Familiarity with TypeScript, testing frameworks, and CI/CD " +
                       "pipelines is a plus. Join us to work on exciting projects and make a meaningful impact!",
-        Name = "Hoge Corporation",
+        PosterName = "John Doe", // Updated property name and value
         PostedDate = DateTime.Now.AddDays(-10),
         Url = new Uri("https://example.com/job/12345")
     },
@@ -77,7 +77,7 @@ var sampleJobs = new List<Job>
         Location = new Location { Type = "On-site", City = "Tokyo", Country = "Japan" },
         Language = "ja",
         Description = "Join our backend team to build scalable APIs...",
-        Name = "CodeBase Inc.",
+        PosterName = "Jane Smith", // Updated property name and value
         PostedDate = DateTime.Now.AddDays(-5),
         Url = new Uri("https://example2.com/job/67890")
     },
@@ -90,7 +90,7 @@ var sampleJobs = new List<Job>
         Location = new Location { Type = "Remote", City = "San Francisco", Country = "USA" },
         Language = "en",
         Description = "Looking for a full stack developer with React and Node.js experience...",
-        Name = "DevWorks",
+        PosterName = "Alice Johnson", // Updated property name and value
         PostedDate = DateTime.Now.AddDays(-15),
         Url = new Uri("https://example3.com/job/11223")
     },
@@ -103,7 +103,7 @@ var sampleJobs = new List<Job>
         Location = new Location { Type = "On-site", City = "New York", Country = "USA" },
         Language = "en",
         Description = "We are hiring a data scientist to analyze large datasets...",
-        Name = "DataCorp",
+        PosterName = "Michael Brown", // Updated property name and value
         PostedDate = DateTime.Now.AddDays(-20),
         Url = new Uri("https://example4.com/job/44556")
     }

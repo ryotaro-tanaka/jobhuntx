@@ -40,13 +40,13 @@ function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
             <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
             <p className="text-sm text-gray-600">{job.company}</p>
             <p className="text-sm text-gray-500">
-              {job.location?.map((loc, index) => (
-                <span key={index}>
-                  {loc.type ? `${loc.type}` : ''}
-                  {loc.city ? `, ${loc.city}` : ''}
-                  {loc.country ? `, ${loc.country}` : ''}
+              {job.location && (
+                <span>
+                  {job.location.type ? `${job.location.type}` : ''}
+                  {job.location.city ? `, ${job.location.city}` : ''}
+                  {job.location.country ? `, ${job.location.country}` : ''}
                 </span>
-              ))}
+              )}
             </p>
           </li>
         ))}
