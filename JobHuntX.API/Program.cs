@@ -8,15 +8,12 @@ builder.Services.AddSwaggerGen();
 
 // Add CORS policy
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
-if (allowedOrigins == null || !allowedOrigins.Any())
-{
+if (allowedOrigins == null || !allowedOrigins.Any()) {
     throw new InvalidOperationException("AllowedOrigins is not configured.");
 }
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(policy => {
         policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod();
@@ -26,8 +23,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Swagger
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -109,15 +105,14 @@ var sampleJobs = new List<Job>
     // ...add more jobs as needed...
 };
 
-app.MapGet("/api/jobs", () =>
-{
+app.MapGet("/api/jobs", () => {
     return Results.Ok(sampleJobs);
 })
     .Produces<List<Job>>(StatusCodes.Status200OK) // Add Produces hint
     .WithOpenApi(); // 明示的にOpenAPI定義へ
 
 app.MapGet("/", () => "Welcome to JobHuntX.API!")
-    .Produces<string>(StatusCodes.Status200OK) // Add Produces hint
+.Produces<string>(StatusCodes.Status200OK) // Add Produces hint
     .WithOpenApi(); // 明示的にOpenAPI定義へ
 
 app.Run();

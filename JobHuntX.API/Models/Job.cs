@@ -1,7 +1,6 @@
 namespace JobHuntX.API.Models;
 
-public class Job
-{
+public class Job {
     public Guid Id { get; set; }
     public Uri Website { get; set; } = new Uri("about:blank");
     public string Title { get; set; } = string.Empty;
