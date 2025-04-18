@@ -27,6 +27,16 @@ function JobDetail({ job }: { job: Job }) {
       <p className="mt-1 text-sm text-gray-500">
         Posted on: {job.postedDate ? new Date(job.postedDate).toLocaleDateString() : 'N/A'}
       </p>
+      {job.url && (
+        <div className="mt-6">
+          <button
+            className="flex items-center justify-center px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white focus:outline-none"
+            onClick={() => window.open(job.url, '_blank')}
+          >
+            Open Original Job Posting
+          </button>
+        </div>
+      )}
     </div>
   );
 }
