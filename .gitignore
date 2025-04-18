@@ -48,6 +48,9 @@
 # automatically added by pnpm install
 /client-app/.gitignore
 
+# Ignore NSwag generated API client
+/client-app/src/api/generated.ts
+
 # ##
 # ASP.NET Core specific ignores
 # ##

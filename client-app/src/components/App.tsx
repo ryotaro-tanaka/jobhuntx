@@ -1,18 +1,19 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import { Job } from '../api/generated';
 import FixedHeader from './FixedHeader/FixedHeader'
 import JobList from './JobList/JobList'
 import JobDetail from './JobDetail/JobDetail'
 
 function App() {
-  const [isJobDetailVisible, setJobDetailVisible] = useState(false)
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
-  const handleJobClick = () => {
-    setJobDetailVisible(true)
-  }
+  const handleJobClick = (job: Job) => {
+    setSelectedJob(job); // Set the selected job
+  };
 
   const handleCloseDetail = () => {
-    setJobDetailVisible(false)
-  }
+    setSelectedJob(null); // Clear the selected job
+  };
 
   return (
     <div className="relative overflow-hidden bg-white">
@@ -20,7 +21,7 @@ function App() {
       <div className="pt-32 p-4">
         <JobList onJobClick={handleJobClick} />
       </div>
-      {isJobDetailVisible && (
+      {selectedJob && (
         <div
           className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black bg-opacity-50"
           onClick={handleCloseDetail}
@@ -36,13 +37,13 @@ function App() {
               >
                 Close
               </button>
-              <JobDetail />
+              <JobDetail job={selectedJob} /> {/* Pass the selected job */}
             </div>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

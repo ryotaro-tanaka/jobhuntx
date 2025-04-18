@@ -1,16 +1,32 @@
-const jobs = [
-  { id: 1, title: 'Frontend Developer', company: 'TechCorp', location: 'Tokyo, Japan' },
-  { id: 2, title: 'Backend Engineer', company: 'CodeWorks', location: 'Osaka, Japan' },
-  { id: 3, title: 'Data Scientist', company: 'AI Innovations', location: 'Kyoto, Japan' },
-  { id: 4, title: 'Product Manager', company: 'Startup Inc.', location: 'Remote' },
-  { id: 5, title: 'DevOps Engineer', company: 'Cloud Solutions', location: 'Fukuoka, Japan' },
-  { id: 6, title: 'UI/UX Designer', company: 'Design Studio', location: 'Nagoya, Japan' },
-  { id: 7, title: 'Mobile App Developer', company: 'Appify', location: 'Sapporo, Japan' },
-  { id: 8, title: 'Cybersecurity Specialist', company: 'SecureTech', location: 'Tokyo, Japan' },
-  { id: 9, title: 'AI Researcher', company: 'DeepMind Labs', location: 'Remote' },
-]
+import { useEffect, useState } from 'react';
+import { Client, Job } from '../../api/generated';
 
-function JobList({ onJobClick }: { onJobClick: () => void }) {
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const client = new Client(API_BASE_URL); // Initialize the NSwag client
+        const data = await client.jobs(); // Fetch jobs using the generated client
+        setJobs(data);
+      } catch (error) {
+        console.error('Failed to fetch jobs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  if (loading) {
+    return <p>Loading jobs...</p>;
+  }
+
   return (
     <div>
       <h2 className="text-xl font-semibold text-gray-800">Job Listings</h2>
@@ -19,16 +35,24 @@ function JobList({ onJobClick }: { onJobClick: () => void }) {
           <li
             key={job.id}
             className="p-4 border border-gray-200 rounded-md shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-100"
-            onClick={onJobClick}
+            onClick={() => onJobClick(job)} // Pass the selected job
           >
             <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
             <p className="text-sm text-gray-600">{job.company}</p>
-            <p className="text-sm text-gray-500">{job.location}</p>
+            <p className="text-sm text-gray-500">
+              {job.location && (
+                <span>
+                  {job.location.type ? `${job.location.type}` : ''}
+                  {job.location.city ? `, ${job.location.city}` : ''}
+                  {job.location.country ? `, ${job.location.country}` : ''}
+                </span>
+              )}
+            </p>
           </li>
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
-export default JobList
+export default JobList;
