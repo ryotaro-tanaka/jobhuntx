@@ -59,7 +59,16 @@ var sampleJobs = new List<Job>
             new Location { City = "Sydney", Country = "Australia" }
         },
         Language = "en",
-        Description = "We are looking for a React developer...",
+        Description = "We are looking for a skilled React developer to join our dynamic team. " +
+                      "In this role, you will be responsible for building and maintaining user-facing features " +
+                      "using React.js and related technologies. You will collaborate closely with designers, " +
+                      "backend developers, and product managers to deliver high-quality, scalable, and maintainable " +
+                      "web applications. Key responsibilities include writing clean and efficient code, " +
+                      "optimizing components for maximum performance, and staying up-to-date with the latest " +
+                      "industry trends and best practices. The ideal candidate has a strong understanding of " +
+                      "JavaScript, modern frontend frameworks, and experience with state management libraries " +
+                      "such as Redux or Context API. Familiarity with TypeScript, testing frameworks, and CI/CD " +
+                      "pipelines is a plus. Join us to work on exciting projects and make a meaningful impact!",
         Name = "Hoge Corporation",
         PostedDate = DateTime.Now.AddDays(-10),
         Url = new Uri("https://example.com/job/12345")

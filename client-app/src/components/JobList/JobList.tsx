@@ -3,7 +3,7 @@ import { Client, Job } from '../../api/generated';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-function JobList({ onJobClick }: { onJobClick: () => void }) {
+function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,7 +35,7 @@ function JobList({ onJobClick }: { onJobClick: () => void }) {
           <li
             key={job.id}
             className="p-4 border border-gray-200 rounded-md shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-100"
-            onClick={() => onJobClick()}
+            onClick={() => onJobClick(job)} // Pass the selected job
           >
             <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
             <p className="text-sm text-gray-600">{job.company}</p>
