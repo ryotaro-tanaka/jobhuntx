@@ -26,8 +26,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-// 開発環境なら Swagger を使う
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -53,11 +52,7 @@ var sampleJobs = new List<Job>
         Website = new Uri("https://example.com"),
         Title = "React Developer",
         Company = "TechCorp",
-        Location = new List<Location>
-        {
-            new Location { Type = "Remote" },
-            new Location { City = "Sydney", Country = "Australia" }
-        },
+        Location = new Location { Type = "Remote", City = null, Country = null },
         Language = "en",
         Description = "We are looking for a skilled React developer to join our dynamic team. " +
                       "In this role, you will be responsible for building and maintaining user-facing features " +
@@ -73,10 +68,45 @@ var sampleJobs = new List<Job>
         PostedDate = DateTime.Now.AddDays(-10),
         Url = new Uri("https://example.com/job/12345")
     },
-    new Job { Id = Guid.NewGuid(), Website = new Uri("https://example2.com"), Title = "Backend Engineer", Company = "CodeBase Inc.", Location = new List<Location> { new Location { Type = "On-site", City = "Tokyo", Country = "Japan" } }, Language = "ja", Description = "Join our backend team to build scalable APIs...", Name = "CodeBase Inc.", PostedDate = DateTime.Now.AddDays(-5), Url = new Uri("https://example2.com/job/67890") },
-    new Job { Id = Guid.NewGuid(), Website = new Uri("https://example3.com"), Title = "Full Stack Developer", Company = "DevWorks", Location = new List<Location> { new Location { Type = "Remote" } }, Language = "en", Description = "Looking for a full stack developer with React and Node.js experience...", Name = "DevWorks", PostedDate = DateTime.Now.AddDays(-15), Url = new Uri("https://example3.com/job/11223") },
-    new Job { Id = Guid.NewGuid(), Website = new Uri("https://example4.com"), Title = "Data Scientist", Company = "DataCorp", Location = new List<Location> { new Location { Type = "On-site", City = "New York", Country = "USA" } }, Language = "en", Description = "We are hiring a data scientist to analyze large datasets...", Name = "DataCorp", PostedDate = DateTime.Now.AddDays(-20), Url = new Uri("https://example4.com/job/44556") },
-    new Job { Id = Guid.NewGuid(), Website = new Uri("https://example4.com"), Title = "Data Scientist", Company = "DataCorp", Location = new List<Location> { new Location { Type = "On-site", City = "New York", Country = "USA" } }, Language = "en", Description = "We are hiring a data scientist to analyze large datasets...", Name = "DataCorp", PostedDate = DateTime.Now.AddDays(-20), Url = new Uri("https://example4.com/job/44556") }
+    new Job
+    {
+        Id = Guid.NewGuid(),
+        Website = new Uri("https://example2.com"),
+        Title = "Backend Engineer",
+        Company = "CodeBase Inc.",
+        Location = new Location { Type = "On-site", City = "Tokyo", Country = "Japan" },
+        Language = "ja",
+        Description = "Join our backend team to build scalable APIs...",
+        Name = "CodeBase Inc.",
+        PostedDate = DateTime.Now.AddDays(-5),
+        Url = new Uri("https://example2.com/job/67890")
+    },
+    new Job
+    {
+        Id = Guid.NewGuid(),
+        Website = new Uri("https://example3.com"),
+        Title = "Full Stack Developer",
+        Company = "DevWorks",
+        Location = new Location { Type = "Remote", City = "San Francisco", Country = "USA" },
+        Language = "en",
+        Description = "Looking for a full stack developer with React and Node.js experience...",
+        Name = "DevWorks",
+        PostedDate = DateTime.Now.AddDays(-15),
+        Url = new Uri("https://example3.com/job/11223")
+    },
+    new Job
+    {
+        Id = Guid.NewGuid(),
+        Website = new Uri("https://example4.com"),
+        Title = "Data Scientist",
+        Company = "DataCorp",
+        Location = new Location { Type = "On-site", City = "New York", Country = "USA" },
+        Language = "en",
+        Description = "We are hiring a data scientist to analyze large datasets...",
+        Name = "DataCorp",
+        PostedDate = DateTime.Now.AddDays(-20),
+        Url = new Uri("https://example4.com/job/44556")
+    }
     // ...add more jobs as needed...
 };
 
