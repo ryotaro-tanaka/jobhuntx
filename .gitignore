@@ -2,8 +2,7 @@
 /note.md
 /.vscode
 /.env
-/output.json
-/output
+/output*
 
 # ##
 # client-app specific ignores
