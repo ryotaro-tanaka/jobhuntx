@@ -1,11 +1,8 @@
 using JobHuntX.API.Models;
 
-namespace JobHuntX.API.Data
-{
-    public static class SampleData
-    {
-        public static List<Job> GetSampleJobs()
-        {
+namespace JobHuntX.API.Data {
+    public static class SampleData {
+        public static List<Job> GetSampleJobs() {
             return new List<Job>
             {
                 new Job
