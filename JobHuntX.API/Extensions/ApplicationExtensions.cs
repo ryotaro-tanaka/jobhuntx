@@ -13,11 +13,21 @@ namespace JobHuntX.API.Extensions {
         }
 
         public static void MapEndpoints(this WebApplication app) {
-            var sampleJobs = SampleData.GetSampleJobs();
+            app.MapGet("/api/jobs", () => {
+                var sampleJobs = SampleData.GetSampleJobs();
+                return Results.Ok(sampleJobs);
+            })
+            .Produces<List<Job>>(StatusCodes.Status200OK)
+            .WithOpenApi();
 
-            app.MapGet("/api/jobs", () => Results.Ok(sampleJobs))
-                .Produces<List<Job>>(StatusCodes.Status200OK)
-                .WithOpenApi();
+            app.MapGet("/api/remoteok", async () => {
+                using var httpClient = new HttpClient();
+                var jobs = await httpClient.GetFromJsonAsync<List<object>>("https://remoteok.com/api");
+                if (jobs != null && jobs.Count > 0) {
+                    jobs.RemoveAt(0); // Remove the first element
+                }
+                return Results.Ok(jobs);
+            });
 
             app.MapGet("/", () => "Welcome to JobHuntX.API!")
                 .Produces<string>(StatusCodes.Status200OK)
