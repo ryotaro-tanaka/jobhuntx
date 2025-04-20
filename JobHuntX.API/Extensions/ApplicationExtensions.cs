@@ -12,12 +12,16 @@ namespace JobHuntX.API.Extensions {
         }
 
         public static void MapEndpoints(this WebApplication app) {
-            app.MapGet("/api/jobs", () => {
-                var sampleJobs = SampleData.GetSampleJobs();
-                return Results.Ok(sampleJobs);
-            })
-            .Produces<List<Job>>(StatusCodes.Status200OK)
-            .WithOpenApi();
+            // app.MapGet("/api/jobs", () => {
+            //     var sampleJobs = SampleData.GetSampleJobs();
+            //     return Results.Ok(sampleJobs);
+            // })
+            // .Produces<List<Job>>(StatusCodes.Status200OK)
+            // .WithOpenApi();
+
+            app.MapGet("/api/jobs", RemoteOkHandler.GetRemoteOkJobs)
+                .Produces<List<Job>>(StatusCodes.Status200OK)
+                .WithOpenApi();
 
             app.MapGet("/api/remoteok", async () => {
                 var jobs = await RemoteOkHandler.GetRemoteOkJobs();
