@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using JobHuntX.API.Models;
-using JobHuntX.API.Data; // Add this line to reference SampleData
+using JobHuntX.API.Data;
+using JobHuntX.API.Handlers;
 
 namespace JobHuntX.API.Extensions {
     public static class ApplicationExtensions {
@@ -21,13 +23,11 @@ namespace JobHuntX.API.Extensions {
             .WithOpenApi();
 
             app.MapGet("/api/remoteok", async () => {
-                using var httpClient = new HttpClient();
-                var jobs = await httpClient.GetFromJsonAsync<List<object>>("https://remoteok.com/api");
-                if (jobs != null && jobs.Count > 0) {
-                    jobs.RemoveAt(0); // Remove the first element
-                }
+                var jobs = await RemoteOkHandler.GetRemoteOkJobs();
                 return Results.Ok(jobs);
-            });
+            })
+            .Produces<List<Job>>(StatusCodes.Status200OK)
+            .WithOpenApi();
 
             app.MapGet("/", () => "Welcome to JobHuntX.API!")
                 .Produces<string>(StatusCodes.Status200OK)
