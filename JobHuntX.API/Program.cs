@@ -1,6 +1,4 @@
-using JobHuntX.API.Models;
 using JobHuntX.API.Extensions;
-using Microsoft.OpenApi.Models; // Add this line for Swagger extensions
 
 var builder = WebApplication.CreateBuilder(args);
 
