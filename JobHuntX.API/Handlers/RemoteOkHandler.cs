@@ -16,8 +16,6 @@ public static class RemoteOkHandler {
             return Results.Ok(new List<Job>());
         }
 
-        Console.WriteLine("Decoded: " + json[1].Description);
-
         json.RemoveAt(0); // metadata
 
         var jobs = json.Select(remoteOkJob => new Job {

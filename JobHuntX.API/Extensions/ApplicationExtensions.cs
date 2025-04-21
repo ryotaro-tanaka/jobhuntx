@@ -1,5 +1,4 @@
 using JobHuntX.API.Models;
-using JobHuntX.API.Data;
 using JobHuntX.API.Handlers;
 
 namespace JobHuntX.API.Extensions {
@@ -12,12 +11,9 @@ namespace JobHuntX.API.Extensions {
         }
 
         public static void MapEndpoints(this WebApplication app) {
-            // app.MapGet("/api/jobs", () => {
-            //     var sampleJobs = SampleData.GetSampleJobs();
-            //     return Results.Ok(sampleJobs);
-            // })
-            // .Produces<List<Job>>(StatusCodes.Status200OK)
-            // .WithOpenApi();
+            app.MapGet("/api/sample", SampleJobHandler.GetSampleJobs)
+                .Produces<List<Job>>(StatusCodes.Status200OK)
+                .WithOpenApi();
 
             app.MapGet("/api/jobs", RemoteOkHandler.GetRemoteOkJobs)
                 .Produces<List<Job>>(StatusCodes.Status200OK)
