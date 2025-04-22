@@ -8,6 +8,7 @@ public class Job {
     public Location Location { get; set; } = new();
     public string Language { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public Salary? Salary { get; set; }
     public string PosterName { get; set; } = string.Empty;
     public DateTime PostedDate { get; set; }
     public Uri Url { get; set; } = new Uri("about:blank");

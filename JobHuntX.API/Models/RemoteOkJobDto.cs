@@ -33,10 +33,10 @@ public class RemoteOkJobDto {
     public string Location { get; set; } = string.Empty;
 
     [JsonPropertyName("salary_min")]
-    public int? SalaryMin { get; set; }
+    public int SalaryMin { get; set; }
 
     [JsonPropertyName("salary_max")]
-    public int? SalaryMax { get; set; }
+    public int SalaryMax { get; set; }
 
     [JsonPropertyName("apply_url")]
     public string ApplyUrl { get; set; } = string.Empty;
