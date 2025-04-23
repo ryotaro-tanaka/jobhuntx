@@ -1,4 +1,5 @@
 import { Job } from '../../api/generated';
+import DOMPurify from 'dompurify';
 
 function JobDetail({ job }: { job: Job }) {
   if (!job) {
@@ -6,6 +7,9 @@ function JobDetail({ job }: { job: Job }) {
   }
 
   console.log('Job Details:', JSON.stringify(job, null, 2)); // Log the Job object as JSON
+
+  const isHtml = (text: string) => /<\/?[a-z][\s\S]*>/i.test(text);
+  const isMarkdown = (text: string) => /[#*_`~]/.test(text); // Simple check for Markdown syntax
 
   return (
     <div className="p-4">
@@ -31,7 +35,13 @@ function JobDetail({ job }: { job: Job }) {
             : null}
         </p>
       )}
-      <p className="mt-4">{job.description}</p>
+      <div className="mt-4 text-gray-800">
+        {job.description && isHtml(job.description) ? (
+          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description) }} />
+        ) : (
+          <p>{job.description}</p>
+        )}
+      </div>
       <p className="mt-4 text-sm text-gray-500">
         Posted by: {job.posterName || job.company || 'unknown'}
       </p>
