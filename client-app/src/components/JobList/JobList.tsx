@@ -39,15 +39,20 @@ function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
           >
             <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
             <p className="text-sm text-gray-600">{job.company}</p>
-            <p className="text-sm text-gray-500">
-              {job.location && (
+            {job.location && (
+              <p className="text-sm text-gray-500">
                 <span>
                   {job.location.type ? `${job.location.type}` : ''}
                   {job.location.city ? `, ${job.location.city}` : ''}
                   {job.location.country ? `, ${job.location.country}` : ''}
                 </span>
-              )}
-            </p>
+              </p>
+            )}
+            {job.salary && job.salary.min != null && job.salary.max != null && (
+              <p className="text-sm text-gray-500">
+                {job.salary.min.toLocaleString()} - {job.salary.max.toLocaleString()} {job.salary.currencyCode}
+              </p>
+            )}
           </li>
         ))}
       </ul>
