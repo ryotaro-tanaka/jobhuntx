@@ -1,5 +1,6 @@
 using System.Text.Json;
 using JobHuntX.API.Models;
+using JobHuntX.API.DTOs;
 
 namespace JobHuntX.API.Handlers;
 
