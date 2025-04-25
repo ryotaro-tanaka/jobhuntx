@@ -34,42 +34,11 @@ public static class RemoteOkHandler {
             },
             PosterName = string.Empty,
             PostedDate = DateTime.TryParse(remoteOkJob.Date, out var parsedDate) ? parsedDate : DateTime.UtcNow,
-            Url = new Uri(remoteOkJob.ApplyUrl)
+            Url = new Uri(remoteOkJob.ApplyUrl),
+            Tags = remoteOkJob.Tags
         }).ToList();
 
         return Results.Ok(jobs);
-    }
-
-    private static Salary? ParseSalary(string? salaryString) {
-        if (string.IsNullOrEmpty(salaryString)) return null;
-
-        // Example: "$80,000 - $120,000 USD/year"
-        var parts = salaryString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length < 4) return null;
-
-        try {
-            var minMax = parts[0].Replace("$", "").Split('-');
-            var min = decimal.Parse(minMax[0].Replace(",", ""));
-            var max = decimal.Parse(minMax[1].Replace(",", ""));
-            var currency = parts[2];
-            var timeUnit = parts[3].ToLower() switch {
-                "year" => SalaryTimeUnit.Year,
-                "month" => SalaryTimeUnit.Month,
-                "week" => SalaryTimeUnit.Week,
-                "day" => SalaryTimeUnit.Day,
-                "hour" => SalaryTimeUnit.Hour,
-                _ => SalaryTimeUnit.Year
-            };
-
-            return new Salary {
-                CurrencyCode = currency,
-                Min = min,
-                Max = max,
-                TimeUnit = timeUnit
-            };
-        } catch {
-            return null;
-        }
     }
 
     public static string RemoveNonAscii(string input) {

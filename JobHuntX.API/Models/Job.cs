@@ -12,4 +12,5 @@ public class Job {
     public string PosterName { get; set; } = string.Empty;
     public DateTime PostedDate { get; set; }
     public Uri Url { get; set; } = new Uri("about:blank");
+    public List<string> Tags { get; set; } = new();
 }

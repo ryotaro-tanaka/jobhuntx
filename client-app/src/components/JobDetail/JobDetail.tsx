@@ -9,7 +9,6 @@ function JobDetail({ job }: { job: Job }) {
   console.log('Job Details:', JSON.stringify(job, null, 2)); // Log the Job object as JSON
 
   const isHtml = (text: string) => /<\/?[a-z][\s\S]*>/i.test(text);
-  const isMarkdown = (text: string) => /[#*_`~]/.test(text); // Simple check for Markdown syntax
 
   return (
     <div className="p-4">

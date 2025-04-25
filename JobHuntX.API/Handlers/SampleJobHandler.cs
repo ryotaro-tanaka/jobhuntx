@@ -24,7 +24,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "John Doe",
                 PostedDate = DateTime.Now.AddDays(-10),
-                Url = new Uri("https://example.com/job/12345")
+                Url = new Uri("https://example.com/job/12345"),
+                Tags = new List<string> { "react", "javascript", "remote", "frontend", "full-time" }
             },
             new Job
             {
@@ -44,7 +45,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "Jane Smith",
                 PostedDate = DateTime.Now.AddDays(-5),
-                Url = new Uri("https://example2.com/job/67890")
+                Url = new Uri("https://example2.com/job/67890"),
+                Tags = new List<string> { "backend", "api", "tokyo", "japan", "full-time" }
             },
             new Job
             {
@@ -64,7 +66,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "Alice Johnson",
                 PostedDate = DateTime.Now.AddDays(-15),
-                Url = new Uri("https://example3.com/job/11223")
+                Url = new Uri("https://example3.com/job/11223"),
+                Tags = new List<string> { "full stack", "remote", "usa", "developer", "full-time" }
             },
             new Job
             {
@@ -84,7 +87,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "Michael Brown",
                 PostedDate = DateTime.Now.AddDays(-20),
-                Url = new Uri("https://example4.com/job/44556")
+                Url = new Uri("https://example4.com/job/44556"),
+                Tags = new List<string> { "data scientist", "new york", "analytics", "usa", "full-time" }
             },
             new Job
             {
@@ -104,7 +108,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "Chris Evans",
                 PostedDate = DateTime.Now.AddDays(-25),
-                Url = new Uri("https://example5.com/job/55678")
+                Url = new Uri("https://example5.com/job/55678"),
+                Tags = new List<string> { "mobile", "ios", "android", "remote", "developer" }
             },
             new Job
             {
@@ -124,7 +129,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "Emma Watson",
                 PostedDate = DateTime.Now.AddDays(-30),
-                Url = new Uri("https://example6.com/job/66789")
+                Url = new Uri("https://example6.com/job/66789"),
+                Tags = new List<string> { "devops", "ci/cd", "london", "uk", "full-time" }
             },
             new Job
             {
@@ -144,7 +150,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "Sophia Lee",
                 PostedDate = DateTime.Now.AddDays(-35),
-                Url = new Uri("https://example7.com/job/77890")
+                Url = new Uri("https://example7.com/job/77890"),
+                Tags = new List<string> { "ui/ux", "designer", "remote", "creative", "full-time" }
             },
             new Job
             {
@@ -164,7 +171,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "Liam Brown",
                 PostedDate = DateTime.Now.AddDays(-40),
-                Url = new Uri("https://example8.com/job/88901")
+                Url = new Uri("https://example8.com/job/88901"),
+                Tags = new List<string> { "machine learning", "berlin", "germany", "ai", "full-time" }
             },
             new Job
             {
@@ -184,7 +192,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "Olivia Green",
                 PostedDate = DateTime.Now.AddDays(-45),
-                Url = new Uri("https://example9.com/job/99012")
+                Url = new Uri("https://example9.com/job/99012"),
+                Tags = new List<string> { "cloud", "infrastructure", "remote", "architect", "full-time" }
             },
             new Job
             {
@@ -204,7 +213,8 @@ public static class SampleJobHandler {
                 },
                 PosterName = "Noah Wilson",
                 PostedDate = DateTime.Now.AddDays(-50),
-                Url = new Uri("https://example10.com/job/10123")
+                Url = new Uri("https://example10.com/job/10123"),
+                Tags = new List<string> { "cybersecurity", "sydney", "australia", "analyst", "full-time" }
             }
         };
         return Results.Ok(sampleJobs); // Return Results.Ok directly
