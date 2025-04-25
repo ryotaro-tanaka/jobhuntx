@@ -1,5 +1,6 @@
 using JobHuntX.API.Models;
 using JobHuntX.API.Handlers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JobHuntX.API.Extensions {
     public static class ApplicationExtensions {
@@ -19,12 +20,12 @@ namespace JobHuntX.API.Extensions {
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();
 
-            app.MapGet("/api/remoteok", async (HttpRequest request) => {
-                var jobs = await RemoteOkHandler.GetRemoteOkJobs(request);
+            app.MapGet("/api/remoteok", async ([FromQuery] string? key) => {
+                var jobs = await RemoteOkHandler.GetRemoteOkJobs(key);
                 return Results.Ok(jobs);
             })
-            .Produces<List<Job>>(StatusCodes.Status200OK)
-            .WithOpenApi();
+                .Produces<List<Job>>(StatusCodes.Status200OK)
+                .WithOpenApi();
 
             app.MapGet("/", () => "Welcome to JobHuntX.API!")
                 .Produces<string>(StatusCodes.Status200OK)

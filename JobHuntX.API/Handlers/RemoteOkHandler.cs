@@ -1,12 +1,12 @@
 using System.Text.Json;
 using JobHuntX.API.Models;
 using JobHuntX.API.DTOs;
-using System.Reflection.Metadata.Ecma335;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JobHuntX.API.Handlers;
 
 public static class RemoteOkHandler {
-    public static async Task<IResult> GetRemoteOkJobs(HttpRequest request) {
+    public static async Task<IResult> GetRemoteOkJobs([FromQuery] string? key) {
         using var httpClient = new HttpClient();
         using var response = await httpClient.GetAsync("https://remoteok.com/api");
 
@@ -21,14 +21,12 @@ public static class RemoteOkHandler {
         json.RemoveAt(0); // metadata
         var jobs = json.Select(ConvertToJob).ToList();
 
-        jobs = FilterJobsByKey(request, jobs);
+        jobs = FilterJobsByKey(key, jobs);
 
         return Results.Ok(jobs);
     }
 
-    private static List<Job> FilterJobsByKey(HttpRequest request, List<Job> jobs) {
-        string? key = request.Query["key"];
-
+    private static List<Job> FilterJobsByKey(string? key, List<Job> jobs) {
         if (string.IsNullOrWhiteSpace(key)) {
             return jobs;
         }
