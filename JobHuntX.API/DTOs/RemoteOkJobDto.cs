@@ -1,5 +1,6 @@
-namespace JobHuntX.API.Models;
 using System.Text.Json.Serialization;
+
+namespace JobHuntX.API.DTOs;
 
 public class RemoteOkJobDto {
     [JsonPropertyName("slug")]

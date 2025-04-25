@@ -1,11 +1,12 @@
 using System.Text.Json;
 using JobHuntX.API.Models;
 using JobHuntX.API.DTOs;
+using System.Reflection.Metadata.Ecma335;
 
 namespace JobHuntX.API.Handlers;
 
 public static class RemoteOkHandler {
-    public static async Task<IResult> GetRemoteOkJobs() {
+    public static async Task<IResult> GetRemoteOkJobs(HttpRequest request) {
         using var httpClient = new HttpClient();
         using var response = await httpClient.GetAsync("https://remoteok.com/api");
 
@@ -18,8 +19,33 @@ public static class RemoteOkHandler {
         }
 
         json.RemoveAt(0); // metadata
+        var jobs = json.Select(ConvertToJob).ToList();
 
-        var jobs = json.Select(remoteOkJob => new Job {
+        jobs = FilterJobsByKey(request, jobs);
+
+        return Results.Ok(jobs);
+    }
+
+    private static List<Job> FilterJobsByKey(HttpRequest request, List<Job> jobs) {
+        string? key = request.Query["key"];
+
+        if (string.IsNullOrWhiteSpace(key)) {
+            return jobs;
+        }
+
+        var lowerKey = key.ToLowerInvariant();
+        return jobs.Where(job =>
+            job.Title.ToLowerInvariant().Contains(lowerKey) ||
+            job.Company.ToLowerInvariant().Contains(lowerKey) ||
+            (job.Location.Country?.ToLowerInvariant().Contains(lowerKey) ?? false) ||
+            (job.Location.City?.ToLowerInvariant().Contains(lowerKey) ?? false) ||
+            job.PosterName.ToLowerInvariant().Contains(lowerKey) ||
+            job.Tags.Any(tag => tag.ToLowerInvariant().Contains(lowerKey))
+        ).ToList();
+    }
+
+    private static Job ConvertToJob(RemoteOkJobDto remoteOkJob) {
+        return new Job {
             Id = Guid.NewGuid(),
             Website = new Uri("https://remoteok.com"),
             Title = remoteOkJob.Position,
@@ -37,12 +63,10 @@ public static class RemoteOkHandler {
             PostedDate = DateTime.TryParse(remoteOkJob.Date, out var parsedDate) ? parsedDate : DateTime.UtcNow,
             Url = new Uri(remoteOkJob.ApplyUrl),
             Tags = remoteOkJob.Tags
-        }).ToList();
-
-        return Results.Ok(jobs);
+        };
     }
 
-    public static string RemoveNonAscii(string input) {
+    private static string RemoveNonAscii(string input) {
         if (string.IsNullOrEmpty(input))
             return input;
         return new string(input.Where(c => c <= 127).ToArray());
