@@ -30,32 +30,36 @@ function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; se
   return (
     <div>
       <h2 className="text-xl font-semibold text-gray-800">Job Listings</h2>
-      <ul className="mt-4 space-y-4">
-        {jobs.map((job) => (
-          <li
-            key={job.id}
-            className="p-4 border border-gray-200 rounded-md shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-100"
-            onClick={() => onJobClick(job)} // Pass the selected job
-          >
-            <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
-            <p className="text-sm text-gray-600">{job.company}</p>
-            {job.location && (
-              <p className="text-sm text-gray-500">
-                <span>
-                  {job.location.type ? `${job.location.type}` : ''}
-                  {job.location.city ? `, ${job.location.city}` : ''}
-                  {job.location.country ? `, ${job.location.country}` : ''}
-                </span>
-              </p>
-            )}
-            {job.salary && job.salary.min != null && job.salary.max != null && (
-              <p className="text-sm text-gray-500">
-                {job.salary.min.toLocaleString()} - {job.salary.max.toLocaleString()} {job.salary.currencyCode}
-              </p>
-            )}
-          </li>
-        ))}
-      </ul>
+      {jobs.length === 0 ? (
+        <p className="mt-4 text-gray-600">No jobs found. Please try a different search.</p>
+      ) : (
+        <ul className="mt-4 space-y-4">
+          {jobs.map((job) => (
+            <li
+              key={job.id}
+              className="p-4 border border-gray-200 rounded-md shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-100"
+              onClick={() => onJobClick(job)} // Pass the selected job
+            >
+              <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
+              <p className="text-sm text-gray-600">{job.company}</p>
+              {job.location && (
+                <p className="text-sm text-gray-500">
+                  <span>
+                    {job.location.type ? `${job.location.type}` : ''}
+                    {job.location.city ? `, ${job.location.city}` : ''}
+                    {job.location.country ? `, ${job.location.country}` : ''}
+                  </span>
+                </p>
+              )}
+              {job.salary && job.salary.min != null && job.salary.max != null && (
+                <p className="text-sm text-gray-500">
+                  {job.salary.min.toLocaleString()} - {job.salary.max.toLocaleString()} {job.salary.currencyCode}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
