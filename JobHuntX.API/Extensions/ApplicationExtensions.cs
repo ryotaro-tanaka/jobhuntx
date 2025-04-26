@@ -26,6 +26,13 @@ namespace JobHuntX.API.Extensions {
             })
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();
+                
+            app.MapGet("/api/wework", async ([FromQuery] string? key) => {
+                var jobs = await WeWorkRemotelyHandler.GetWeWorkRemotelyJobs(key);
+                return Results.Ok(jobs);
+            })
+                .Produces<List<Job>>(StatusCodes.Status200OK)
+                .WithOpenApi();
 
             app.MapGet("/", () => "Welcome to JobHuntX.API!")
                 .Produces<string>(StatusCodes.Status200OK)
