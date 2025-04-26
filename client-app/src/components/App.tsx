@@ -6,20 +6,25 @@ import JobDetail from './JobDetail/JobDetail'
 
 function App() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [searchKey, setSearchKey] = useState<string | null>(null); // /api/job?key={searchKey}
 
   const handleJobClick = (job: Job) => {
-    setSelectedJob(job); // Set the selected job
+    setSelectedJob(job);
   };
 
   const handleCloseDetail = () => {
-    setSelectedJob(null); // Clear the selected job
+    setSelectedJob(null);
+  };
+
+  const handleSearch = (key: string | null) => {
+    setSearchKey(key);
   };
 
   return (
     <div className="relative overflow-hidden bg-white">
-      <FixedHeader />
+      <FixedHeader onSearch={handleSearch} /> {/* 検索イベントを渡す */}
       <div className="pt-32 p-4">
-        <JobList onJobClick={handleJobClick} />
+        <JobList onJobClick={handleJobClick} searchKey={searchKey} /> {/* 動的URLを渡す */}
       </div>
       {selectedJob && (
         <div

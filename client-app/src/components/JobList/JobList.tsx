@@ -3,7 +3,7 @@ import { Client, Job } from '../../api/generated';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
+function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; searchKey: string | null }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -11,7 +11,7 @@ function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
     const fetchJobs = async () => {
       try {
         const client = new Client(API_BASE_URL); // Initialize the NSwag client
-        const data = await client.jobs(); // Fetch jobs using the generated client
+        const data = await client.jobs(searchKey ?? undefined);
         setJobs(data);
       } catch (error) {
         console.error('Failed to fetch jobs:', error);
@@ -21,7 +21,7 @@ function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
     };
 
     fetchJobs();
-  }, []);
+  }, [searchKey]);
 
   if (loading) {
     return <p>Loading jobs...</p>;
