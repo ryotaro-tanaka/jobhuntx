@@ -16,7 +16,8 @@ namespace JobHuntX.API.Extensions {
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();
 
-            app.MapGet("/api/jobs", RemoteOkHandler.GetRemoteOkJobs)
+            // app.MapGet("/api/jobs", RemoteOkHandler.GetRemoteOkJobs)
+            app.MapGet("/api/jobs", WeWorkRemotelyHandler.GetWeWorkRemotelyJobs)
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();
 

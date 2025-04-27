@@ -97,6 +97,7 @@ public static class WeWorkRemotelyHandler {
                 ? href
                 : $"{BaseUrl}{href}";
         var description = GetJobDescriptionAsync(fullUrl).Result;
+        var salary = GetJobSalaryAsync(fullUrl).Result;
 
         return new Job {
             Id = Guid.NewGuid(),
@@ -104,15 +105,16 @@ public static class WeWorkRemotelyHandler {
             Title = GetSafeInnerText(titleNode, "No Title"),
             Company = GetSafeInnerText(companyNode, "No Company"),
             Location = new Location { Type = "Remote" },
-            Language = string.Empty,
+            Language = "en",
             Description = description,
-            Salary = null,
+            Salary = salary,
             PosterName = string.Empty,
             PostedDate = DateTime.UtcNow,
             Url = new Uri(fullUrl),
             Tags = new List<string>()
         };
     }
+
     private static async Task<string> GetJobDescriptionAsync(string jobUrl)
     {
         var descriptionNode = await FetchAndParseJobNodes<HtmlNode>(
@@ -128,6 +130,40 @@ public static class WeWorkRemotelyHandler {
         return descriptionNode.InnerText.Trim();
     }
 
+    private static async Task<Salary?> GetJobSalaryAsync(string jobUrl) {
+        var salaryNode = await FetchAndParseJobNodes<HtmlNode>(
+                jobUrl,
+                "//li[contains(@class, 'lis-container__job__sidebar__job-about__list__item') and contains(text(), 'Salary')]//span[contains(@class, 'box')]",
+                true
+            );
+
+        if (salaryNode == null) return null;
+
+        var salaryText = salaryNode.InnerText.Trim();
+        return ParseSalary(salaryText);
+    }
+
+    private static Salary? ParseSalary(string salaryText) {
+        // Example formats: "$100,000 or more USD", "$10,000 - $25,000 USD"
+        var salary = new Salary();
+        var parts = salaryText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length > 0 && parts[0].StartsWith("$")) {
+            var range = parts[0].Trim('$').Replace(",", "").Split('-');
+            if (range.Length == 2) {
+                salary.Min = decimal.TryParse(range[0], out var min) ? min : null;
+                salary.Max = decimal.TryParse(range[1], out var max) ? max : null;
+            } else if (range.Length == 1) {
+                salary.Min = decimal.TryParse(range[0], out var min) ? min : null;
+            }
+        }
+
+        if (parts.Length > 1 && parts[^1].Length == 3) {
+            salary.CurrencyCode = parts[^1]; // e.g., "USD"
+        }
+
+        return salary;
+    }
 
     private static string GetSafeInnerText(HtmlNode? node, string defaultValue) {
         return !string.IsNullOrWhiteSpace(node?.InnerText)
