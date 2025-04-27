@@ -14,31 +14,13 @@ public static class WeWorkRemotelyHandler {
     private static readonly HttpClient _httpClient = CreateHttpClientWithHeaders();
     private const string BaseUrl = "https://weworkremotely.com";
 
-
     public static async Task<IResult> GetWeWorkRemotelyJobs([FromQuery] string? key) {
         try {
             var response = await _httpClient.GetAsync($"{BaseUrl}/remote-jobs");
             response.EnsureSuccessStatusCode();
 
-            var encoding = Encoding.UTF8; // 文字コード（今回はUTF-8想定）
-
-            Stream stream = await response.Content.ReadAsStreamAsync();
-            if (response.Content.Headers.ContentEncoding.Contains("br")) {
-                stream = new BrotliStream(stream, CompressionMode.Decompress);
-            } else if (response.Content.Headers.ContentEncoding.Contains("gzip")) {
-                stream = new GZipStream(stream, CompressionMode.Decompress);
-            } else if (response.Content.Headers.ContentEncoding.Contains("deflate")) {
-                stream = new DeflateStream(stream, CompressionMode.Decompress);
-            }
-            // else 生のstreamでOK
-
-            using var reader = new StreamReader(stream, encoding);
-            var html = await reader.ReadToEndAsync();
-
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html);
-
-            var jobNodes = doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a");
+            var html = await GetHtmlFromResponse(response);
+            var jobNodes = ParseJobNodesFromHtml(html);
 
             if (jobNodes == null || jobNodes.Count == 0) {
                 return Results.Ok(new List<Job>());
@@ -50,10 +32,32 @@ public static class WeWorkRemotelyHandler {
             return Results.Ok(jobs);
         }
         catch (Exception ex) {
-            // 例外発生時はログ（開発中は詳細返す）
             Console.WriteLine($"Error scraping WeWorkRemotely: {ex.Message}");
             return Results.Problem("Failed to scrape WeWorkRemotely.");
         }
+    }
+
+    private static async Task<string> GetHtmlFromResponse(HttpResponseMessage response) {
+        var encoding = Encoding.UTF8;
+
+        Stream stream = await response.Content.ReadAsStreamAsync();
+        if (response.Content.Headers.ContentEncoding.Contains("br")) {
+            stream = new BrotliStream(stream, CompressionMode.Decompress);
+        } else if (response.Content.Headers.ContentEncoding.Contains("gzip")) {
+            stream = new GZipStream(stream, CompressionMode.Decompress);
+        } else if (response.Content.Headers.ContentEncoding.Contains("deflate")) {
+            stream = new DeflateStream(stream, CompressionMode.Decompress);
+        }
+
+        using var reader = new StreamReader(stream, encoding);
+        return await reader.ReadToEndAsync();
+    }
+
+    private static HtmlNodeCollection? ParseJobNodesFromHtml(string html) {
+        var doc = new HtmlDocument();
+        doc.LoadHtml(html);
+
+        return doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a");
     }
 
     // pretend to be a real browser
