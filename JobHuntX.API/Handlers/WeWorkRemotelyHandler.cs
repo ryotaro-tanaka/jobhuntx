@@ -11,10 +11,12 @@ namespace JobHuntX.API.Handlers;
 public static class WeWorkRemotelyHandler {
     // HttpClientはstaticにして再利用（毎回newすると403になるため）
     private static readonly HttpClient _httpClient = CreateHttpClientWithHeaders();
+    private const string BaseUrl = "https://weworkremotely.com";
+
 
     public static async Task<IResult> GetWeWorkRemotelyJobs([FromQuery] string? key) {
         try {
-            var response = await _httpClient.GetAsync("https://weworkremotely.com/remote-jobs");
+            var response = await _httpClient.GetAsync($"{BaseUrl}/remote-jobs");
             response.EnsureSuccessStatusCode();
 
             var encoding = Encoding.UTF8; // 文字コード（今回はUTF-8想定）
@@ -35,9 +37,9 @@ public static class WeWorkRemotelyHandler {
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
 
-            var jobNodes = doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]//a");
+            var jobNodes = doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a");
             Console.WriteLine($"Found {jobNodes?.Count} job nodes.");
-            Console.WriteLine($"{jobNodes?[0].InnerHtml}");
+            // Console.WriteLine($"{jobNodes?[0].InnerHtml}");
 
             if (jobNodes == null || jobNodes.Count == 0) {
                 return Results.Ok(new List<Job>());
@@ -92,23 +94,32 @@ public static class WeWorkRemotelyHandler {
     }
 
     private static Job ConvertToJob(HtmlNode node) {
-        var titleNode = node.SelectSingleNode(".//span[@class='title']");
-        var companyNode = node.SelectSingleNode(".//span[@class='company']");
-        var url = "https://weworkremotely.com" + node.GetAttributeValue("href", "");
+        var titleNode = node.SelectSingleNode(".//h4[@class='new-listing__header__title']");
+        var companyNode = node.SelectSingleNode(".//p[@class='new-listing__company-name']");
+        var href = node.GetAttributeValue("href", "");
 
         return new Job {
             Id = Guid.NewGuid(),
-            Website = new Uri("https://weworkremotely.com"),
-            Title = titleNode?.InnerText.Trim() ?? "No Title",
-            Company = companyNode?.InnerText.Trim() ?? "No Company",
+            Website = new Uri(BaseUrl),
+            Title = GetSafeInnerText(titleNode, "No Title"),
+            Company = GetSafeInnerText(companyNode, "No Company"),
             Location = new Location { Type = "Remote" },
             Language = string.Empty,
             Description = string.Empty,
             Salary = null,
             PosterName = string.Empty,
             PostedDate = DateTime.UtcNow,
-            Url = new Uri(url),
+            Url = href.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
+                ? new Uri(href) 
+                : new Uri($"{BaseUrl}{href}"),
             Tags = new List<string>()
         };
     }
+
+    private static string GetSafeInnerText(HtmlNode? node, string defaultValue) {
+        return !string.IsNullOrWhiteSpace(node?.InnerText)
+            ? node.InnerText.Trim()
+            : defaultValue;
+    }
+
 }
