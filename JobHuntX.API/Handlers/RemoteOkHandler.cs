@@ -2,6 +2,7 @@ using System.Text.Json;
 using JobHuntX.API.Models;
 using JobHuntX.API.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using JobHuntX.API.Utilities;
 
 namespace JobHuntX.API.Handlers;
 
@@ -20,26 +21,9 @@ public static class RemoteOkHandler {
 
         json.RemoveAt(0); // metadata
         var jobs = json.Select(ConvertToJob).ToList();
-
-        jobs = FilterJobsByKey(key, jobs);
+        jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
 
         return Results.Ok(jobs);
-    }
-
-    private static List<Job> FilterJobsByKey(string? key, List<Job> jobs) {
-        if (string.IsNullOrWhiteSpace(key)) {
-            return jobs;
-        }
-
-        var lowerKey = key.ToLowerInvariant();
-        return jobs.Where(job =>
-            job.Title.ToLowerInvariant().Contains(lowerKey) ||
-            job.Company.ToLowerInvariant().Contains(lowerKey) ||
-            (job.Location.Country?.ToLowerInvariant().Contains(lowerKey) ?? false) ||
-            (job.Location.City?.ToLowerInvariant().Contains(lowerKey) ?? false) ||
-            job.PosterName.ToLowerInvariant().Contains(lowerKey) ||
-            job.Tags.Any(tag => tag.ToLowerInvariant().Contains(lowerKey))
-        ).ToList();
     }
 
     private static Job ConvertToJob(RemoteOkJobDto remoteOkJob) {

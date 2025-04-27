@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text;
 using System.IO.Compression; // 追加
+using JobHuntX.API.Utilities;
 
 namespace JobHuntX.API.Handlers;
 
@@ -38,15 +39,13 @@ public static class WeWorkRemotelyHandler {
             doc.LoadHtml(html);
 
             var jobNodes = doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a");
-            Console.WriteLine($"Found {jobNodes?.Count} job nodes.");
-            // Console.WriteLine($"{jobNodes?[0].InnerHtml}");
 
             if (jobNodes == null || jobNodes.Count == 0) {
                 return Results.Ok(new List<Job>());
             }
 
             var jobs = jobNodes.Select(node => ConvertToJob(node)).ToList();
-            jobs = FilterJobsByKey(key, jobs);
+            jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
 
             return Results.Ok(jobs);
         }
@@ -75,22 +74,6 @@ public static class WeWorkRemotelyHandler {
         httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Site", "none");
         httpClient.DefaultRequestHeaders.Add("Sec-Fetch-User", "?1");
         return httpClient;
-    }
-
-    private static List<Job> FilterJobsByKey(string? key, List<Job> jobs) {
-        if (string.IsNullOrWhiteSpace(key)) {
-            return jobs;
-        }
-
-        var lowerKey = key.ToLowerInvariant();
-        return jobs.Where(job =>
-            job.Title.ToLowerInvariant().Contains(lowerKey) ||
-            job.Company.ToLowerInvariant().Contains(lowerKey) ||
-            (job.Location.Country?.ToLowerInvariant().Contains(lowerKey) ?? false) ||
-            (job.Location.City?.ToLowerInvariant().Contains(lowerKey) ?? false) ||
-            job.PosterName.ToLowerInvariant().Contains(lowerKey) ||
-            job.Tags.Any(tag => tag.ToLowerInvariant().Contains(lowerKey))
-        ).ToList();
     }
 
     private static Job ConvertToJob(HtmlNode node) {
