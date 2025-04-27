@@ -3,31 +3,59 @@ using JobHuntX.API.Models;
 using JobHuntX.API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Text;
+using System.IO.Compression; // 追加
 
 namespace JobHuntX.API.Handlers;
 
 public static class WeWorkRemotelyHandler {
-    public static async Task<IResult> GetWeWorkRemotelyJobs([FromQuery] string? key) {
-        // using var httpClient = CreateHttpClientWithHeaders();
-        var html = await _httpClient.GetStringAsync("https://weworkremotely.com/remote-jobs");
-
-        var doc = new HtmlDocument();
-        doc.LoadHtml(html);
-
-        var jobNodes = doc.DocumentNode.SelectNodes("//section[@id='category-2']//li[contains(@class, 'feature')]//a");
-
-        if (jobNodes == null || jobNodes.Count == 0) {
-            return Results.Ok(new List<Job>());
-        }
-
-        var jobs = jobNodes.Select(node => ConvertToJob(node)).ToList();
-        jobs = FilterJobsByKey(key, jobs);
-
-        return Results.Ok(jobs);
-    }
-
+    // HttpClientはstaticにして再利用（毎回newすると403になるため）
     private static readonly HttpClient _httpClient = CreateHttpClientWithHeaders();
 
+    public static async Task<IResult> GetWeWorkRemotelyJobs([FromQuery] string? key) {
+        try {
+            var response = await _httpClient.GetAsync("https://weworkremotely.com/remote-jobs");
+            response.EnsureSuccessStatusCode();
+
+            var encoding = Encoding.UTF8; // 文字コード（今回はUTF-8想定）
+
+            Stream stream = await response.Content.ReadAsStreamAsync();
+            if (response.Content.Headers.ContentEncoding.Contains("br")) {
+                stream = new BrotliStream(stream, CompressionMode.Decompress);
+            } else if (response.Content.Headers.ContentEncoding.Contains("gzip")) {
+                stream = new GZipStream(stream, CompressionMode.Decompress);
+            } else if (response.Content.Headers.ContentEncoding.Contains("deflate")) {
+                stream = new DeflateStream(stream, CompressionMode.Decompress);
+            }
+            // else 生のstreamでOK
+
+            using var reader = new StreamReader(stream, encoding);
+            var html = await reader.ReadToEndAsync();
+
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            var jobNodes = doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]//a");
+            Console.WriteLine($"Found {jobNodes?.Count} job nodes.");
+            Console.WriteLine($"{jobNodes?[0].InnerHtml}");
+
+            if (jobNodes == null || jobNodes.Count == 0) {
+                return Results.Ok(new List<Job>());
+            }
+
+            var jobs = jobNodes.Select(node => ConvertToJob(node)).ToList();
+            jobs = FilterJobsByKey(key, jobs);
+
+            return Results.Ok(jobs);
+        }
+        catch (Exception ex) {
+            // 例外発生時はログ（開発中は詳細返す）
+            Console.WriteLine($"Error scraping WeWorkRemotely: {ex.Message}");
+            return Results.Problem("Failed to scrape WeWorkRemotely.");
+        }
+    }
+
+    // pretend to be a real browser
     private static HttpClient CreateHttpClientWithHeaders() {
         var handler = new HttpClientHandler {
             UseCookies = true,
@@ -75,12 +103,12 @@ public static class WeWorkRemotelyHandler {
             Company = companyNode?.InnerText.Trim() ?? "No Company",
             Location = new Location { Type = "Remote" },
             Language = string.Empty,
-            Description = string.Empty, // 詳細ページスクレイピングするなら後で追加
-            Salary = null, // WWRは給与情報ほぼ載ってない
+            Description = string.Empty,
+            Salary = null,
             PosterName = string.Empty,
-            PostedDate = DateTime.UtcNow, // 正確な日付情報がないので仮で今
+            PostedDate = DateTime.UtcNow,
             Url = new Uri(url),
-            Tags = new List<string>() // タグ情報も取りたければ後で追加
+            Tags = new List<string>()
         };
     }
 }
