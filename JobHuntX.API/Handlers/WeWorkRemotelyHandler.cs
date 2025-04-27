@@ -4,7 +4,7 @@ using JobHuntX.API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text;
-using System.IO.Compression; // 追加
+using System.IO.Compression;
 using JobHuntX.API.Utilities;
 
 namespace JobHuntX.API.Handlers;
@@ -14,19 +14,21 @@ public static class WeWorkRemotelyHandler {
     private static readonly HttpClient _httpClient = CreateHttpClientWithHeaders();
     private const string BaseUrl = "https://weworkremotely.com";
 
+    // https://weworkremotely.com/remote-job-rss-feed の選択肢
+    // XMLで配信しているのでスクレイピングせずにパースできる
     public static async Task<IResult> GetWeWorkRemotelyJobs([FromQuery] string? key) {
         try {
-            var response = await _httpClient.GetAsync($"{BaseUrl}/remote-jobs");
-            response.EnsureSuccessStatusCode();
-
-            var html = await GetHtmlFromResponse(response);
-            var jobNodes = ParseJobNodesFromHtml(html);
+            var jobNodes = await FetchAndParseJobNodes<HtmlNodeCollection>(
+                    $"{BaseUrl}/remote-jobs", 
+                    "//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a"
+                );
 
             if (jobNodes == null || jobNodes.Count == 0) {
                 return Results.Ok(new List<Job>());
             }
 
-            var jobs = jobNodes.Select(node => ConvertToJob(node)).ToList();
+            // テスト用に10件まで
+            var jobs = jobNodes.Take(10).Select(node => ConvertToJob(node)).ToList();
             jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
 
             return Results.Ok(jobs);
@@ -35,6 +37,20 @@ public static class WeWorkRemotelyHandler {
             Console.WriteLine($"Error scraping WeWorkRemotely: {ex.Message}");
             return Results.Problem("Failed to scrape WeWorkRemotely.");
         }
+    }
+
+    private static async Task<T?> FetchAndParseJobNodes<T>(string requestUri, string xpath, bool singleNode = false) where T : class {
+        var response = await _httpClient.GetAsync(requestUri);
+        response.EnsureSuccessStatusCode();
+
+        var html = await GetHtmlFromResponse(response);
+
+        var doc = new HtmlDocument();
+        doc.LoadHtml(html);
+
+        return singleNode 
+            ? doc.DocumentNode.SelectSingleNode(xpath) as T
+            : doc.DocumentNode.SelectNodes(xpath) as T;
     }
 
     private static async Task<string> GetHtmlFromResponse(HttpResponseMessage response) {
@@ -51,13 +67,6 @@ public static class WeWorkRemotelyHandler {
 
         using var reader = new StreamReader(stream, encoding);
         return await reader.ReadToEndAsync();
-    }
-
-    private static HtmlNodeCollection? ParseJobNodesFromHtml(string html) {
-        var doc = new HtmlDocument();
-        doc.LoadHtml(html);
-
-        return doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a");
     }
 
     // pretend to be a real browser
@@ -84,6 +93,10 @@ public static class WeWorkRemotelyHandler {
         var titleNode = node.SelectSingleNode(".//h4[@class='new-listing__header__title']");
         var companyNode = node.SelectSingleNode(".//p[@class='new-listing__company-name']");
         var href = node.GetAttributeValue("href", "");
+        var fullUrl = href.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
+                ? href
+                : $"{BaseUrl}{href}";
+        var description = GetJobDescriptionAsync(fullUrl).Result;
 
         return new Job {
             Id = Guid.NewGuid(),
@@ -92,16 +105,29 @@ public static class WeWorkRemotelyHandler {
             Company = GetSafeInnerText(companyNode, "No Company"),
             Location = new Location { Type = "Remote" },
             Language = string.Empty,
-            Description = string.Empty,
+            Description = description,
             Salary = null,
             PosterName = string.Empty,
             PostedDate = DateTime.UtcNow,
-            Url = href.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
-                ? new Uri(href) 
-                : new Uri($"{BaseUrl}{href}"),
+            Url = new Uri(fullUrl),
             Tags = new List<string>()
         };
     }
+    private static async Task<string> GetJobDescriptionAsync(string jobUrl)
+    {
+        var descriptionNode = await FetchAndParseJobNodes<HtmlNode>(
+                jobUrl, 
+                "//div[contains(@class, 'lis-container__job__content__description')]",
+                true
+            );
+
+        if (descriptionNode == null)
+            return string.Empty;
+
+        // テキストだけ取得（改行をある程度保持したいなら、HtmlAgilityPackのInnerTextではなく、カスタムで取るのもアリ）
+        return descriptionNode.InnerText.Trim();
+    }
+
 
     private static string GetSafeInnerText(HtmlNode? node, string defaultValue) {
         return !string.IsNullOrWhiteSpace(node?.InnerText)
