@@ -1,36 +1,81 @@
 using HtmlAgilityPack;
 using JobHuntX.API.Models;
-using JobHuntX.API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text;
 using System.IO.Compression;
 using JobHuntX.API.Utilities;
+using System.Text.RegularExpressions;
 
 namespace JobHuntX.API.Handlers;
 
 public static class WeWorkRemotelyHandler {
-    // HttpClientはstaticにして再利用（毎回newすると403になるため）
     private static readonly HttpClient _httpClient = CreateHttpClientWithHeaders();
     private const string BaseUrl = "https://weworkremotely.com";
+    private static readonly Random random = new Random(); 
 
-    // https://weworkremotely.com/remote-job-rss-feed の選択肢
-    // XMLで配信しているのでスクレイピングせずにパースできる
     public static async Task<IResult> GetWeWorkRemotelyJobs([FromQuery] string? key) {
         try {
-            var jobNodes = await FetchAndParseJobNodes<HtmlNodeCollection>(
-                    $"{BaseUrl}/remote-jobs", 
-                    "//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a"
-                );
+            var doc = await FetchJobDocumentAsync($"{BaseUrl}/remote-jobs");
+            var jobNodes = doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a");
 
             if (jobNodes == null || jobNodes.Count == 0) {
                 return Results.Ok(new List<Job>());
             }
 
-            // テスト用に10件まで
-            var jobs = jobNodes.Take(10).Select(node => ConvertToJob(node)).ToList();
-            jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
+            // // 10件まで取得
+            // var throttler = new SemaphoreSlim(2); // 同時に2件まで
 
+            // var jobTasks = jobNodes.Take(10)
+            //     .Select(async node => {
+            //         await throttler.WaitAsync();
+            //         try {
+            //             // 100〜300ms待機する
+            //             await Task.Delay(random.Next(100, 300));
+
+            //             var job = await ConvertToJobAsync(node);
+            //             return (Job: job, Error: (string?)null);
+            //         } catch (Exception ex) {
+            //             return (Job: (Job?)null, Error: ex.Message);
+            //         } finally {
+            //             throttler.Release();
+            //         }
+            //     })
+            //     .ToList();
+
+
+            // var jobResults = await Task.WhenAll(jobTasks);
+
+            // var jobs = jobResults
+            //     .Where(r => r.Job != null)
+            //     .Select(r => r.Job!)
+            //     .ToList();
+
+            // var errors = jobResults
+            //     .Where(r => r.Error != null)
+            //     .Select(r => r.Error!)
+            //     .ToList();
+
+            // var filteredJobs = JobFilterHelper.FilterJobsByKey(key, jobs);
+
+            // // 成功件数、失敗件数もまとめる
+            // var response = new {
+            //     successCount = filteredJobs.Count,
+            //     errorCount = errors.Count,
+            //     errors,
+            //     jobs = filteredJobs
+            // };
+
+            // return Results.Ok(response);
+
+            // 10件まで取得
+            var jobs = new List<Job>();
+            foreach (var node in jobNodes.Take(10)) {
+                var job = await ConvertToJobAsync(node);
+                jobs.Add(job);
+            }
+
+            jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
             return Results.Ok(jobs);
         }
         catch (Exception ex) {
@@ -39,7 +84,21 @@ public static class WeWorkRemotelyHandler {
         }
     }
 
-    private static async Task<T?> FetchAndParseJobNodes<T>(string requestUri, string xpath, bool singleNode = false) where T : class {
+    // private static async Task<T?> FetchAndParseJobNodes<T>(string requestUri, string xpath, bool singleNode = false) where T : class {
+    //     var response = await _httpClient.GetAsync(requestUri);
+    //     response.EnsureSuccessStatusCode();
+
+    //     var html = await GetHtmlFromResponse(response);
+
+    //     var doc = new HtmlDocument();
+    //     doc.LoadHtml(html);
+
+    //     return singleNode
+    //         ? doc.DocumentNode.SelectSingleNode(xpath) as T
+    //         : doc.DocumentNode.SelectNodes(xpath) as T;
+    // }
+
+    private static async Task<HtmlDocument> FetchJobDocumentAsync(string requestUri) {
         var response = await _httpClient.GetAsync(requestUri);
         response.EnsureSuccessStatusCode();
 
@@ -47,10 +106,7 @@ public static class WeWorkRemotelyHandler {
 
         var doc = new HtmlDocument();
         doc.LoadHtml(html);
-
-        return singleNode 
-            ? doc.DocumentNode.SelectSingleNode(xpath) as T
-            : doc.DocumentNode.SelectNodes(xpath) as T;
+        return doc;
     }
 
     private static async Task<string> GetHtmlFromResponse(HttpResponseMessage response) {
@@ -69,7 +125,6 @@ public static class WeWorkRemotelyHandler {
         return await reader.ReadToEndAsync();
     }
 
-    // pretend to be a real browser
     private static HttpClient CreateHttpClientWithHeaders() {
         var handler = new HttpClientHandler {
             UseCookies = true,
@@ -89,54 +144,45 @@ public static class WeWorkRemotelyHandler {
         return httpClient;
     }
 
-    private static Job ConvertToJob(HtmlNode node) {
+    private static async Task<Job> ConvertToJobAsync(HtmlNode node) {
         var titleNode = node.SelectSingleNode(".//h4[@class='new-listing__header__title']");
         var companyNode = node.SelectSingleNode(".//p[@class='new-listing__company-name']");
+        var companyStr = GetSafeInnerText(companyNode, "No Company");
         var href = node.GetAttributeValue("href", "");
-        var fullUrl = href.StartsWith("http", StringComparison.OrdinalIgnoreCase) 
-                ? href
-                : $"{BaseUrl}{href}";
-        var description = GetJobDescriptionAsync(fullUrl).Result;
-        var salary = GetJobSalaryAsync(fullUrl).Result;
+        var fullUrl = href.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? href
+            : $"{BaseUrl}{href}";
+
+        var doc = await FetchJobDocumentAsync(fullUrl);
+
+        var description = ExtractJobDescription(doc);
+        var salary = ExtractJobSalary(doc);
+        var PostedDate = ExtractJobPostedDate(doc);
+        var tags = ExtractJobTags(doc);
 
         return new Job {
             Id = Guid.NewGuid(),
             Website = new Uri(BaseUrl),
             Title = GetSafeInnerText(titleNode, "No Title"),
-            Company = GetSafeInnerText(companyNode, "No Company"),
+            Company = companyStr,
             Location = new Location { Type = "Remote" },
             Language = "en",
             Description = description,
             Salary = salary,
-            PosterName = string.Empty,
-            PostedDate = DateTime.UtcNow,
+            PosterName = companyStr,
+            PostedDate = PostedDate,
             Url = new Uri(fullUrl),
-            Tags = new List<string>()
+            Tags = tags
         };
     }
 
-    private static async Task<string> GetJobDescriptionAsync(string jobUrl)
-    {
-        var descriptionNode = await FetchAndParseJobNodes<HtmlNode>(
-                jobUrl, 
-                "//div[contains(@class, 'lis-container__job__content__description')]",
-                true
-            );
-
-        if (descriptionNode == null)
-            return string.Empty;
-
-        // テキストだけ取得（改行をある程度保持したいなら、HtmlAgilityPackのInnerTextではなく、カスタムで取るのもアリ）
-        return descriptionNode.InnerText.Trim();
+    private static string ExtractJobDescription(HtmlDocument doc) {
+        var descriptionNode = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'lis-container__job__content__description')]");
+        return descriptionNode?.InnerText.Trim() ?? string.Empty;
     }
 
-    private static async Task<Salary?> GetJobSalaryAsync(string jobUrl) {
-        var salaryNode = await FetchAndParseJobNodes<HtmlNode>(
-                jobUrl,
-                "//li[contains(@class, 'lis-container__job__sidebar__job-about__list__item') and contains(text(), 'Salary')]//span[contains(@class, 'box')]",
-                true
-            );
-
+    private static Salary? ExtractJobSalary(HtmlDocument doc) {
+        var salaryNode = doc.DocumentNode.SelectSingleNode("//li[contains(@class, 'lis-container__job__sidebar__job-about__list__item') and contains(text(), 'Salary')]//span[contains(@class, 'box')]");
         if (salaryNode == null) return null;
 
         var salaryText = salaryNode.InnerText.Trim();
@@ -144,7 +190,6 @@ public static class WeWorkRemotelyHandler {
     }
 
     private static Salary? ParseSalary(string salaryText) {
-        // Example formats: "$100,000 or more USD", "$10,000 - $25,000 USD"
         var salary = new Salary();
         var parts = salaryText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
@@ -159,10 +204,31 @@ public static class WeWorkRemotelyHandler {
         }
 
         if (parts.Length > 1 && parts[^1].Length == 3) {
-            salary.CurrencyCode = parts[^1]; // e.g., "USD"
+            salary.CurrencyCode = parts[^1];
         }
 
         return salary;
+    }
+
+    private static DateTime ExtractJobPostedDate(HtmlDocument doc) {
+        var dateNow = DateTime.Now;
+
+        var postedDateNode = doc.DocumentNode.SelectSingleNode("//li[contains(@class, 'lis-container__job__sidebar__job-about__list__item') and contains(text(), 'Posted on')]/span");
+        if (postedDateNode == null) return dateNow; // Return current DateTime if element not found.
+
+        var text = postedDateNode.InnerText.Trim();
+        var match = Regex.Match(text, @"(\d+)\s+(minutes?|hours?|days?|months?)\s+ago");
+
+        if (!match.Success) return dateNow; // Return current DateTime if regex does not match.
+
+        var value = int.Parse(match.Groups[1].Value);
+        var unit = match.Groups[2].Value;
+
+        return unit.StartsWith("minute") ? dateNow.AddMinutes(-value) :
+               unit.StartsWith("hour")   ? dateNow.AddHours(-value) :
+               unit.StartsWith("day")    ? dateNow.AddDays(-value) :
+               unit.StartsWith("month")  ? dateNow.AddMonths(-value) :
+               dateNow; // Default to current DateTime if unit is unrecognized.
     }
 
     private static string GetSafeInnerText(HtmlNode? node, string defaultValue) {
@@ -171,4 +237,29 @@ public static class WeWorkRemotelyHandler {
             : defaultValue;
     }
 
+    private static List<string> ExtractJobTags(HtmlDocument doc) {
+        var tags = new List<string>();
+
+        // Extract Job Type
+        var jobTypeNode = doc.DocumentNode.SelectSingleNode("//li[contains(@class, 'lis-container__job__sidebar__job-about__list__item') and contains(text(), 'Job type')]//span[contains(@class, 'box--jobType')]");
+        if (jobTypeNode != null) {
+            var jobType = jobTypeNode.InnerText.Trim().ToLower();
+            if (!string.IsNullOrEmpty(jobType)) {
+                tags.Add(jobType);
+            }
+        }
+
+        // Extract Skills
+        var skillsNodes = doc.DocumentNode.SelectNodes("//li[contains(@class, 'lis-container__job__sidebar__job-about__list__item--full') and contains(text(), 'Skills')]//span[contains(@class, 'box--multi')]");
+        if (skillsNodes != null) {
+            foreach (var skillNode in skillsNodes) {
+                var skill = skillNode.InnerText.Trim().ToLower();
+                if (!string.IsNullOrEmpty(skill)) {
+                    tags.Add(skill);
+                }
+            }
+        }
+
+        return tags;
+    }
 }
