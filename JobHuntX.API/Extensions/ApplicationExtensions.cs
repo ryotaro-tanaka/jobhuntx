@@ -21,14 +21,14 @@ namespace JobHuntX.API.Extensions {
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();
 
-            app.MapGet("/api/remoteok", async ([FromQuery] string? key) => {
+            app.MapGet("/api/remoteok", async([FromQuery] string ? key) => {
                 var jobs = await RemoteOkHandler.GetRemoteOkJobs(key);
                 return Results.Ok(jobs);
             })
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();
-                
-            app.MapGet("/api/wework", async ([FromQuery] string? key) => {
+
+            app.MapGet("/api/wework", async([FromQuery] string ? key) => {
                 var jobs = await WeWorkRemotelyHandler.GetWeWorkRemotelyJobs(key);
                 return Results.Ok(jobs);
             })

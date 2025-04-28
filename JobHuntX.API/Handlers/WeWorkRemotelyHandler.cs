@@ -12,7 +12,7 @@ namespace JobHuntX.API.Handlers;
 public static class WeWorkRemotelyHandler {
     private static readonly HttpClient _httpClient = CreateHttpClientWithHeaders();
     private const string BaseUrl = "https://weworkremotely.com";
-    private static readonly Random random = new Random(); 
+    private static readonly Random random = new Random();
 
     public static async Task<IResult> GetWeWorkRemotelyJobs([FromQuery] string? key) {
         try {
@@ -115,9 +115,11 @@ public static class WeWorkRemotelyHandler {
         Stream stream = await response.Content.ReadAsStreamAsync();
         if (response.Content.Headers.ContentEncoding.Contains("br")) {
             stream = new BrotliStream(stream, CompressionMode.Decompress);
-        } else if (response.Content.Headers.ContentEncoding.Contains("gzip")) {
+        }
+        else if (response.Content.Headers.ContentEncoding.Contains("gzip")) {
             stream = new GZipStream(stream, CompressionMode.Decompress);
-        } else if (response.Content.Headers.ContentEncoding.Contains("deflate")) {
+        }
+        else if (response.Content.Headers.ContentEncoding.Contains("deflate")) {
             stream = new DeflateStream(stream, CompressionMode.Decompress);
         }
 
@@ -183,7 +185,8 @@ public static class WeWorkRemotelyHandler {
 
     private static Salary? ExtractJobSalary(HtmlDocument doc) {
         var salaryNode = doc.DocumentNode.SelectSingleNode("//li[contains(@class, 'lis-container__job__sidebar__job-about__list__item') and contains(text(), 'Salary')]//span[contains(@class, 'box')]");
-        if (salaryNode == null) return null;
+        if (salaryNode == null)
+            return null;
 
         var salaryText = salaryNode.InnerText.Trim();
         return ParseSalary(salaryText);
@@ -198,7 +201,8 @@ public static class WeWorkRemotelyHandler {
             if (range.Length == 2) {
                 salary.Min = decimal.TryParse(range[0], out var min) ? min : null;
                 salary.Max = decimal.TryParse(range[1], out var max) ? max : null;
-            } else if (range.Length == 1) {
+            }
+            else if (range.Length == 1) {
                 salary.Min = decimal.TryParse(range[0], out var min) ? min : null;
             }
         }
@@ -214,20 +218,22 @@ public static class WeWorkRemotelyHandler {
         var dateNow = DateTime.Now;
 
         var postedDateNode = doc.DocumentNode.SelectSingleNode("//li[contains(@class, 'lis-container__job__sidebar__job-about__list__item') and contains(text(), 'Posted on')]/span");
-        if (postedDateNode == null) return dateNow; // Return current DateTime if element not found.
+        if (postedDateNode == null)
+            return dateNow; // Return current DateTime if element not found.
 
         var text = postedDateNode.InnerText.Trim();
         var match = Regex.Match(text, @"(\d+)\s+(minutes?|hours?|days?|months?)\s+ago");
 
-        if (!match.Success) return dateNow; // Return current DateTime if regex does not match.
+        if (!match.Success)
+            return dateNow; // Return current DateTime if regex does not match.
 
         var value = int.Parse(match.Groups[1].Value);
         var unit = match.Groups[2].Value;
 
         return unit.StartsWith("minute") ? dateNow.AddMinutes(-value) :
-               unit.StartsWith("hour")   ? dateNow.AddHours(-value) :
-               unit.StartsWith("day")    ? dateNow.AddDays(-value) :
-               unit.StartsWith("month")  ? dateNow.AddMonths(-value) :
+               unit.StartsWith("hour") ? dateNow.AddHours(-value) :
+               unit.StartsWith("day") ? dateNow.AddDays(-value) :
+               unit.StartsWith("month") ? dateNow.AddMonths(-value) :
                dateNow; // Default to current DateTime if unit is unrecognized.
     }
 
