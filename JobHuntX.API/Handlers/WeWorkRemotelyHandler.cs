@@ -12,71 +12,55 @@ namespace JobHuntX.API.Handlers;
 public static class WeWorkRemotelyHandler {
     private static readonly HttpClient _httpClient = CreateHttpClientWithHeaders();
     private const string BaseUrl = "https://weworkremotely.com";
-    private static readonly Random random = new Random();
 
-    public static async Task<IResult> GetWeWorkRemotelyJobs([FromQuery] string? key) {
+    // cache
+    private static List<Job>? _cachedJobs = null;
+    private static DateTime _cacheTime;
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(30);
+    private static readonly SemaphoreSlim _cacheSemaphore = new(1, 1);
+
+    /// <summary>
+    /// We Work Remotely からリモートジョブのリストを取得します。
+    /// キャッシュが有効な場合はキャッシュを使用し、無効な場合は新たにデータを取得します。
+    /// キーワードでフィルタリングし、ページネーションをサポートします。
+    /// </summary>
+    public static async Task<IResult> GetWeWorkRemotelyJobs([FromQuery] string? key, [FromQuery] int page = 1) {
         try {
-            var doc = await FetchJobDocumentAsync($"{BaseUrl}/remote-jobs");
-            var jobNodes = doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a");
+            await _cacheSemaphore.WaitAsync(); // ロック開始
+            try {
+                // キャッシュが有効なら使う
+                if (_cachedJobs != null && DateTime.Now - _cacheTime < CacheDuration) {
+                    var pagedJobs = GetPagedJobs(_cachedJobs, key, page);
+                    return Results.Ok(pagedJobs);
+                }
 
-            if (jobNodes == null || jobNodes.Count == 0) {
-                return Results.Ok(new List<Job>());
+                // キャッシュが無効なら新たに取得
+                var doc = await FetchJobDocumentAsync($"{BaseUrl}/remote-jobs");
+                var jobNodes = doc.DocumentNode.SelectNodes("//section[contains(@class, 'jobs')]//li[contains(@class, 'new-listing-container')]/a");
+
+                if (jobNodes == null || jobNodes.Count == 0) {
+                    return Results.Ok(new List<Job>());
+                }
+
+                // 重いので10件まで取得。余裕があれば10件ずつ取得する仕様にしたい
+                // 並列に処理するとWWR側でブロックされるので、1件ずつ処理する
+                var jobs = new List<Job>();
+                foreach (var node in jobNodes.Take(10)) {
+                    var job = await ConvertToJobAsync(node);
+                    jobs.Add(job);
+                }
+                
+                _cachedJobs = jobs;
+                _cacheTime = DateTime.Now;
+                jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
+                
+                var pagedResult = GetPagedJobs(jobs, key, page);
+                return Results.Ok(pagedResult);
+            }
+            finally {
+                _cacheSemaphore.Release(); // ロック解除
             }
 
-            // // 10件まで取得
-            // var throttler = new SemaphoreSlim(2); // 同時に2件まで
-
-            // var jobTasks = jobNodes.Take(10)
-            //     .Select(async node => {
-            //         await throttler.WaitAsync();
-            //         try {
-            //             // 100〜300ms待機する
-            //             await Task.Delay(random.Next(100, 300));
-
-            //             var job = await ConvertToJobAsync(node);
-            //             return (Job: job, Error: (string?)null);
-            //         } catch (Exception ex) {
-            //             return (Job: (Job?)null, Error: ex.Message);
-            //         } finally {
-            //             throttler.Release();
-            //         }
-            //     })
-            //     .ToList();
-
-
-            // var jobResults = await Task.WhenAll(jobTasks);
-
-            // var jobs = jobResults
-            //     .Where(r => r.Job != null)
-            //     .Select(r => r.Job!)
-            //     .ToList();
-
-            // var errors = jobResults
-            //     .Where(r => r.Error != null)
-            //     .Select(r => r.Error!)
-            //     .ToList();
-
-            // var filteredJobs = JobFilterHelper.FilterJobsByKey(key, jobs);
-
-            // // 成功件数、失敗件数もまとめる
-            // var response = new {
-            //     successCount = filteredJobs.Count,
-            //     errorCount = errors.Count,
-            //     errors,
-            //     jobs = filteredJobs
-            // };
-
-            // return Results.Ok(response);
-
-            // 10件まで取得
-            var jobs = new List<Job>();
-            foreach (var node in jobNodes.Take(10)) {
-                var job = await ConvertToJobAsync(node);
-                jobs.Add(job);
-            }
-
-            jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
-            return Results.Ok(jobs);
         }
         catch (Exception ex) {
             Console.WriteLine($"Error scraping WeWorkRemotely: {ex.Message}");
@@ -84,19 +68,11 @@ public static class WeWorkRemotelyHandler {
         }
     }
 
-    // private static async Task<T?> FetchAndParseJobNodes<T>(string requestUri, string xpath, bool singleNode = false) where T : class {
-    //     var response = await _httpClient.GetAsync(requestUri);
-    //     response.EnsureSuccessStatusCode();
-
-    //     var html = await GetHtmlFromResponse(response);
-
-    //     var doc = new HtmlDocument();
-    //     doc.LoadHtml(html);
-
-    //     return singleNode
-    //         ? doc.DocumentNode.SelectSingleNode(xpath) as T
-    //         : doc.DocumentNode.SelectNodes(xpath) as T;
-    // }
+    private static List<Job> GetPagedJobs(List<Job> jobs, string? key, int page) {
+        const int PageSize = 10;
+        var filtered = JobFilterHelper.FilterJobsByKey(key, jobs);
+        return filtered.Skip((page - 1) * PageSize).Take(PageSize).ToList();
+}
 
     private static async Task<HtmlDocument> FetchJobDocumentAsync(string requestUri) {
         var response = await _httpClient.GetAsync(requestUri);
