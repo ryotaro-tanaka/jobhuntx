@@ -12,7 +12,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example.com"),
                 Title = "React Developer",
                 Company = "TechCorp",
-                Location = new Location { Type = "Remote", City = null, Country = null },
+                Location = new Location { Type = LocationType.Remote, City = null, Country = null },
                 Language = "en",
                 Description = "We are looking for a skilled React developer.", // 10 words
                 Salary = new Salary
@@ -33,7 +33,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example2.com"),
                 Title = "Backend Engineer",
                 Company = "CodeBase Inc.",
-                Location = new Location { Type = "On-site", City = "Tokyo", Country = "Japan" },
+                Location = new Location { Type = LocationType.Onsite, City = "Tokyo", Country = "Japan" },
                 Language = "ja",
                 Description = string.Join(" ", Enumerable.Repeat("Join our backend team to build scalable APIs.", 20)), // 100 words
                 Salary = new Salary
@@ -54,7 +54,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example3.com"),
                 Title = "Full Stack Developer",
                 Company = "DevWorks",
-                Location = new Location { Type = "Remote", City = "San Francisco", Country = "USA" },
+                Location = new Location { Type = LocationType.Remote, City = "San Francisco", Country = "USA" },
                 Language = "en",
                 Description = string.Join(" ", Enumerable.Repeat("Looking for a full stack developer.", 10)), // 10 words
                 Salary = new Salary
@@ -75,7 +75,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example4.com"),
                 Title = "Data Scientist",
                 Company = "DataCorp",
-                Location = new Location { Type = "On-site", City = "New York", Country = "USA" },
+                Location = new Location { Type = LocationType.Onsite, City = "New York", Country = "USA" },
                 Language = "en",
                 Description = string.Join(" ", Enumerable.Repeat("We are hiring a data scientist to analyze datasets.", 20)), // 100 words
                 Salary = new Salary
@@ -96,7 +96,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example5.com"),
                 Title = "Mobile App Developer",
                 Company = "Appify",
-                Location = new Location { Type = "Remote", City = null, Country = null },
+                Location = new Location { Type = LocationType.Remote, City = null, Country = null },
                 Language = "en",
                 Description = "Develop cutting-edge mobile applications for iOS and Android.", // 10 words
                 Salary = new Salary
@@ -117,7 +117,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example6.com"),
                 Title = "DevOps Engineer",
                 Company = "CloudOps",
-                Location = new Location { Type = "On-site", City = "London", Country = "UK" },
+                Location = new Location { Type = LocationType.Onsite, City = "London", Country = "UK" },
                 Language = "en",
                 Description = string.Join(" ", Enumerable.Repeat("Implement and maintain CI/CD pipelines.", 20)), // 100 words
                 Salary = new Salary
@@ -138,7 +138,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example7.com"),
                 Title = "UI/UX Designer",
                 Company = "Designify",
-                Location = new Location { Type = "Remote", City = null, Country = null },
+                Location = new Location { Type = LocationType.Remote, City = null, Country = null },
                 Language = "en",
                 Description = "Create intuitive and visually appealing user interfaces.", // 10 words
                 Salary = new Salary
@@ -159,7 +159,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example8.com"),
                 Title = "Machine Learning Engineer",
                 Company = "AI Labs",
-                Location = new Location { Type = "On-site", City = "Berlin", Country = "Germany" },
+                Location = new Location { Type = LocationType.Onsite, City = "Berlin", Country = "Germany" },
                 Language = "en",
                 Description = string.Join(" ", Enumerable.Repeat("Develop and optimize machine learning models.", 20)), // 100 words
                 Salary = new Salary
@@ -180,7 +180,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example9.com"),
                 Title = "Cloud Architect",
                 Company = "Cloudify",
-                Location = new Location { Type = "Remote", City = null, Country = null },
+                Location = new Location { Type = LocationType.Remote, City = null, Country = null },
                 Language = "en",
                 Description = "Design scalable cloud infrastructure solutions.", // 10 words
                 Salary = new Salary
@@ -201,7 +201,7 @@ public static class SampleJobHandler {
                 Website = new Uri("https://example10.com"),
                 Title = "Cybersecurity Analyst",
                 Company = "SecureTech",
-                Location = new Location { Type = "On-site", City = "Sydney", Country = "Australia" },
+                Location = new Location { Type = LocationType.Onsite, City = "Sydney", Country = "Australia" },
                 Language = "en",
                 Description = string.Join(" ", Enumerable.Repeat("Monitor and protect systems from cyber threats.", 20)), // 100 words
                 Salary = new Salary

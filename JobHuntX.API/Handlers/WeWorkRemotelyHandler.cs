@@ -125,7 +125,6 @@ public static class WeWorkRemotelyHandler {
     private static async Task<Job> ConvertToJobAsync(HtmlNode node) {
         var titleNode = node.SelectSingleNode(".//h4[@class='new-listing__header__title']");
         var companyNode = node.SelectSingleNode(".//p[@class='new-listing__company-name']");
-        var companyStr = GetSafeInnerText(companyNode, "No Company");
         var href = node.GetAttributeValue("href", "");
         var fullUrl = href.StartsWith("http", StringComparison.OrdinalIgnoreCase)
             ? href
@@ -142,12 +141,12 @@ public static class WeWorkRemotelyHandler {
             Id = Guid.NewGuid(),
             Website = new Uri(BaseUrl),
             Title = GetSafeInnerText(titleNode, "No Title"),
-            Company = companyStr,
-            Location = new Location { Type = "Remote" },
+            Company = GetSafeInnerText(companyNode, "No Company"),
+            Location = new Location { Type = LocationType.Remote },
             Language = "en",
             Description = description,
             Salary = salary,
-            PosterName = companyStr,
+            PosterName = null,
             PostedDate = PostedDate,
             Url = new Uri(fullUrl),
             Tags = tags

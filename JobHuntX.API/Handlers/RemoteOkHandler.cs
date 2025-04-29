@@ -32,7 +32,7 @@ public static class RemoteOkHandler {
             Website = new Uri("https://remoteok.com"),
             Title = remoteOkJob.Position,
             Company = remoteOkJob.Company,
-            Location = new Location { Type = "Remote" },
+            Location = new Location { Type = LocationType.Remote },
             Language = string.Empty,
             Description = RemoveNonAscii(remoteOkJob.Description),
             Salary = (remoteOkJob.SalaryMax == 0 || remoteOkJob.SalaryMin == 0) ? null : new Salary {
@@ -41,7 +41,7 @@ public static class RemoteOkHandler {
                 Max = remoteOkJob.SalaryMax,
                 TimeUnit = SalaryTimeUnit.Year
             },
-            PosterName = string.Empty,
+            PosterName = null,
             PostedDate = DateTime.TryParse(remoteOkJob.Date, out var parsedDate) ? parsedDate : DateTime.UtcNow,
             Url = new Uri(remoteOkJob.ApplyUrl),
             Tags = remoteOkJob.Tags
