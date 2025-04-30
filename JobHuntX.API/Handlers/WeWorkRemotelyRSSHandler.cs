@@ -12,27 +12,19 @@ public static class WeWorkRemotelyRSSHandler
     private const string BaseUrl = "https://weworkremotely.com";
     private const string RssUrl = $"{BaseUrl}/remote-jobs.rss";
     private const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
-
-    // cache
-    private static List<Job>? _cachedJobs = null;
-    private static DateTime _cacheTime;
-    private static readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(5);
-    private static readonly SemaphoreSlim _cacheSemaphore = new(1, 1);
-
+    private const string cacheKey = nameof(WeWorkRemotelyRSSHandler);
     public static async Task<IResult> GetJobs([FromQuery] string? key)
     {
         return await ErrorHandler.WrapAsync(async () =>
         {
             var jobs = await CacheHelper.GetOrSetAsync(
+                cacheKey,
                 async () =>
                 {
                     var feed = await FetchFeedAsync();
                     return ParseFeedItems(feed);
                 },
-                _cacheSemaphore,
-                () => _cachedJobs,
-                (value) => { _cachedJobs = value; _cacheTime = DateTime.UtcNow; },
-                _cacheDuration
+                TimeSpan.FromMinutes(5)
             );
 
             jobs = JobFilterHelper.FilterJobsByKey(key, jobs);

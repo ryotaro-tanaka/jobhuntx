@@ -1,48 +1,44 @@
+using System.Collections.Concurrent;
 using System.Threading;
 
 namespace JobHuntX.API.Utilities;
 
 public static class CacheHelper
 {
+    private static readonly ConcurrentDictionary<string, (object? Data, DateTime CacheTime)> _cache = new();
+    private static readonly SemaphoreSlim _semaphore = new(1, 1);
+
     public static async Task<T> GetOrSetAsync<T>(
+        string cacheKey,
         Func<Task<T>> fetchData,
-        SemaphoreSlim semaphore,
-        Func<T?> getCachedData,
-        Action<T> setCacheData,
         TimeSpan cacheDuration)
     {
-        await semaphore.WaitAsync();
+        await _semaphore.WaitAsync();
         try
         {
-            var cachedData = getCachedData();
-            if (cachedData != null && (DateTime.UtcNow - GetCacheTime(setCacheData)) < cacheDuration)
+            if (_cache.TryGetValue(cacheKey, out var cachedEntry) &&
+                (DateTime.UtcNow - cachedEntry.CacheTime) < cacheDuration)
             {
-                return cachedData;
+                return (T)cachedEntry.Data!;
             }
         }
         finally
         {
-            semaphore.Release();
+            _semaphore.Release();
         }
 
         var data = await fetchData();
 
-        await semaphore.WaitAsync();
+        await _semaphore.WaitAsync();
         try
         {
-            setCacheData(data);
+            _cache[cacheKey] = (data, DateTime.UtcNow);
         }
         finally
         {
-            semaphore.Release();
+            _semaphore.Release();
         }
 
         return data;
-    }
-
-    private static DateTime GetCacheTime<T>(Action<T> setCacheData)
-    {
-        // This method should return the cache time. Adjust as needed for your implementation.
-        return DateTime.UtcNow; // Placeholder
     }
 }
