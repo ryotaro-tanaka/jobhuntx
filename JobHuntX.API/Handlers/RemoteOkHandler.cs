@@ -6,10 +6,30 @@ using JobHuntX.API.Utilities;
 
 namespace JobHuntX.API.Handlers;
 
-public static class RemoteOkHandler {
+public class RemoteOkHandler : HandlerBase {
+    protected override string CacheKey => nameof(RemoteOkHandler);
+    private const string BaseUrl = "https://remoteok.com";
+    private const string ApiUrl = $"{BaseUrl}/api";
+
+    protected override async Task<List<Job>> FetchJobsAsync() {
+        using var httpClient = new HttpClient();
+        using var response = await httpClient.GetAsync(ApiUrl);
+
+        response.EnsureSuccessStatusCode();
+        var jsonString = await response.Content.ReadAsStringAsync();// 絵文字も正しく認識されている
+        var json = JsonSerializer.Deserialize<List<RemoteOkJobDto>>(jsonString); // 絵文字が文字化けしている
+
+        if (json == null || json.Count == 0) {
+            return new List<Job>();
+        }
+
+        json.RemoveAt(0); // metadata
+        return json.Select(ConvertToJob).ToList();
+    }
+
     public static async Task<IResult> GetRemoteOkJobs([FromQuery] string? key) {
         using var httpClient = new HttpClient();
-        using var response = await httpClient.GetAsync("https://remoteok.com/api");
+        using var response = await httpClient.GetAsync(ApiUrl);
 
         response.EnsureSuccessStatusCode();
         var jsonString = await response.Content.ReadAsStringAsync();// 絵文字も正しく認識されている
@@ -29,7 +49,7 @@ public static class RemoteOkHandler {
     private static Job ConvertToJob(RemoteOkJobDto remoteOkJob) {
         return new Job {
             Id = Guid.NewGuid(),
-            Website = new Uri("https://remoteok.com"),
+            Website = new Uri(BaseUrl),
             Title = remoteOkJob.Position,
             Company = remoteOkJob.Company,
             Location = new Location { Type = LocationType.Remote },
