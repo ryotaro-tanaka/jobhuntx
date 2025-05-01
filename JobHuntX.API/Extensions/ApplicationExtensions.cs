@@ -17,7 +17,7 @@ namespace JobHuntX.API.Extensions {
                 .WithOpenApi();
 
             // app.MapGet("/api/jobs", RemoteOkHandler.GetRemoteOkJobs)
-            app.MapGet("/api/jobs", WeWorkRemotelyHandler.GetWeWorkRemotelyJobs)
+            app.MapGet("/api/jobs", SampleJobHandler.GetSampleJobs)
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();
 
@@ -29,13 +29,13 @@ namespace JobHuntX.API.Extensions {
                 .WithOpenApi();
 
             app.MapGet("/api/wework", async([FromQuery] string ? key) => {
-                var jobs = await WeWorkRemotelyHandler.GetWeWorkRemotelyJobs(key);
-                return Results.Ok(jobs);
+                var handler = new WeWorkRemotelyHandler();
+                return await handler.GetJobs(key);
             })
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();
 
-            app.MapGet("/api/weworkrss", async ([FromQuery] string? key) => {
+            app.MapGet("/api/weworkrss", async([FromQuery] string ? key) => {
                 var handler = new WeWorkRemotelyRSSHandler();
                 return await handler.GetJobs(key);
             })
