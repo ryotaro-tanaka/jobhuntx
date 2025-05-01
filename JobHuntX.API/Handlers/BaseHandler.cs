@@ -4,7 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JobHuntX.API.Handlers;
 
-public abstract class HandlerBase {
+public interface IJobHandler {
+    Task<IResult> GetJobs(string? key);
+}
+
+public abstract class HandlerBase : IJobHandler {
     protected virtual TimeSpan CacheDuration => TimeSpan.FromMinutes(10);
 
     /// <summary>Defines the cache key for each handler</summary>

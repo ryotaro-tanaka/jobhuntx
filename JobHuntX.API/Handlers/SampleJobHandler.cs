@@ -3,7 +3,7 @@ using JobHuntX.API.Models;
 namespace JobHuntX.API.Handlers;
 
 public static class SampleJobHandler {
-    public static IResult GetSampleJobs() {
+    public static IResult GetJobs() {
         var sampleJobs = new List<Job>
         {
             new Job
