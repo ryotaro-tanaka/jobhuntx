@@ -35,8 +35,9 @@ namespace JobHuntX.API.Extensions {
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();
 
-            app.MapGet("/api/weworkrss", async([FromQuery] string? key) => {
-                return await WeWorkRemotelyRSSHandler.GetJobs(key);
+            app.MapGet("/api/weworkrss", async ([FromQuery] string? key) => {
+                var handler = new WeWorkRemotelyRSSHandler();
+                return await handler.GetJobs(key);
             })
                 .Produces<List<Job>>(StatusCodes.Status200OK)
                 .WithOpenApi();

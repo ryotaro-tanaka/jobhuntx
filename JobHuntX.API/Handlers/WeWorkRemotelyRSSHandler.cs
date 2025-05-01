@@ -6,30 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JobHuntX.API.Handlers;
 
-public static class WeWorkRemotelyRSSHandler
+public class WeWorkRemotelyRSSHandler : HandlerBase
 {
     private static readonly HttpClient _httpClient = new HttpClient();
     private const string BaseUrl = "https://weworkremotely.com";
     private const string RssUrl = $"{BaseUrl}/remote-jobs.rss";
     private const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
-    private const string cacheKey = nameof(WeWorkRemotelyRSSHandler);
-    public static async Task<IResult> GetJobs([FromQuery] string? key)
-    {
-        return await ErrorHandler.WrapAsync(async () =>
-        {
-            var jobs = await CacheHelper.GetOrSetAsync(
-                cacheKey,
-                async () =>
-                {
-                    var feed = await FetchFeedAsync();
-                    return ParseFeedItems(feed);
-                },
-                TimeSpan.FromMinutes(5)
-            );
 
-            jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
-            return Results.Ok(jobs);
-        });
+    protected override string CacheKey => nameof(WeWorkRemotelyRSSHandler);
+
+    protected override async Task<List<Job>> FetchJobsAsync()
+    {
+        var feed = await FetchFeedAsync();
+        return ParseFeedItems(feed);
     }
 
     private static async Task<SyndicationFeed> FetchFeedAsync()
