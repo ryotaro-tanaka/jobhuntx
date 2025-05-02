@@ -2,7 +2,7 @@
 /note.md
 /.vscode
 /.env
-/output.json
+/*output*
 
 # ##
 # client-app specific ignores
@@ -95,3 +95,9 @@
 
 # Generated files
 /JobHuntX.API/*.generated.cs
+
+# ##
+# JobHuntX.Tests specific ignores
+# ##
+/JobHuntX.Tests/bin/
+/JobHuntX.Tests/obj/

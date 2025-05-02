@@ -1,0 +1,24 @@
+{
+    "roles": [
+      "developer", "engineer", "designer", "manager", "analyst", "architect",
+      "tester", "support", "qa", "lead", "intern", "junior", "senior", "staff"
+    ],
+    "skills": [
+      "python", "javascript", "typescript", "java", "c++", "c", "go", "ruby", "php",
+      "react", "vue", "angular", "node", "kubernetes", "docker", "aws", "gcp", "azure",
+      "terraform", "sql", "postgres", "mongodb", "firebase", "graphql", "rest", "linux",
+      "git", "ci/cd"
+    ],
+    "domains": [
+      "ai", "machine learning", "blockchain", "fintech", "ecommerce", "healthcare",
+      "gaming", "edtech", "iot", "saas", "cloud", "analytics"
+    ],
+    "employment": [
+      "full-time", "part-time", "contract", "freelance", "remote", "hybrid", "on-site",
+      "digital nomad", "internship"
+    ],
+    "locations": [
+      "us", "uk", "australia", "japan", "remote", "europe", "canada"
+    ]
+  }
+  

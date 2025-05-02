@@ -1,4 +1,5 @@
 import { Job } from '../../api/generated';
+import DOMPurify from 'dompurify';
 
 function JobDetail({ job }: { job: Job }) {
   if (!job) {
@@ -7,22 +8,41 @@ function JobDetail({ job }: { job: Job }) {
 
   console.log('Job Details:', JSON.stringify(job, null, 2)); // Log the Job object as JSON
 
+  const isHtml = (text: string) => /<\/?[a-z][\s\S]*>/i.test(text);
+
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold">{job.title}</h2>
       <p className="mt-2 text-gray-600">{job.company}</p>
-      <p className="mt-2 text-sm text-gray-500">
-        {job.location && (
+      {job.location && (
+        <p className="mt-2 text-sm text-gray-500">
           <span>
             {job.location.type ? `${job.location.type}` : ''}
             {job.location.city ? `, ${job.location.city}` : ''}
             {job.location.country ? `, ${job.location.country}` : ''}
           </span>
+        </p>
+      )}
+      {job.salary && (
+        <p className="mt-2 text-sm text-gray-500">
+          {job.salary.min != null && job.salary.max != null
+            ? `${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()} ${job.salary.currencyCode}`
+            : job.salary.min != null
+            ? `${job.salary.min.toLocaleString()} ${job.salary.currencyCode} or more`
+            : job.salary.max != null
+            ? `${job.salary.max.toLocaleString()} ${job.salary.currencyCode} or less`
+            : null}
+        </p>
+      )}
+      <div className="mt-4 text-gray-800">
+        {job.description && isHtml(job.description) ? (
+          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description) }} />
+        ) : (
+          <p>{job.description}</p>
         )}
-      </p>
-      <p className="mt-4">{job.description}</p>
+      </div>
       <p className="mt-4 text-sm text-gray-500">
-        Posted by: {job.posterName || 'Unknown'}
+        Posted by: {job.posterName || job.company || 'unknown'}
       </p>
       <p className="mt-1 text-sm text-gray-500">
         Posted on: {job.postedDate ? new Date(job.postedDate).toLocaleDateString() : 'N/A'}

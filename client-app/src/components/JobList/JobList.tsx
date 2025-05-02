@@ -3,7 +3,7 @@ import { Client, Job } from '../../api/generated';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
+function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; searchKey: string | null }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -11,7 +11,7 @@ function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
     const fetchJobs = async () => {
       try {
         const client = new Client(API_BASE_URL); // Initialize the NSwag client
-        const data = await client.jobs(); // Fetch jobs using the generated client
+        const data = await client.jobs(searchKey ?? undefined);
         setJobs(data);
       } catch (error) {
         console.error('Failed to fetch jobs:', error);
@@ -21,7 +21,7 @@ function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
     };
 
     fetchJobs();
-  }, []);
+  }, [searchKey]);
 
   if (loading) {
     return <p>Loading jobs...</p>;
@@ -30,27 +30,36 @@ function JobList({ onJobClick }: { onJobClick: (job: Job) => void }) {
   return (
     <div>
       <h2 className="text-xl font-semibold text-gray-800">Job Listings</h2>
-      <ul className="mt-4 space-y-4">
-        {jobs.map((job) => (
-          <li
-            key={job.id}
-            className="p-4 border border-gray-200 rounded-md shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-100"
-            onClick={() => onJobClick(job)} // Pass the selected job
-          >
-            <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
-            <p className="text-sm text-gray-600">{job.company}</p>
-            <p className="text-sm text-gray-500">
+      {jobs.length === 0 ? (
+        <p className="mt-4 text-gray-600">No jobs found. Please try a different search.</p>
+      ) : (
+        <ul className="mt-4 space-y-4">
+          {jobs.map((job) => (
+            <li
+              key={job.id}
+              className="p-4 border border-gray-200 rounded-md shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-100"
+              onClick={() => onJobClick(job)} // Pass the selected job
+            >
+              <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
+              <p className="text-sm text-gray-600">{job.company}</p>
               {job.location && (
-                <span>
-                  {job.location.type ? `${job.location.type}` : ''}
-                  {job.location.city ? `, ${job.location.city}` : ''}
-                  {job.location.country ? `, ${job.location.country}` : ''}
-                </span>
+                <p className="text-sm text-gray-500">
+                  <span>
+                    {job.location.type ? `${job.location.type}` : ''}
+                    {job.location.city ? `, ${job.location.city}` : ''}
+                    {job.location.country ? `, ${job.location.country}` : ''}
+                  </span>
+                </p>
               )}
-            </p>
-          </li>
-        ))}
-      </ul>
+              {job.salary && job.salary.min != null && job.salary.max != null && (
+                <p className="text-sm text-gray-500">
+                  {job.salary.min.toLocaleString()} - {job.salary.max.toLocaleString()} {job.salary.currencyCode}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
