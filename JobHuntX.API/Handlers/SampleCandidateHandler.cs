@@ -11,16 +11,16 @@ public static class SampleCandidateHandler {
                 Id = Guid.NewGuid(),
                 Name = "Ryotaro Tanaka",
                 Skills = new List<string> {
-                    "React", 
-                    "ASP.NET Core", 
-                    "Docker" 
+                    "React",
+                    "ASP.NET Core",
+                    "Docker"
                 },
                 ProfileUrl = new Uri("https://www.linkedin.com/in/ryotaro-tanaka/"),
                 Summary = "This app was developed by this person.",
-                Location = new Location { 
-                    Type = LocationType.Hybrid, 
-                    City = null, 
-                    Country = "Australia" 
+                Location = new Location {
+                    Type = LocationType.Hybrid,
+                    City = null,
+                    Country = "Australia"
                 },
                 AvailableFrom = DateTime.Now
             }

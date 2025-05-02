@@ -26,7 +26,7 @@ public static class ApplicationExtensions {
         app.MapGet("/api/sample", SampleJobHandler.GetJobs)
             .Produces<List<Job>>(StatusCodes.Status200OK)
             .WithOpenApi();
-        
+
         app.MapGet("/api/candidates", SampleCandidateHandler.GetCandidates)
             .Produces<List<Job>>(StatusCodes.Status200OK)
             .WithOpenApi();
