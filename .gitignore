@@ -95,3 +95,9 @@
 
 # Generated files
 /JobHuntX.API/*.generated.cs
+
+# ##
+# JobHuntX.Tests specific ignores
+# ##
+/JobHuntX.Tests/bin/
+/JobHuntX.Tests/obj/
