@@ -94,6 +94,7 @@ public class WeWorkRemotelyHandler : HandlerBase {
         var salary = ExtractJobSalary(doc);
         var PostedDate = ExtractJobPostedDate(doc);
         var tags = ExtractJobTags(doc);
+        tags.AddRange(TagGenerator.ExtractTags(description));
 
         return new Job {
             Id = Guid.NewGuid(),

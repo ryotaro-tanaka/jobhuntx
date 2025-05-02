@@ -8,7 +8,7 @@ namespace JobHuntX.API.Handlers;
 
 public class WeWorkRemotelyRSSHandler : HandlerBase {
     protected override string CacheKey => nameof(WeWorkRemotelyRSSHandler);
-    protected override TimeSpan CacheDuration => TimeSpan.FromMinutes(0);
+    protected override TimeSpan CacheDuration => TimeSpan.FromSeconds(60 * 5);
 
     private static readonly HttpClient _httpClient = new HttpClient();
     private const string BaseUrl = "https://weworkremotely.com";
@@ -39,6 +39,7 @@ public class WeWorkRemotelyRSSHandler : HandlerBase {
                 var titleParts = item.Title?.Text.Split(':', 2); // Split by ':' into at most 2 parts
                 var company = titleParts != null && titleParts.Length > 1 ? titleParts[0].Trim() : "Unknown";
                 var title = titleParts != null && titleParts.Length > 1 ? titleParts[1].Trim() : item.Title?.Text ?? string.Empty;
+                var description = item.Summary?.Text ?? string.Empty;
 
                 return new Job {
                     Id = Guid.NewGuid(),
@@ -47,13 +48,12 @@ public class WeWorkRemotelyRSSHandler : HandlerBase {
                     Company = company,
                     Location = new Location { Type = LocationType.Remote },
                     Language = "en",
-                    // Description = item.Summary?.Text ?? string.Empty,
-                    Description = string.Empty,
+                    Description = description,
                     Salary = null,
                     PosterName = null,
                     PostedDate = item.PublishDate.UtcDateTime,
                     Url = item.Links.FirstOrDefault()?.Uri!,
-                    Tags = new List<string>(),
+                    Tags = TagGenerator.ExtractTags(description)
                 };
             }).ToList();
     }

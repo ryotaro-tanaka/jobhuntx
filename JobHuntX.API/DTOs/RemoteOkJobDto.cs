@@ -25,7 +25,7 @@ public class RemoteOkJobDto {
     public string Position { get; set; } = string.Empty;
 
     [JsonPropertyName("tags")]
-    public List<string> Tags { get; set; } = new();
+    public List<string> Tags { get; set; } = new List<string>();
 
     [JsonPropertyName("description")]
     public string Description { get; set; } = string.Empty;

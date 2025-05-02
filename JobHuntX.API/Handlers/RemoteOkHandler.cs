@@ -47,6 +47,11 @@ public class RemoteOkHandler : HandlerBase {
     }
 
     private static Job ConvertToJob(RemoteOkJobDto remoteOkJob) {
+        var description = RemoveNonAscii(remoteOkJob.Description);
+
+        var tags = remoteOkJob.Tags;
+        tags.AddRange(TagGenerator.ExtractTags(description));
+
         return new Job {
             Id = Guid.NewGuid(),
             Website = new Uri(BaseUrl),
@@ -54,7 +59,7 @@ public class RemoteOkHandler : HandlerBase {
             Company = remoteOkJob.Company,
             Location = new Location { Type = LocationType.Remote },
             Language = string.Empty,
-            Description = RemoveNonAscii(remoteOkJob.Description),
+            Description = description,
             Salary = (remoteOkJob.SalaryMax == 0 || remoteOkJob.SalaryMin == 0) ? null : new Salary {
                 CurrencyCode = "USD",
                 Min = remoteOkJob.SalaryMin,
@@ -64,13 +69,11 @@ public class RemoteOkHandler : HandlerBase {
             PosterName = null,
             PostedDate = DateTime.TryParse(remoteOkJob.Date, out var parsedDate) ? parsedDate : DateTime.UtcNow,
             Url = new Uri(remoteOkJob.ApplyUrl),
-            Tags = remoteOkJob.Tags
+            Tags = tags,
         };
     }
 
     private static string RemoveNonAscii(string input) {
-        if (string.IsNullOrEmpty(input))
-            return input;
         return new string(input.Where(c => c <= 127).ToArray());
     }
 }
