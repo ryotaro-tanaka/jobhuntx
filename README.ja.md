@@ -48,5 +48,23 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 ![NSwag](https://img.shields.io/badge/NSwag-14.3.0-blue?logo=openapiinitiative)
 ![dotnet-format](https://img.shields.io/badge/dotnet--format-5.1.250801-blue?logo=dotnet)
 
+## dotnet-formatでのフォーマット
+
+`JobHuntX.API`プロジェクトは`dotnet-format`コマンドを使用してフォーマットを整形できます:
+
+```bash
+$ cd JobHuntX.API
+$ dotnet tool run dotnet-format
+```
+
+## NSwagでのAPI型生成
+
+モデルを変更した後、`nswag`を使用してフロントエンド側のAPI型を自動生成できます:
+
+```bash
+$ cd ./JobHuntX.API
+$ dotnet nswag run nswag.json
+```
+
 ## ライセンス
 このプロジェクトは [MIT ライセンス](./LICENSE) の下で提供されています。

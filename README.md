@@ -48,5 +48,23 @@ JobHuntX is a job information scraping application developed using ASP.NET Core 
 ![NSwag](https://img.shields.io/badge/NSwag-14.3.0-blue?logo=openapiinitiative)
 ![dotnet-format](https://img.shields.io/badge/dotnet--format-5.1.250801-blue?logo=dotnet)
 
+## Formatting with dotnet-format
+
+You can format the `JobHuntX.API` project using the `dotnet-format` command:
+
+```bash
+$ cd JobHuntX.API
+$ dotnet tool run dotnet-format
+```
+
+## Generating API Types with NSwag
+
+After modifying models, you can use `nswag` to automatically define API types for the frontend:
+
+```bash
+$ cd ./JobHuntX.API
+$ dotnet nswag run nswag.json
+```
+
 ## License
 This project is provided under the [MIT License](./LICENSE).
