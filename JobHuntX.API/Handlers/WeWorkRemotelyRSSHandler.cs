@@ -8,6 +8,7 @@ namespace JobHuntX.API.Handlers;
 
 public class WeWorkRemotelyRSSHandler : HandlerBase {
     protected override string CacheKey => nameof(WeWorkRemotelyRSSHandler);
+    protected override TimeSpan CacheDuration => TimeSpan.FromMinutes(0);
 
     private static readonly HttpClient _httpClient = new HttpClient();
     private const string BaseUrl = "https://weworkremotely.com";
@@ -46,7 +47,8 @@ public class WeWorkRemotelyRSSHandler : HandlerBase {
                     Company = company,
                     Location = new Location { Type = LocationType.Remote },
                     Language = "en",
-                    Description = item.Summary?.Text ?? string.Empty,
+                    // Description = item.Summary?.Text ?? string.Empty,
+                    Description = string.Empty,
                     Salary = null,
                     PosterName = null,
                     PostedDate = item.PublishDate.UtcDateTime,
