@@ -14,7 +14,7 @@ public static class JobFilterHelper {
             job.Company.ToLowerInvariant().Contains(lowerKey) ||
             (job.Location.Country?.ToLowerInvariant().Contains(lowerKey) ?? false) ||
             (job.Location.City?.ToLowerInvariant().Contains(lowerKey) ?? false) ||
-            job.PosterName.ToLowerInvariant().Contains(lowerKey) ||
+            (job.PosterName?.ToLowerInvariant().Contains(lowerKey) ?? false) ||
             job.Tags.Any(tag => tag.ToLowerInvariant().Contains(lowerKey))
         ).ToList();
     }
