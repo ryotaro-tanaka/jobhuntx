@@ -30,6 +30,9 @@ function App() {
         <div
           className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black bg-opacity-50"
           onClick={handleCloseDetail}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Job Detail Modal"
         >
           <div
             className="w-full md:w-3/4 h-3/4 bg-white rounded-lg shadow-lg overflow-hidden"
