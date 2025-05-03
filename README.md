@@ -1,5 +1,8 @@
 # JobHuntX
 
+<!-- ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/test.yml/badge.svg) -->
+
+
 ## Overview
 JobHuntX is a job information scraping application developed using ASP.NET Core and React. This project aims to collect information from multiple job sites and provide tools to efficiently manage and search job postings.
 
@@ -32,21 +35,24 @@ JobHuntX is a job information scraping application developed using ASP.NET Core 
 
 ### 🧱 Core Technologies
 
-![React](https://img.shields.io/badge/React-18.3.1-blue?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-blue?logo=typescript)
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-8.0-blue?logo=dotnet)
-![Docker](https://img.shields.io/badge/Docker-blue?logo=docker)
+![React](https://img.shields.io/badge/React--blue?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript--blue?logo=typescript&logoColor=white)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core--blue?logo=dotnet&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker--blue?logo=docker&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
 
 ### 🛠️ Tooling & Utilities
 
-![Vite](https://img.shields.io/badge/Vite-5.4.14-blue?logo=vite)
-![Vitest](https://img.shields.io/badge/Vitest-1.6.1-blue?logo=vitest)
-![Testing Library](https://img.shields.io/badge/Testing%20Library-14.3.1-blue?logo=testinglibrary)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4.17-blue?logo=tailwindcss)
-![ESLint](https://img.shields.io/badge/ESLint-8.57.1-blue?logo=eslint)
-![Prettier](https://img.shields.io/badge/Prettier-3.1.1-blue?logo=prettier)
-![NSwag](https://img.shields.io/badge/NSwag-14.3.0-blue?logo=openapiinitiative)
-![dotnet-format](https://img.shields.io/badge/dotnet--format-5.1.250801-blue?logo=dotnet)
+![Vite](https://img.shields.io/badge/Vite--blue?logo=vite&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest--blue?logo=vitest&logoColor=white)
+![Testing Library](https://img.shields.io/badge/Testing%20Library--blue?logo=testinglibrary&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS--blue?logo=tailwindcss&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint--blue?logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier--blue?logo=prettier&logoColor=white)
+![NSwag](https://img.shields.io/badge/NSwag--blue?logo=openapiinitiative&logoColor=white)
+![dotnet-format](https://img.shields.io/badge/dotnet%20format--blue?logo=dotnet&logoColor=white)
+![xUnit](https://img.shields.io/badge/xUnit--blue?logo=.net&logoColor=white)
+
 
 ## Formatting with dotnet-format
 
