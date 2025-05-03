@@ -35,7 +35,7 @@ jobs:
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Generate API client (NSwag)
-        run: dotnet nswag run nswag.json
+        run: nswag run nswag.json
         working-directory: ${{ github.workspace }}/JobHuntX.API
 
       - name: Run backend tests
