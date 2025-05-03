@@ -21,15 +21,19 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Clear NuGet cache
-        run: dotnet nuget locals all --clear
+      # - name: Clear NuGet cache
+      #   run: dotnet nuget locals all --clear
 
       - name: Restore .NET dependencies
         run: dotnet restore JobHuntX.API.sln
         working-directory: ${{ github.workspace }}
 
+      - name: Generate API client (NSwag)
+        run: dotnet nswag run nswag.json
+        working-directory: ${{ github.workspace }}/JobHuntX.API
+
       - name: Run backend tests
-        run: dotnet test JobHuntX.Tests/JobHuntX.Tests.csproj
+        run: dotnet test JobHuntX.Tests/JobHuntX.Tests.csproj --verbosity normal
         # run: dotnet test JobHuntX.Tests/JobHuntX.Tests.csproj --no-restore --verbosity normal
         working-directory: ${{ github.workspace }}
 
