@@ -1,0 +1,14 @@
+{
+  "runtime": "Net80",
+  "documentGenerator": {
+    "fromDocument": {
+      "input": "swagger.json"
+    }
+  },
+  "codeGenerators": {
+    "openApiToTypeScriptClient": {
+      "template": "Fetch",
+      "output": "../client-app/src/api/generated.ts"
+    }
+  }
+}
