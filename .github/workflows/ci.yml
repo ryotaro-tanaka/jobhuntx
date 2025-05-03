@@ -28,6 +28,12 @@ jobs:
         run: dotnet restore JobHuntX.API.sln
         working-directory: ${{ github.workspace }}
 
+      - name: Install NSwag CLI
+        run: dotnet tool install --global NSwag.ConsoleCore
+
+      - name: Add .dotnet/tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
       - name: Generate API client (NSwag)
         run: dotnet nswag run nswag.json
         working-directory: ${{ github.workspace }}/JobHuntX.API
