@@ -17,7 +17,10 @@ function FixedHeader({ onSearch }: { onSearch: (key: string | null) => void }) {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-10 flex items-center justify-between p-8 bg-white border-b border-gray-300 shadow-md">
+    <header
+      role="banner"
+      className="fixed top-0 left-0 right-0 z-10 flex items-center justify-between p-8 bg-white border-b border-gray-300 shadow-md"
+    >
       <img src={logoWide} alt="JobHuntX Logo" className="h-10 flex-shrink-0 mr-4" />
       <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-2 border border-gray-300 rounded-full p-2 focus-within:ring-2 focus-within:ring-indigo-500 bg-white overflow-hidden max-w-[600px] w-full px-4 md:px-6">
         <input
@@ -35,7 +38,7 @@ function FixedHeader({ onSearch }: { onSearch: (key: string | null) => void }) {
           <img src={searchIcon} alt="Search" className="w-8 h-8" />
         </button>
       </div>
-    </div>
+    </header>
   )
 }
 

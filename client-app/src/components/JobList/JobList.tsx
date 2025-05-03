@@ -28,12 +28,16 @@ function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; se
   }
 
   return (
-    <div>
+    <div role="main">
       <h2 className="text-xl font-semibold text-gray-800">Job Listings</h2>
       {jobs.length === 0 ? (
         <p className="mt-4 text-gray-600">No jobs found. Please try a different search.</p>
       ) : (
-        <ul className="mt-4 space-y-4">
+        <ul
+          className="mt-4 space-y-4"
+          role="list"
+          aria-label="Job Listings"
+        >
           {jobs.map((job) => (
             <li
               key={job.id}

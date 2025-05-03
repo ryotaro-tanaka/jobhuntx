@@ -1,32 +1,17 @@
 import { render, screen } from '@testing-library/react'
-
 import App from './App'
 
+// UI test (component test)
 describe('<App />', () => {
-  it('should render the App', () => {
-    const { container } = render(<App />)
+  it('display sub components', async () => {
+    render(<App />)
 
-    expect(
-      screen.getByRole('heading', {
-        name: /Welcome!/i,
-        level: 1
-      })
-    ).toBeInTheDocument()
-
-    expect(
-      screen.getByText(
-        /This is a boilerplate build with Vite, React 18, TypeScript, Vitest, Testing Library, TailwindCSS 3, Eslint and Prettier./i
-      )
-    ).toBeInTheDocument()
-
-    expect(
-      screen.getByRole('link', {
-        name: /start building for free/i
-      })
-    ).toBeInTheDocument()
-
-    expect(screen.getByRole('img')).toBeInTheDocument()
-
-    expect(container.firstChild).toBeInTheDocument()
+    expect(screen.getByRole('banner')).toBeInTheDocument()
+    expect(await screen.findByRole('main')).toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 })
+
+// Unit test
+// Mock
+// snapshot test
