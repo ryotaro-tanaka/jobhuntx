@@ -23,9 +23,11 @@ jobs:
 
       - name: Restore .NET dependencies
         run: dotnet restore
+        working-directory: ${{ github.workspace }}
 
       - name: Run backend tests
         run: dotnet test JobHuntX.Tests/JobHuntX.Tests.csproj --no-restore --verbosity normal
+        working-directory: ${{ github.workspace }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
