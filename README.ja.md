@@ -38,7 +38,6 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 ![TypeScript](https://img.shields.io/badge/TypeScript--blue?logo=typescript&logoColor=white)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core--blue?logo=dotnet&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker--blue?logo=docker&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
 
 ### 🛠️ ツール & ユーティリティ
 
@@ -51,6 +50,7 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 ![NSwag](https://img.shields.io/badge/NSwag--blue?logo=openapiinitiative&logoColor=white)
 ![dotnet-format](https://img.shields.io/badge/dotnet%20format--blue?logo=dotnet&logoColor=white)
 ![xUnit](https://img.shields.io/badge/xUnit--blue?logo=.net&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
 
 ## dotnet-formatでのフォーマット
 
