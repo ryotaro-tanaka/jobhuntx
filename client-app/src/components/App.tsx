@@ -21,7 +21,7 @@ function App() {
   };
 
   return (
-    <div className="relative overflow-hidden bg-white">
+    <div className="relative overflow-hidden bg-white font-sans">
       <FixedHeader onSearch={handleSearch} />
       <JobList onJobClick={handleJobClick} searchKey={searchKey} />
       {selectedJob && (

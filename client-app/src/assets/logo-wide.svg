@@ -5,7 +5,7 @@
   <circle cx="90" cy="50" r="5" fill="#4f46e5" />
 
   <!-- テキスト部分 -->
-  <text x="120" y="54" font-family="Nunito Sans, sans-serif" fill="#4f46e5" letter-spacing="-1" dominant-baseline="middle">
+  <text x="120" y="54" font-family="Inter, sans-serif" fill="#4f46e5" letter-spacing="-1" dominant-baseline="middle">
     <tspan font-size="36" font-weight="900">Job</tspan>
     <tspan font-size="36" font-weight="900" dx="0">Hunt</tspan>
     <tspan font-size="46" font-weight="900" dx="0">X</tspan>
