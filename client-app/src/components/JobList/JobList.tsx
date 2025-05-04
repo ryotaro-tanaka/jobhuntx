@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Client, Job } from '../../api/generated';
+import spinner from '../../assets/spinner.svg';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -10,6 +11,7 @@ function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; se
   useEffect(() => {
     const fetchJobs = async () => {
       try {
+        await new Promise(res => setTimeout(res, 10000)); // ここで10秒待つ
         const client = new Client(API_BASE_URL); // Initialize the NSwag client
         const data = await client.jobs(searchKey ?? undefined);
         setJobs(data);
@@ -24,11 +26,16 @@ function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; se
   }, [searchKey]);
 
   if (loading) {
-    return <p>Loading jobs...</p>;
+    return (
+      <div className="pt-32 p-4 flex items-center justify-center py-8">
+        <img src={spinner} alt="Loading..." className="w-10 h-10 mr-2 animate-spin" />
+        Loading jobs...
+      </div>
+    );
   }
 
   return (
-    <div role="main">
+    <div role="main" className="pt-32 p-4">
       <h2 className="text-xl font-semibold text-gray-800">Job Listings</h2>
       {jobs.length === 0 ? (
         <p className="mt-4 text-gray-600">No jobs found. Please try a different search.</p>

@@ -23,9 +23,7 @@ function App() {
   return (
     <div className="relative overflow-hidden bg-white">
       <FixedHeader onSearch={handleSearch} />
-      <div className="pt-32 p-4">
-        <JobList onJobClick={handleJobClick} searchKey={searchKey} />
-      </div>
+      <JobList onJobClick={handleJobClick} searchKey={searchKey} />
       {selectedJob && (
         <JobDetailModal job={selectedJob} onClose={handleCloseDetail} />
       )}
