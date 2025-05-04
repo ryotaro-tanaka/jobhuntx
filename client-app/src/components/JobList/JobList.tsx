@@ -3,7 +3,7 @@ import { Client, Job } from '../../api/generated';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; searchKey: string | null }) {
+function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: Job) => void; searchKey: string | null, headerIsLarge: boolean }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [suggestedJobs, setSuggestedJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,10 @@ function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; se
   }, [searchKey]);
 
   return (
-    <div role="main" className="pt-28 p-4">
+    <div
+      role="main"
+      className={`transition-all duration-300 ${headerIsLarge ? 'pt-32' : 'pt-16'} p-4`}
+    >
       <ul
         className="mt-4 space-y-4"
         role="list"
