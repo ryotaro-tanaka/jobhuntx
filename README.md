@@ -1,6 +1,6 @@
 # JobHuntX
 
-<!-- ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/test.yml/badge.svg) -->
+![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
 
 ## Overview
@@ -69,8 +69,19 @@ After modifying models, you can use `nswag` to automatically define API types fo
 
 ```bash
 $ cd ./JobHuntX.API
-$ dotnet nswag run nswag.json
+$ dotnet nswag run nswag.local.json
 ```
+
+## Before Creating a Pull Request
+
+Before creating a pull request, **be sure to update the local `swagger.json`** for CI tests to pass:
+
+```bash
+$ docker-compose up -d
+$ dotnet run --project JobHuntX.API & curl http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json
+```
+
+This ensures that the frontend API types can be generated from the latest API specification and that CI tests will not fail due to missing or outdated `swagger.json`.
 
 ## License
 This project is provided under the [MIT License](./LICENSE).

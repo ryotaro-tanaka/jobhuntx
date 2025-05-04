@@ -1,5 +1,7 @@
 # JobHuntX
 
+![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
+
 ## 概要
 JobHuntX は、ASP.NET Core と React を使用して開発された求人情報スクレイピングアプリケーションです。このプロジェクトは、複数の求人サイトから情報を収集し、求人情報を効率的に管理・検索するためのツールを提供します。
 
@@ -32,25 +34,27 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 
 ### 🧱 コア技術
 
-![React](https://img.shields.io/badge/React-18.3.1-blue?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-blue?logo=typescript)
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-8.0-blue?logo=dotnet)
-![Docker](https://img.shields.io/badge/Docker-blue?logo=docker)
+![React](https://img.shields.io/badge/React--blue?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript--blue?logo=typescript&logoColor=white)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core--blue?logo=dotnet&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker--blue?logo=docker&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
 
 ### 🛠️ ツール & ユーティリティ
 
-![Vite](https://img.shields.io/badge/Vite-5.4.14-blue?logo=vite)
-![Vitest](https://img.shields.io/badge/Vitest-1.6.1-blue?logo=vitest)
-![Testing Library](https://img.shields.io/badge/Testing%20Library-14.3.1-blue?logo=testinglibrary)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4.17-blue?logo=tailwindcss)
-![ESLint](https://img.shields.io/badge/ESLint-8.57.1-blue?logo=eslint)
-![Prettier](https://img.shields.io/badge/Prettier-3.1.1-blue?logo=prettier)
-![NSwag](https://img.shields.io/badge/NSwag-14.3.0-blue?logo=openapiinitiative)
-![dotnet-format](https://img.shields.io/badge/dotnet--format-5.1.250801-blue?logo=dotnet)
+![Vite](https://img.shields.io/badge/Vite--blue?logo=vite&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest--blue?logo=vitest&logoColor=white)
+![Testing Library](https://img.shields.io/badge/Testing%20Library--blue?logo=testinglibrary&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS--blue?logo=tailwindcss&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint--blue?logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier--blue?logo=prettier&logoColor=white)
+![NSwag](https://img.shields.io/badge/NSwag--blue?logo=openapiinitiative&logoColor=white)
+![dotnet-format](https://img.shields.io/badge/dotnet%20format--blue?logo=dotnet&logoColor=white)
+![xUnit](https://img.shields.io/badge/xUnit--blue?logo=.net&logoColor=white)
 
 ## dotnet-formatでのフォーマット
 
-`JobHuntX.API`プロジェクトは`dotnet-format`コマンドを使用してフォーマットを整形できます:
+`JobHuntX.API` プロジェクトは `dotnet-format` コマンドを使用してフォーマットを整形できます:
 
 ```bash
 $ cd JobHuntX.API
@@ -59,12 +63,23 @@ $ dotnet tool run dotnet-format
 
 ## NSwagでのAPI型生成
 
-モデルを変更した後、`nswag`を使用してフロントエンド側のAPI型を自動生成できます:
+モデルを変更した後、`nswag` を使用してフロントエンド側のAPI型を自動生成できます:
 
 ```bash
 $ cd ./JobHuntX.API
-$ dotnet nswag run nswag.json
+$ dotnet nswag run nswag.local.json
 ```
+
+## プルリクエスト作成前の注意
+
+プルリクエストを作成する前に、**CIテストが通るよう必ずローカルの `swagger.json` を最新化してください**:
+
+```bash
+$ docker-compose up -d
+$ dotnet run --project JobHuntX.API & curl http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json
+```
+
+これにより、フロントエンドのAPI型が最新のAPI仕様から生成され、CIテストが `swagger.json` の不足や古さで失敗しなくなります。
 
 ## ライセンス
 このプロジェクトは [MIT ライセンス](./LICENSE) の下で提供されています。
