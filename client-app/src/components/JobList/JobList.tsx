@@ -5,15 +5,24 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; searchKey: string | null }) {
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [suggestedJobs, setSuggestedJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchJobs = async () => {
-      setLoading(true); // ここで毎回ローディング状態にする
+      setLoading(true);
       try {
         const client = new Client(API_BASE_URL); // Initialize the NSwag client
         const data = await client.jobs(searchKey ?? undefined);
         setJobs(data);
+
+        // 検索結果が0件ならサジェスト用に全件取得
+        if ((searchKey && data.length === 0)) {
+          const allJobs = await client.jobs(undefined);
+          setSuggestedJobs(allJobs);
+        } else {
+          setSuggestedJobs([]);
+        }
       } catch (error) {
         console.error('Failed to fetch jobs:', error);
       } finally {
@@ -31,16 +40,20 @@ function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; se
         role="list"
         aria-label="Job Listings"
       >
-        {loading
-          ? <LoadingSkeletonList />
-          : jobs.length === 0 ? (
-              <EmptyJobList />
-            ) : (
-              jobs.map((job) => (
-                <JobListItem key={job.id} job={job} onClick={onJobClick} />
-              ))
-            )
-        }
+        {loading ? (
+          <LoadingSkeletonList />
+        ) : jobs.length === 0 ? (
+          <>
+            <EmptyJobList />
+            {suggestedJobs.map((job) => (
+              <JobListItem key={job.id} job={job} onClick={onJobClick} />
+            ))}
+          </>
+        ) : (
+          jobs.map((job) => (
+            <JobListItem key={job.id} job={job} onClick={onJobClick} />
+          ))
+        )}
       </ul>
     </div>
   );
