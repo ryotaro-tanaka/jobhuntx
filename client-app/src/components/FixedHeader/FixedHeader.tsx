@@ -24,7 +24,11 @@ function FixedHeader({ onSearch, isLarge, setIsLarge }: { onSearch: (key: string
         bg-white border-b border-gray-300 shadow-md`}
     >
       <img src={logoWide} alt="JobHuntX Logo" className="h-10 flex-shrink-0 mr-4" />
-      <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-2 border border-gray-300 rounded-full p-2 focus-within:ring-2 focus-within:ring-indigo-500 bg-white overflow-hidden max-w-[600px] w-full px-4 md:px-6">
+      <form
+        role="search"
+        className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-2 border border-gray-300 rounded-full p-2 focus-within:ring-2 focus-within:ring-indigo-500 bg-white overflow-hidden max-w-[600px] w-full px-4 md:px-6 m-0"
+        onSubmit={e => { e.preventDefault(); handleSearch(); }}
+      >
         <input
           type="text"
           placeholder="Search for jobs..."
@@ -36,12 +40,12 @@ function FixedHeader({ onSearch, isLarge, setIsLarge }: { onSearch: (key: string
           onBlur={() => setIsLarge(window.scrollY < 10)}
         />
         <button
+          type="submit"
           className="flex items-center justify-center w-16 h-12 rounded-full bg-indigo-600 hover:bg-indigo-700 focus:outline-none"
-          onClick={handleSearch}
         >
           <img src={searchIcon} alt="Search" className="w-8 h-8" />
         </button>
-      </div>
+      </form>
     </header>
   )
 }
