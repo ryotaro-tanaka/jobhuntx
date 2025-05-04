@@ -9,6 +9,7 @@ function JobList({ onJobClick, searchKey }: { onJobClick: (job: Job) => void; se
 
   useEffect(() => {
     const fetchJobs = async () => {
+      setLoading(true); // ここで毎回ローディング状態にする
       try {
         const client = new Client(API_BASE_URL); // Initialize the NSwag client
         const data = await client.jobs(searchKey ?? undefined);
