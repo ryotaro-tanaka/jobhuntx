@@ -37,7 +37,7 @@ function FixedHeader({ onSearch, isLarge, setIsLarge }: { onSearch: (key: string
         onSubmit={e => { e.preventDefault(); handleSearch(); }}
       >
         <input
-          type="text"
+          type="search"
           placeholder="Keyword"
           className="w-full px-6 py-3 text-lg focus:outline-none"
           value={searchKeyStr}
