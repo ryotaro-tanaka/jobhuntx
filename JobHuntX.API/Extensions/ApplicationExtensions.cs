@@ -31,7 +31,7 @@ public static class ApplicationExtensions {
             .Produces<List<Job>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
-        app.MapGet("/api/keywords", KeywordTagsHandler.GetKeywordTags)
+        app.MapGet("/api/keywords", () => KeywordTagsHandler.GetKeywordTags())
             .Produces<KeywordTags>(StatusCodes.Status200OK)
             .WithOpenApi();
 
