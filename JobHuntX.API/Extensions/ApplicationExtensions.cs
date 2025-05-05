@@ -31,6 +31,10 @@ public static class ApplicationExtensions {
             .Produces<List<Job>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
+        app.MapGet("/api/keywords", KeywordTagsHandler.GetKeywordTags)
+            .Produces<KeywordTags>(StatusCodes.Status200OK)
+            .WithOpenApi();
+
         app.MapGet("/", () => "Welcome to JobHuntX.API!")
             .Produces<string>(StatusCodes.Status200OK)
             .WithOpenApi();
