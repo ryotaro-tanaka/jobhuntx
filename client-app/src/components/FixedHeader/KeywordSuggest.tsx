@@ -47,7 +47,6 @@ export default function KeywordSuggest({isLarge, value, onChange, onSelect, onBl
       setShowSuggestions(false);
       setHighlightedIndex(-1);
     }
-  // }, [value, keywords, isLarge]);
   }, [value]);
 
   useEffect(() => {

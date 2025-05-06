@@ -7,13 +7,11 @@ function FixedHeader({ onSearch, isLarge, setIsLarge }: { onSearch: (key: string
   const [searchKeyStr, setSearchKeyStr] = useState<string>('');
   const formRef = useRef<HTMLFormElement>(null);
 
-  // サジェストクリック時
   const handleSuggestionSelect = (suggestion: string) => {
     setSearchKeyStr(suggestion);
     onSearch(suggestion);
   };
 
-  // フォーカス外れたらサジェスト非表示
   const handleBlur = () => {
     setTimeout(() => setIsLarge(window.scrollY < 10), 100);
   };
