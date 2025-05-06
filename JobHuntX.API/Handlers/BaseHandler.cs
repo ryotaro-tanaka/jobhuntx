@@ -25,4 +25,9 @@ public abstract class HandlerBase : IJobHandler {
             return Results.Ok(jobs);
         });
     }
+    
+    public async Task<List<Job>> GetJobsAsync(string? key) {
+        var jobs = await CacheHelper.GetOrSetAsync(CacheKey, FetchJobsAsync, CacheDuration);
+        return JobFilterHelper.FilterJobsByKey(key, jobs);
+    }
 }

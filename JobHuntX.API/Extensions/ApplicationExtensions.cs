@@ -12,8 +12,8 @@ public static class ApplicationExtensions {
     }
 
     public static void MapEndpoints(this WebApplication app) {
-        app.MapGet("/api/jobs", async([FromQuery] string ? key) => {
-            var handler = new RemoteOkHandler();
+        app.MapGet("/api/jobs", async ([FromQuery] string? key) => {
+            var handler = new AggregateJobHandler();
             return await handler.GetJobs(key);
         })
             .Produces<List<Job>>(StatusCodes.Status200OK)
@@ -31,7 +31,10 @@ public static class ApplicationExtensions {
             .Produces<List<Job>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
-        app.MapGet("/api/keywords", () => KeywordTagsHandler.GetKeywordTags())
+        app.MapGet("/api/keywords", async (HttpContext context) => {
+            context.Response.Headers.CacheControl = "public, max-age=86400"; // 1 day
+            return await KeywordTagsHandler.GetKeywordTags();
+        })
             .Produces<KeywordTags>(StatusCodes.Status200OK)
             .WithOpenApi();
 
