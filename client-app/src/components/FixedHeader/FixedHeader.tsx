@@ -1,10 +1,22 @@
-import { useState } from 'react';
-import logo from 'assets/logo.svg'
+import { useState, useRef } from 'react';
 import logoWide from 'assets/logo-wide.svg'
 import searchIcon from 'assets/search.svg'
+import KeywordSuggest from './KeywordSuggest';
 
 function FixedHeader({ onSearch, isLarge, setIsLarge }: { onSearch: (key: string | null) => void, isLarge: boolean, setIsLarge: (isLarge: boolean) => void }) {
   const [searchKeyStr, setSearchKeyStr] = useState<string>('');
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // サジェストクリック時
+  const handleSuggestionSelect = (suggestion: string) => {
+    setSearchKeyStr(suggestion);
+    onSearch(suggestion);
+  };
+
+  // フォーカス外れたらサジェスト非表示
+  const handleBlur = () => {
+    setTimeout(() => setIsLarge(window.scrollY < 10), 100);
+  };
 
   const handleSearch = () => {
     onSearch(searchKeyStr.trim() === '' ? null : searchKeyStr);
@@ -25,9 +37,10 @@ function FixedHeader({ onSearch, isLarge, setIsLarge }: { onSearch: (key: string
     >
       <img src={logoWide} alt="JobHuntX Logo" className="h-10 flex-shrink-0 mr-4" />
       <form
+        ref={formRef}
         role="search"
         className={
-          `absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-2 border border-gray-300 rounded-full bg-white overflow-hidden m-0
+          `absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-2 border border-gray-300 rounded-full bg-white overflow-visible m-0
           transition-all duration-300
           ${isLarge
             ? 'max-w-[600px] w-full px-4 md:px-6 p-2 h-16'
@@ -35,16 +48,16 @@ function FixedHeader({ onSearch, isLarge, setIsLarge }: { onSearch: (key: string
           `
         }
         onSubmit={e => { e.preventDefault(); handleSearch(); }}
+        autoComplete="off"
       >
-        <input
-          type="search"
-          placeholder="Keyword"
-          className="w-full px-6 py-3 text-lg focus:outline-none no-search-cancel"
+        <KeywordSuggest
+          isLarge={isLarge}
           value={searchKeyStr}
-          onChange={(e) => setSearchKeyStr(e.target.value)}
-          onKeyDown={handleKeyDown}
+          onChange={setSearchKeyStr}
+          onSelect={handleSuggestionSelect}
+          onBlur={handleBlur}
           onFocus={() => setIsLarge(true)}
-          onBlur={() => setIsLarge(window.scrollY < 10)}
+          formRef={formRef}
         />
         <button
           type="submit"
