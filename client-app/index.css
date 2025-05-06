@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .no-search-cancel {
+    &::-webkit-search-cancel-button {
+      appearance: none;
+      -webkit-appearance: none;
+      display: none;
+    }
+  }
+}

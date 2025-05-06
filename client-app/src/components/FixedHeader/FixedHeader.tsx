@@ -39,7 +39,7 @@ function FixedHeader({ onSearch, isLarge, setIsLarge }: { onSearch: (key: string
         <input
           type="search"
           placeholder="Keyword"
-          className="w-full px-6 py-3 text-lg focus:outline-none"
+          className="w-full px-6 py-3 text-lg focus:outline-none no-search-cancel"
           value={searchKeyStr}
           onChange={(e) => setSearchKeyStr(e.target.value)}
           onKeyDown={handleKeyDown}
