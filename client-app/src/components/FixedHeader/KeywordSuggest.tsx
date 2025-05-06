@@ -13,15 +13,7 @@ type Props = {
   formRef: React.RefObject<HTMLFormElement>;
 };
 
-export default function KeywordSuggest({
-  isLarge,
-  value,
-  onChange,
-  onSelect,
-  onBlur,
-  onFocus,
-  formRef,
-}: Props) {
+export default function KeywordSuggest({isLarge, value, onChange, onSelect, onBlur, onFocus, formRef}: Props) {
   const [keywords, setKeywords] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -55,7 +47,13 @@ export default function KeywordSuggest({
       setShowSuggestions(false);
       setHighlightedIndex(-1);
     }
-  }, [value, keywords, isLarge]);
+  // }, [value, keywords, isLarge]);
+  }, [value]);
+
+  useEffect(() => {
+    setShowSuggestions(false);
+    setHighlightedIndex(-1);
+  }, [isLarge]);
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showSuggestions || suggestions.length === 0) return;
@@ -98,7 +96,10 @@ export default function KeywordSuggest({
         value={value}
         onChange={e => onChange(e.target.value)}
         onFocus={onFocus}
-        onBlur={onBlur}
+        onBlur={e => {
+          onBlur(e);
+          setShowSuggestions(false);
+        }}
         onKeyDown={handleInputKeyDown}
         aria-activedescendant={
           highlightedIndex >= 0 ? `suggestion-${highlightedIndex}` : undefined
