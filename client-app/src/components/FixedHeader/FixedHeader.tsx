@@ -20,12 +20,6 @@ function FixedHeader({ onSearch, isLarge, setIsLarge }: { onSearch: (key: string
     onSearch(searchKeyStr.trim() === '' ? null : searchKeyStr);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
   return (
     <header
       role="banner"

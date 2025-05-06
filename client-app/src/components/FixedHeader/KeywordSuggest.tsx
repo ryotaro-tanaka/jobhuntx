@@ -106,7 +106,7 @@ export default function KeywordSuggest({isLarge, value, onChange, onSelect, onBl
         aria-autocomplete="list"
         aria-controls="suggestion-list"
       />
-      {isLarge && showSuggestions && (
+      {showSuggestions && (
         <ul
           className="absolute left-0 -translate-x-2 top-full mt-2 w-full bg-white rounded-[32px] shadow-lg border border-gray-200 z-20 list-none m-0 p-4"
           style={{ minWidth: formRef.current?.offsetWidth || undefined }}
