@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Client, Job } from '../../api/generated';
+import { createApiClient } from '../../api/clientFactory';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// const API_KEY = import.meta.env.VITE_API_KEY;
 
 function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: Job) => void; searchKey: string | null, headerIsLarge: boolean }) {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -12,7 +14,7 @@ function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: J
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        const client = new Client(API_BASE_URL); // Initialize the NSwag client
+        const client = createApiClient();
         const data = await client.jobs(searchKey ?? undefined);
         setJobs(data);
 

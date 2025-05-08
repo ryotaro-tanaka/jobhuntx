@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Client, KeywordTags } from 'api/generated';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { createApiClient } from '../../api/clientFactory';
 
 type Props = {
   isLarge: boolean;
@@ -20,7 +19,7 @@ export default function KeywordSuggest({isLarge, value, onChange, onSelect, onBl
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
 
   useEffect(() => {
-    const client = new Client(API_BASE_URL);
+    const client = createApiClient();
     client.keywords().then((tags: KeywordTags) => {
       const all = [
         ...(tags.roles ?? []),

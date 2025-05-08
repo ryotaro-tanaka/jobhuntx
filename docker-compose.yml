@@ -8,7 +8,7 @@ services:
       - ./client-app:/app
     ports:
       - "5173:5173" # Vite
-    environment:
+    environment: # .env は vite によって自動で読み込まれる
       - CHOKIDAR_USEPOLLING=true  # hot reload = true on WSL
     command: ["pnpm", "run", "dev"]
 
