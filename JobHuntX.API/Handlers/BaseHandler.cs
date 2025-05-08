@@ -25,7 +25,7 @@ public abstract class HandlerBase : IJobHandler {
             return Results.Ok(jobs);
         });
     }
-    
+
     /// <summary>
     /// Fetches and filters the job list for internal use or aggregation.
     /// Unlike GetJobs, this method returns a raw List<Job>; without HTTP response wrapping or error handling.

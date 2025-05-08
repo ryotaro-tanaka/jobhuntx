@@ -4,12 +4,10 @@ using JobHuntX.API.Utilities;
 
 namespace JobHuntX.API.Handlers;
 
-public class AggregateJobHandler
-{
+public class AggregateJobHandler {
     private readonly List<IJobHandler> _handlers;
 
-    public AggregateJobHandler()
-    {
+    public AggregateJobHandler() {
         _handlers = new List<IJobHandler>
         {
             new RemoteOkHandler(),
@@ -17,15 +15,11 @@ public class AggregateJobHandler
         };
     }
 
-    public async Task<IResult> GetJobs([FromQuery] string? key)
-    {
-        return await ErrorHandler.WrapAsync(async () =>
-        {
+    public async Task<IResult> GetJobs([FromQuery] string? key) {
+        return await ErrorHandler.WrapAsync(async () => {
             var allJobs = new List<Job>();
-            foreach (var handler in _handlers)
-            {
-                if (handler is HandlerBase baseHandler)
-                {
+            foreach (var handler in _handlers) {
+                if (handler is HandlerBase baseHandler) {
                     var jobs = await baseHandler.GetJobsAsync(key);
                     allJobs.AddRange(jobs);
                 }

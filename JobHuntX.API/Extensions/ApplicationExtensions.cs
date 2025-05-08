@@ -12,7 +12,7 @@ public static class ApplicationExtensions {
     }
 
     public static void MapEndpoints(this WebApplication app) {
-        app.MapGet("/api/jobs", async ([FromQuery] string? key) => {
+        app.MapGet("/api/jobs", async([FromQuery] string ? key) => {
             var handler = new AggregateJobHandler();
             return await handler.GetJobs(key);
         })
