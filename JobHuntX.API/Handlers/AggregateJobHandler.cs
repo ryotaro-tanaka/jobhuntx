@@ -10,12 +10,10 @@ public class AggregateJobHandler
 
     public AggregateJobHandler()
     {
-        // 必要なHandlerをここに追加
         _handlers = new List<IJobHandler>
         {
             new RemoteOkHandler(),
             new WeWorkRemotelyRSSHandler(),
-            // 今後増やす場合はここに追加
         };
     }
 

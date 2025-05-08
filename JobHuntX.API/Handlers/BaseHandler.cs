@@ -26,6 +26,10 @@ public abstract class HandlerBase : IJobHandler {
         });
     }
     
+    /// <summary>
+    /// Fetches and filters the job list for internal use or aggregation.
+    /// Unlike GetJobs, this method returns a raw List<Job>; without HTTP response wrapping or error handling.
+    /// </summary>
     public async Task<List<Job>> GetJobsAsync(string? key) {
         var jobs = await CacheHelper.GetOrSetAsync(CacheKey, FetchJobsAsync, CacheDuration);
         return JobFilterHelper.FilterJobsByKey(key, jobs);

@@ -96,6 +96,9 @@
 # Generated files
 /JobHuntX.API/*.generated.cs
 
+# local env files
+/JobHuntX.API/**/.env
+
 # ##
 # JobHuntX.Tests specific ignores
 # ##
