@@ -23,7 +23,7 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 1. API クライアントを生成します:
     ```bash
     cd JobHuntX/JobHuntX.API
-    dotnet nswag run nswag.json
+    dotnet nswag run nswag.local.json
     ```
 1. Docker Compose を使用してアプリケーションを起動します:
     ```bash

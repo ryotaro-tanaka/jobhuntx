@@ -16,12 +16,12 @@ function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: J
       try {
         const client = createApiClient();
         const data = await client.jobs(searchKey ?? undefined);
-        setJobs(data);
-
+        console.log('Fetched jobs:', data);
+        setJobs(data.jobs ?? []);
         // 検索結果が0件ならサジェスト用に全件取得
-        if ((searchKey && data.length === 0)) {
-          const allJobs = await client.jobs(undefined);
-          setSuggestedJobs(allJobs);
+        if ((searchKey && data.totalCount === 0)) {
+          const allJobsData = await client.jobs(undefined);
+          setSuggestedJobs(allJobsData.jobs ?? []);
         } else {
           setSuggestedJobs([]);
         }

@@ -24,7 +24,7 @@ JobHuntX is a job information scraping application developed using ASP.NET Core 
 1. Generate the API client:
     ```bash
     cd JobHuntX/JobHuntX.API
-    dotnet nswag run nswag.json
+    dotnet nswag run nswag.local.json
     ```
 1. Start the application using Docker Compose:
     ```bash

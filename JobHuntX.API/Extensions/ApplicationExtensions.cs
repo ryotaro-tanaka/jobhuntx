@@ -16,7 +16,7 @@ public static class ApplicationExtensions {
             var handler = new AggregateJobHandler();
             return await handler.GetJobs(key);
         })
-            .Produces<List<Job>>(StatusCodes.Status200OK)
+            .Produces<JobListResponse>(StatusCodes.Status200OK)
             .WithOpenApi();
 
         app.MapJobEndpoint<RemoteOkHandler>("/api/remoteok");
@@ -24,11 +24,11 @@ public static class ApplicationExtensions {
         app.MapJobEndpoint<WeWorkRemotelyRSSHandler>("/api/weworkrss");
 
         app.MapGet("/api/sample", SampleJobHandler.GetJobs)
-            .Produces<List<Job>>(StatusCodes.Status200OK)
+            .Produces<JobListResponse>(StatusCodes.Status200OK)
             .WithOpenApi();
 
         app.MapGet("/api/candidates", SampleCandidateHandler.GetCandidates)
-            .Produces<List<Job>>(StatusCodes.Status200OK)
+            .Produces<List<Candidate>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
         app.MapGet("/api/keywords", async (HttpContext context) => {
@@ -49,7 +49,7 @@ public static class ApplicationExtensions {
             var handler = new THandler();
             return await handler.GetJobs(key);
         })
-        .Produces<List<Job>>(StatusCodes.Status200OK)
+        .Produces<JobListResponse>(StatusCodes.Status200OK)
         .WithOpenApi();
     }
 }
