@@ -1,5 +1,6 @@
 using JobHuntX.API.Models;
 using JobHuntX.API.Utilities;
+using JobHuntX.API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobHuntX.API.Handlers;
@@ -22,7 +23,14 @@ public abstract class HandlerBase : IJobHandler {
         return await ErrorHandler.WrapAsync(async () => {
             var jobs = await CacheHelper.GetOrSetAsync(CacheKey, FetchJobsAsync, CacheDuration);
             jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
-            return Results.Ok(jobs);
+
+            var response = new JobListResponse {
+                IsSuccess = true,
+                TotalCount = jobs.Count,
+                Jobs = jobs,
+                Messages = new()
+            };
+            return Results.Ok(response);
         });
     }
 
