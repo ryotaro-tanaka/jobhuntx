@@ -1,7 +1,6 @@
 using System.Text.Json;
 using JobHuntX.API.Models;
 using JobHuntX.API.DTOs;
-using Microsoft.AspNetCore.Mvc;
 using JobHuntX.API.Utilities;
 
 namespace JobHuntX.API.Handlers;
@@ -25,25 +24,6 @@ public class RemoteOkHandler : HandlerBase {
 
         json.RemoveAt(0); // metadata
         return json.Select(ConvertToJob).ToList();
-    }
-
-    public static async Task<IResult> GetRemoteOkJobs([FromQuery] string? key) {
-        using var httpClient = new HttpClient();
-        using var response = await httpClient.GetAsync(ApiUrl);
-
-        response.EnsureSuccessStatusCode();
-        var jsonString = await response.Content.ReadAsStringAsync();// 絵文字も正しく認識されている
-        var json = JsonSerializer.Deserialize<List<RemoteOkJobDto>>(jsonString); // 絵文字が文字化けしている
-
-        if (json == null || json.Count == 0) {
-            return Results.Ok(new List<Job>());
-        }
-
-        json.RemoveAt(0); // metadata
-        var jobs = json.Select(ConvertToJob).ToList();
-        jobs = JobFilterHelper.FilterJobsByKey(key, jobs);
-
-        return Results.Ok(jobs);
     }
 
     private static Job ConvertToJob(RemoteOkJobDto remoteOkJob) {

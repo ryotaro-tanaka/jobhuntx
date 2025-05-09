@@ -1,4 +1,5 @@
 using JobHuntX.API.Models;
+using JobHuntX.API.DTOs;
 
 namespace JobHuntX.API.Handlers;
 
@@ -217,6 +218,21 @@ public static class SampleJobHandler {
                 Tags = new List<string> { "cybersecurity", "sydney", "australia", "analyst", "full-time" }
             }
         };
-        return Results.Ok(sampleJobs); // Return Results.Ok directly
+
+        var response = new JobListResponse {
+            IsSuccess = true,
+            TotalCount = sampleJobs.Count,
+            Jobs = sampleJobs,
+            Messages = new List<ApiMessage>()
+            {
+                new ApiMessage
+                {
+                    Type = ApiMessageType.Info,
+                    Text = "This is a sample response with dummy job data."
+                }
+            }
+        };
+
+        return Results.Ok(response);
     }
 }

@@ -25,6 +25,6 @@ public static class SampleCandidateHandler {
                 AvailableFrom = DateTime.Now
             }
         };
-        return Results.Ok(sampleCandidates); // Return Results.Ok directly
+        return Results.Ok(sampleCandidates);
     }
 }
