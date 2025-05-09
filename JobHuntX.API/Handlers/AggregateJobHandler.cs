@@ -1,6 +1,7 @@
 using JobHuntX.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobHuntX.API.Utilities;
+using JobHuntX.API.DTOs;
 
 namespace JobHuntX.API.Handlers;
 
@@ -16,15 +17,41 @@ public class AggregateJobHandler {
     }
 
     public async Task<IResult> GetJobs([FromQuery] string? key) {
-        return await ErrorHandler.WrapAsync(async () => {
-            var allJobs = new List<Job>();
-            foreach (var handler in _handlers) {
+        var allJobs = new List<Job>();
+        var messages = new List<ApiMessage>();
+
+        foreach (var handler in _handlers) {
+            try {
                 if (handler is HandlerBase baseHandler) {
                     var jobs = await baseHandler.GetJobsAsync(key);
                     allJobs.AddRange(jobs);
                 }
             }
-            return Results.Ok(allJobs);
-        });
+            catch (Exception ex) {
+                messages.Add(new ApiMessage {
+                    Type = ApiMessageType.Error,
+                    Text = $"{handler.GetType().Name}: {ex.Message}"
+                });
+            }
+        }
+
+        if (allJobs.Count == 0) {
+            var badResponse = new JobListResponse {
+                IsSuccess = false,
+                TotalCount = 0,
+                Jobs = allJobs,
+                Messages = messages
+            };
+            return Results.Ok(badResponse);
+        }
+
+        var response = new JobListResponse {
+            IsSuccess = messages.Count == 0,
+            TotalCount = allJobs.Count,
+            Jobs = allJobs,
+            Messages = messages
+        };
+
+        return Results.Ok(response);
     }
 }
