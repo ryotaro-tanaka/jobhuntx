@@ -3,10 +3,10 @@
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
 ## 概要
-JobHuntX は、ASP.NET Core と React を使用して開発された求人情報スクレイピングアプリケーションです。このプロジェクトは、複数の求人サイトから情報を収集し、求人情報を効率的に管理・検索するためのツールを提供します。
+JobHuntX は、ASP.NET Core と React を使用して開発された求人情報集約アプリケーションです。このプロジェクトは、公開API・RSS・Webサイトなど複数の情報源から求人情報を収集し、効率的に求人情報を管理・検索するためのツールを提供します。
 
 ## 主な機能
-- 求人情報のスクレイピング
+- 求人情報の収集（API・RSS・Webサイト等）
 - 検索およびフィルタリング機能
 - ユーザーフレンドリーなインターフェース
 
