@@ -16,8 +16,8 @@ function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: J
       try {
         const client = createApiClient();
         const data = await client.jobs(searchKey ?? undefined);
-        console.log('Fetched jobs:', data);
         setJobs(data.jobs ?? []);
+        
         // 検索結果が0件ならサジェスト用に全件取得
         if ((searchKey && data.totalCount === 0)) {
           const allJobsData = await client.jobs(undefined);

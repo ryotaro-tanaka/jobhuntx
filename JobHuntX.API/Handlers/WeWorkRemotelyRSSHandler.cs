@@ -8,9 +8,10 @@ namespace JobHuntX.API.Handlers;
 
 public class WeWorkRemotelyRSSHandler : HandlerBase {
     protected override string CacheKey => nameof(WeWorkRemotelyRSSHandler);
-    protected override TimeSpan CacheDuration => TimeSpan.FromSeconds(60 * 5);
+    protected override TimeSpan CacheDuration => TimeSpan.FromMinutes(10);
 
-    private static readonly HttpClient _httpClient = new HttpClient();
+    private static readonly HttpClient _httpClient = HttpClientFactoryUtil.CreateHttpClientWithHeaders();
+
     private const string BaseUrl = "https://weworkremotely.com";
     private const string RssUrl = $"{BaseUrl}/remote-jobs.rss";
     private const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
@@ -21,10 +22,7 @@ public class WeWorkRemotelyRSSHandler : HandlerBase {
     }
 
     private static async Task<SyndicationFeed> FetchFeedAsync() {
-        var request = new HttpRequestMessage(HttpMethod.Get, RssUrl);
-        request.Headers.Add("User-Agent", UserAgent);
-
-        using var response = await _httpClient.SendAsync(request);
+        var response = await _httpClient.GetAsync(RssUrl);
         response.EnsureSuccessStatusCode();
 
         await using var stream = await response.Content.ReadAsStreamAsync();

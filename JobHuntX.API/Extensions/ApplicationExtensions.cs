@@ -20,7 +20,7 @@ public static class ApplicationExtensions {
             .WithOpenApi();
 
         app.MapJobEndpoint<RemoteOkHandler>("/api/remoteok");
-        app.MapJobEndpoint<WeWorkRemotelyHandler>("/api/wework");
+        // app.MapJobEndpoint<WeWorkRemotelyHandler>("/api/wework");
         app.MapJobEndpoint<WeWorkRemotelyRSSHandler>("/api/weworkrss");
 
         app.MapGet("/api/sample", SampleJobHandler.GetJobs)

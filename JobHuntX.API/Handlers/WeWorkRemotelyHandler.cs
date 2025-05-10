@@ -10,9 +10,11 @@ using System.Text.RegularExpressions;
 namespace JobHuntX.API.Handlers;
 
 public class WeWorkRemotelyHandler : HandlerBase {
-    protected override string CacheKey => nameof(WeWorkRemotelyRSSHandler);
+    protected override string CacheKey => nameof(WeWorkRemotelyHandler);
+    protected override TimeSpan CacheDuration => TimeSpan.FromMinutes(0);
 
-    private static readonly HttpClient _httpClient = CreateHttpClientWithHeaders();
+    // shuould share httpclient with RSS
+    private static readonly HttpClient _httpClient = HttpClientFactoryUtil.CreateHttpClientWithHeaders();
     private const string BaseUrl = "https://weworkremotely.com";
 
     protected override async Task<List<Job>> FetchJobsAsync() {
@@ -61,24 +63,24 @@ public class WeWorkRemotelyHandler : HandlerBase {
         return await reader.ReadToEndAsync();
     }
 
-    private static HttpClient CreateHttpClientWithHeaders() {
-        var handler = new HttpClientHandler {
-            UseCookies = true,
-            CookieContainer = new CookieContainer()
-        };
-        var httpClient = new HttpClient(handler);
-        httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
-        httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
-        httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
-        httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
-        httpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
-        httpClient.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests", "1");
-        httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Dest", "document");
-        httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Mode", "navigate");
-        httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Site", "none");
-        httpClient.DefaultRequestHeaders.Add("Sec-Fetch-User", "?1");
-        return httpClient;
-    }
+    // private static HttpClient CreateHttpClientWithHeaders() {
+    //     var handler = new HttpClientHandler {
+    //         UseCookies = true,
+    //         CookieContainer = new CookieContainer()
+    //     };
+    //     var httpClient = new HttpClient(handler);
+    //     httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
+    //     httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
+    //     httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+    //     httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
+    //     httpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
+    //     httpClient.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests", "1");
+    //     httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Dest", "document");
+    //     httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Mode", "navigate");
+    //     httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Site", "none");
+    //     httpClient.DefaultRequestHeaders.Add("Sec-Fetch-User", "?1");
+    //     return httpClient;
+    // }
 
     private static async Task<Job> ConvertToJobAsync(HtmlNode node) {
         var titleNode = node.SelectSingleNode(".//h4[@class='new-listing__header__title']");
