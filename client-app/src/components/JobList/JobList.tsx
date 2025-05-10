@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 import { Client, Job } from '../../api/generated';
 import { createApiClient } from '../../api/clientFactory';
 
-// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-// const API_KEY = import.meta.env.VITE_API_KEY;
-
 function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: Job) => void; searchKey: string | null, headerIsLarge: boolean }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [suggestedJobs, setSuggestedJobs] = useState<Job[]>([]);
@@ -18,7 +15,7 @@ function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: J
         const data = await client.jobs(searchKey ?? undefined);
         setJobs(data.jobs ?? []);
         
-        // 検索結果が0件ならサジェスト用に全件取得
+        // If 0 results, fetch all jobs for suggestions
         if ((searchKey && data.totalCount === 0)) {
           const allJobsData = await client.jobs(undefined);
           setSuggestedJobs(allJobsData.jobs ?? []);
@@ -72,6 +69,7 @@ function LoadingSkeletonList() {
       {Array.from({ length: 5 }).map((_, i) => (
         <li
           key={`loading-${i}`}
+          role="listitem"
           className="p-4 border border-gray-200 rounded-md shadow-sm bg-gray-100 animate-pulse"
         >
           <div className="h-6 bg-gray-300 rounded w-1/3 mb-2"></div>

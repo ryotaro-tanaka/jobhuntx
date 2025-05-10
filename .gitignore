@@ -51,6 +51,9 @@
 # Ignore NSwag generated API client
 /client-app/src/api/generated.ts
 
+# Ignore generated files
+/client-app/vite.config.ts.timestamp-*
+
 # ##
 # ASP.NET Core specific ignores
 # ##

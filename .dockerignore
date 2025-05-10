@@ -5,6 +5,7 @@ client-app/.env*
 client-app/npm-debug.log*
 client-app/yarn-debug.log*
 client-app/yarn-error.log*
+client-app/vite.config.ts.timestamp-*
 
 # .NET関連
 JobHuntX.API/bin
