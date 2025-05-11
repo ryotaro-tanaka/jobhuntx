@@ -16,7 +16,7 @@ public static class SampleCandidateHandler {
                     "Docker"
                 },
                 ProfileUrl = new Uri("https://www.linkedin.com/in/ryotaro-tanaka/"),
-                Summary = "This app was developed by this person. I will go anywhere as long as there is work.",
+                Summary = "This application was developed by this individual. I am willing to relocate or travel anywhere, provided there are suitable work opportunities.",
                 Location = new Location {
                     Type = LocationType.Hybrid,
                     City = "Everywhere",
