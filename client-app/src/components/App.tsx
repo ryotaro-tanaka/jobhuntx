@@ -9,6 +9,7 @@ function App() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [searchKey, setSearchKey] = useState<string | null>(null); // /api/job?key={searchKey}
   const [isHeaderLarge, setIsHeaderLarge] = useState(true);
+  const [isJobList, setIsJobList] = useState(true);
 
   // スクロール検知
   useEffect(() => {
@@ -35,12 +36,15 @@ function App() {
         onSearch={handleSearch}
         isLarge={isHeaderLarge}
         setIsLarge={setIsHeaderLarge}
+        isJobList={isJobList}
+        setIsJobList={setIsJobList}
       />
       <div className="flex-1">
         <JobList
           onJobClick={handleJobClick}
           searchKey={searchKey}
           headerIsLarge={isHeaderLarge}
+          isJobList={isJobList}
         />
         {selectedJob && (
           <JobDetailModal job={selectedJob} onClose={handleCloseDetail} />

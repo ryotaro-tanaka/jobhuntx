@@ -1,12 +1,31 @@
 import { useEffect, useState } from 'react';
-import { Client, Job } from '../../api/generated';
-import { createApiClient } from '../../api/clientFactory';
+import { Job, Candidate } from '../../api/generated';
+import { createApiClient, LocationType } from '../../api/clientFactory';
 
-function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: Job) => void; searchKey: string | null, headerIsLarge: boolean }) {
+function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobClick: (job: Job) => void; searchKey: string | null, headerIsLarge: boolean, isJobList: boolean }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [suggestedJobs, setSuggestedJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
 
+  // talent pool
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      setLoading(true);
+      try {
+        const client = createApiClient();
+        const data = await client.candidates();
+        setCandidates(data ?? []);
+      } catch (error) {
+        console.error('Failed to fetch candidates:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCandidates();
+  }, []);
+
+  // jobs pool
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);
@@ -40,21 +59,33 @@ function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: J
       <ul
         className="mt-4 space-y-4"
         role="list"
-        aria-label="Job Listings"
+        aria-label={isJobList ? "Job Listings" : "Talent Listings"}
       >
         {loading ? (
           <LoadingSkeletonList />
-        ) : jobs.length === 0 ? (
-          <>
-            <EmptyJobList />
-            {suggestedJobs.map((job) => (
+        ) : isJobList ? (
+          jobs.length === 0 ? (
+            <>
+              <EmptyJobList />
+              {suggestedJobs.map((job) => (
+                <JobListItem key={job.id} job={job} onClick={onJobClick} />
+              ))}
+            </>
+          ) : (
+            jobs.map((job) => (
               <JobListItem key={job.id} job={job} onClick={onJobClick} />
-            ))}
-          </>
+            ))
+          )
         ) : (
-          jobs.map((job) => (
-            <JobListItem key={job.id} job={job} onClick={onJobClick} />
-          ))
+          candidates.length === 0 ? (
+            <li>
+              <p className="mt-4 text-gray-600">No talent found.</p>
+            </li>
+          ) : (
+            candidates.map((candidate) => (
+              <CandidateListItem key={candidate.id} candidate={candidate} />
+            ))
+          )
         )}
       </ul>
     </div>
@@ -111,6 +142,44 @@ function EmptyJobList() {
   return (
     <li>
       <p className="mt-4 text-gray-600">No jobs found. Please try a different search.</p>
+    </li>
+  );
+}
+
+function CandidateListItem({ candidate }: { candidate: Candidate }) {
+  const handleClick = () => {
+    if (candidate.profileUrl) {
+      window.open(candidate.profileUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  return (
+    <li
+      className="p-4 border border-green-200 rounded-md shadow-sm hover:shadow-md cursor-pointer hover:bg-green-50"
+      onClick={handleClick}
+      tabIndex={0}
+      role="button"
+      aria-label={`Open profile for ${candidate.name}`}
+      onKeyDown={e => {
+        if (e.key === 'Enter' || e.key === ' ') handleClick();
+      }}
+    >
+      <h3 className="text-lg font-medium text-gray-900">{candidate.name}</h3>
+      {candidate.skills && candidate.skills.length > 0 && (
+        <p className="text-sm text-gray-600">Skills: {candidate.skills.join(', ')}</p>
+      )}
+      {candidate.summary && (
+        <p className="text-sm text-gray-500">{candidate.summary}</p>
+      )}
+      {candidate.location && (
+        <p className="text-sm text-gray-500">
+          <span>
+            {candidate.location.type ? `${LocationType[candidate.location.type]}` : ''}
+            {candidate.location.city ? `, ${candidate.location.city}` : ''}
+            {candidate.location.country ? `, ${candidate.location.country}` : ''}
+          </span>
+        </p>
+      )}
     </li>
   );
 }
