@@ -153,9 +153,21 @@ function CandidateListItem({ candidate }: { candidate: Candidate }) {
     }
   };
 
+  // スタイルをisSpecialで分岐
+  const baseClass =
+    "p-4 rounded-md shadow-sm cursor-pointer transition hover:shadow-md";
+  const specialClass =
+    "border-2 border-yellow-400 bg-yellow-50 hover:bg-yellow-100";
+  const normalClass =
+    "border border-gray-200 bg-white hover:bg-gray-100";
+
   return (
     <li
-      className="p-4 border border-green-200 rounded-md shadow-sm hover:shadow-md cursor-pointer hover:bg-green-50"
+      className={
+        baseClass +
+        " " +
+        (candidate.isSpecial ? specialClass : normalClass)
+      }
       onClick={handleClick}
       tabIndex={0}
       role="button"
@@ -164,7 +176,12 @@ function CandidateListItem({ candidate }: { candidate: Candidate }) {
         if (e.key === 'Enter' || e.key === ' ') handleClick();
       }}
     >
-      <h3 className="text-lg font-medium text-gray-900">{candidate.name}</h3>
+      <h3 className={`text-lg font-medium ${candidate.isSpecial ? "text-yellow-700 animate-pulse" : "text-gray-900"}`}>
+        {candidate.name}
+        {candidate.isSpecial && (
+          <span className="ml-2 inline-block align-middle" title="Special Talent">✨</span>
+        )}
+      </h3>
       {candidate.skills && candidate.skills.length > 0 && (
         <p className="text-sm text-gray-600">Skills: {candidate.skills.join(', ')}</p>
       )}
@@ -174,7 +191,7 @@ function CandidateListItem({ candidate }: { candidate: Candidate }) {
       {candidate.location && (
         <p className="text-sm text-gray-500">
           <span>
-            {candidate.location.type ? `${LocationType[candidate.location.type]}` : ''}
+            {candidate.location.type !== undefined ? `${LocationType[candidate.location.type]}` : ''}
             {candidate.location.city ? `, ${candidate.location.city}` : ''}
             {candidate.location.country ? `, ${candidate.location.country}` : ''}
           </span>

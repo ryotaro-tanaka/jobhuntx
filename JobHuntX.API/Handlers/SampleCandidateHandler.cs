@@ -16,13 +16,14 @@ public static class SampleCandidateHandler {
                     "Docker"
                 },
                 ProfileUrl = new Uri("https://www.linkedin.com/in/ryotaro-tanaka/"),
-                Summary = "This app was developed by this person.",
+                Summary = "This app was developed by this person. I will go anywhere as long as there is work.",
                 Location = new Location {
                     Type = LocationType.Hybrid,
-                    City = null,
+                    City = "Everywhere",
                     Country = "Australia"
                 },
-                AvailableFrom = DateTime.Now
+                AvailableFrom = DateTime.Now,
+                IsSpecial = true
             }
         };
         return Results.Ok(sampleCandidates);
