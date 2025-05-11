@@ -35,7 +35,7 @@ function JobList({ onJobClick, searchKey, headerIsLarge }: { onJobClick: (job: J
   return (
     <div
       role="main"
-      className={`transition-all duration-300 ${headerIsLarge ? 'pt-32' : 'pt-16'} p-4`}
+      className={`transition-all duration-300 ${headerIsLarge ? 'pt-48' : 'pt-20'} p-4`}
     >
       <ul
         className="mt-4 space-y-4"

@@ -90,7 +90,7 @@ export default function KeywordSuggest({isLarge, value, onChange, onSelect, onBl
       <input
         type="search"
         placeholder="Keyword"
-        className="w-full px-6 py-3 text-lg bg-transparent focus:outline-none no-search-cancel"
+        className="w-full px-6 py-3 bg-transparent focus:outline-none no-search-cancel"
         value={value}
         onChange={e => onChange(e.target.value)}
         onFocus={onFocus}
