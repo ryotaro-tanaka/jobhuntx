@@ -13,7 +13,7 @@ public class WeWorkRemotelyHandler : HandlerBase {
     protected override string CacheKey => nameof(WeWorkRemotelyHandler);
     protected override TimeSpan CacheDuration => TimeSpan.FromMinutes(0);
 
-    // shuould share httpclient with RSS
+    // should share httpclient with RSS
     private static readonly HttpClient _httpClient = HttpClientFactoryUtil.CreateHttpClientWithHeaders();
     private const string BaseUrl = "https://weworkremotely.com";
 
