@@ -19,14 +19,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      - name: Create .env file for frontend
-        run: echo "VITE_API_KEY=ci_test_key" > .env
-        working-directory: ./client-app
 
-      - name: Create .env file for backend
-        run: echo "API_KEY=ci_test_key" > .env
-        working-directory: ./JobHuntX.API
+      - name: Copy backend .env.sample to .env
+        run: cp .env.sample .env
+        working-directory: ${{ github.workspace }}/JobHuntX.API
+
+      - name: Copy frontend .env.sample to .env
+        run: cp .env.sample .env
+        working-directory: ${{ github.workspace }}/client-app
+
+      # - name: Create .env file for frontend
+      #   run: echo "VITE_API_KEY=ci_test_key" > .env
+      #   working-directory: ./client-app
+
+      # - name: Create .env file for backend
+      #   run: echo "API_KEY=ci_test_key" > .env
+      #   working-directory: ./JobHuntX.API
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
