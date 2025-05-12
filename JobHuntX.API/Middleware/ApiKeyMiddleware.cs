@@ -9,21 +9,18 @@ public class ApiKeyMiddleware {
 
     public ApiKeyMiddleware(RequestDelegate next, IConfiguration configuration) {
         _next = next;
-        // "API_KEY" 環境変数を参照
         _configuredApiKey = configuration["API_KEY"] ?? throw new ArgumentNullException("API key not configured.");
     }
 
     public async Task InvokeAsync(HttpContext context) {
         var path = context.Request.Path.Value?.ToLower();
 
-        // pathがnullの場合は不正リクエストとして401を返す
         if (path == null) {
             context.Response.StatusCode = 401;
             await context.Response.WriteAsync("Unauthorized: Invalid request path.");
             return;
         }
 
-        // Swagger UIやトップページのみ除外
         if (path == "/" || path.StartsWith("/swagger")) {
             await _next(context);
             return;
