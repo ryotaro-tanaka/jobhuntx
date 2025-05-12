@@ -51,6 +51,9 @@ jobs:
           cat nswag.ci.json
         working-directory: ${{ github.workspace }}/JobHuntX.API
       
+      - name: Validate swagger.json
+        run: jq . swagger.json
+        working-directory: ${{ github.workspace }}/JobHuntX.API
 
       # - name: Generate API client (NSwag)
       #   run: nswag run nswag.ci.json
