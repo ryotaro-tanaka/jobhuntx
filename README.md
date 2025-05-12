@@ -77,6 +77,21 @@ $ cd ./JobHuntX.API
 $ dotnet nswag run nswag.local.json
 ```
 
+## Running Tests
+
+You can run client-side tests with:
+
+```bash
+$ cd client_app
+$ pnpm test
+```
+
+You can also run backend tests using the `JobHuntX.Tests` project:
+
+```bash
+$ dotnet test JobHuntX.Tests
+```
+
 ## Before Creating a Pull Request
 
 Before creating a pull request, **be sure to update the local `swagger.json`** for CI tests to pass:

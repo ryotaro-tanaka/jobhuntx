@@ -2,12 +2,9 @@ using System.Net;
 
 namespace JobHuntX.API.Utilities;
 
-public static class HttpClientFactoryUtil
-{
-    public static HttpClient CreateHttpClientWithHeaders()
-    {
-        var handler = new HttpClientHandler
-        {
+public static class HttpClientFactoryUtil {
+    public static HttpClient CreateHttpClientWithHeaders() {
+        var handler = new HttpClientHandler {
             UseCookies = true,
             CookieContainer = new CookieContainer(),
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli

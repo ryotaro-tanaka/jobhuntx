@@ -86,5 +86,20 @@ $ dotnet run --project JobHuntX.API & curl http://localhost:5000/swagger/v1/swag
 
 これにより、フロントエンドのAPI型が最新のAPI仕様から生成され、CIテストが `swagger.json` の不足や古さで失敗しなくなります。
 
+## テストの実行
+
+クライアント側のテストは以下のコマンドで実行できます:
+
+```bash
+$ cd client_app
+$ pnpm test
+```
+
+バックエンドのテストは `JobHuntX.Tests` プロジェクトを使って実行できます:
+
+```bash
+$ dotnet test JobHuntX.Tests
+```
+
 ## ライセンス
 このプロジェクトは [MIT ライセンス](./LICENSE) の下で提供されています。
