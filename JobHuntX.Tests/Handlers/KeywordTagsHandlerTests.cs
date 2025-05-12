@@ -35,21 +35,6 @@ public class KeywordTagsHandlerTests
     }
 
     [Fact]
-    public async Task GetKeywordTags_ReturnsNotFound_WhenFileDoesNotExist()
-    {
-        // Arrange
-        var tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".json");
-        if (File.Exists(tempFile))
-            File.Delete(tempFile);
-
-        // Act
-        var result = await KeywordTagsHandler.GetKeywordTags(tempFile);
-
-        // Assert
-        Assert.IsType<NotFound>(result);
-    }
-
-    [Fact]
     public async Task GetKeywordTags_ReturnsProblem_WhenFileIsInvalidJson()
     {
         // Arrange
@@ -64,5 +49,26 @@ public class KeywordTagsHandlerTests
 
         // Cleanup
         File.Delete(tempFile);
+    }
+
+    [Fact]
+    public async Task GetKeywordTags_ReturnsOkWithEmptyKeywordTags_WhenFileDoesNotExist()
+    {
+        // Arrange
+        var tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".json");
+        if (File.Exists(tempFile))
+            File.Delete(tempFile);
+
+        // Act
+        var result = await KeywordTagsHandler.GetKeywordTags(tempFile);
+
+        // Assert
+        var okResult = Assert.IsType<Ok<JobHuntX.API.Models.KeywordTags>>(result);
+        Assert.NotNull(okResult.Value);
+        Assert.Empty(okResult.Value!.Roles);
+        Assert.Empty(okResult.Value!.Skills);
+        Assert.Empty(okResult.Value!.Domains);
+        Assert.Empty(okResult.Value!.Employment);
+        Assert.Empty(okResult.Value!.Locations);
     }
 }
