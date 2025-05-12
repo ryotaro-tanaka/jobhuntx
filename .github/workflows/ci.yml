@@ -39,6 +39,10 @@ jobs:
       - name: Add .dotnet/tools to PATH
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
+      - name: Show swagger.json before NSwag
+        run: cat swagger.json
+        working-directory: ${{ github.workspace }}/JobHuntX.API
+
       - name: Generate API client (NSwag)
         run: nswag run nswag.ci.json
         working-directory: ${{ github.workspace }}/JobHuntX.API

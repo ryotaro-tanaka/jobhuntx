@@ -50,6 +50,7 @@
 
 # Ignore NSwag generated API client
 /client-app/src/api/generated.ts
+/client-app/src/api/generated.ci.ts
 
 # Ignore generated files
 /client-app/vite.config.ts.timestamp-*
