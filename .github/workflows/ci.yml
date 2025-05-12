@@ -42,9 +42,22 @@ jobs:
       - name: Show swagger.json before NSwag
         run: cat swagger.json
         working-directory: ${{ github.workspace }}/JobHuntX.API
+      
+      - name: Debug NSwag inputs
+        run: |
+          echo "Current dir: $(pwd)"
+          ls -la
+          cat swagger.json
+          cat nswag.ci.json
+        working-directory: ${{ github.workspace }}/JobHuntX.API
+      
+
+      # - name: Generate API client (NSwag)
+      #   run: nswag run nswag.ci.json
+      #   working-directory: ${{ github.workspace }}/JobHuntX.API
 
       - name: Generate API client (NSwag)
-        run: nswag run nswag.ci.json
+        run: nswag run ./nswag.ci.json
         working-directory: ${{ github.workspace }}/JobHuntX.API
 
       - name: Run backend tests
