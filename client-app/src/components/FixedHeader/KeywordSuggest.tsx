@@ -29,6 +29,8 @@ export default function KeywordSuggest({isLarge, value, onChange, onSelect, onBl
         ...(tags.locations ?? []),
       ];
       setKeywords(Array.from(new Set(all)));
+    }).catch((e: Error) => {
+      setKeywords([]);
     });
   }, []);
 
