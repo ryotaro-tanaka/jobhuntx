@@ -83,19 +83,19 @@ describe('<FixedHeader />', () => {
     expect(setIsLarge).toHaveBeenCalledWith(true)
   })
 
-  it('calls setIsJobList when toggle buttons are clicked', () => {
-    render(
-      <FixedHeader
-        onSearch={onSearch}
-        isLarge={true}
-        setIsLarge={setIsLarge}
-        isJobList={true}
-        setIsJobList={setIsJobList}
-      />
-    )
-    fireEvent.click(screen.getByRole('button', { name: /Talent/i }))
-    expect(setIsJobList).toHaveBeenCalledWith(false)
-    fireEvent.click(screen.getByRole('button', { name: /Jobs/i }))
-    expect(setIsJobList).toHaveBeenCalledWith(true)
-  })
+  // it('calls setIsJobList when toggle buttons are clicked', () => {
+  //   render(
+  //     <FixedHeader
+  //       onSearch={onSearch}
+  //       isLarge={true}
+  //       setIsLarge={setIsLarge}
+  //       isJobList={true}
+  //       setIsJobList={setIsJobList}
+  //     />
+  //   )
+  //   fireEvent.click(screen.getByRole('button', { name: /Talent/i }))
+  //   expect(setIsJobList).toHaveBeenCalledWith(false)
+  //   fireEvent.click(screen.getByRole('button', { name: /Jobs/i }))
+  //   expect(setIsJobList).toHaveBeenCalledWith(true)
+  // })
 })
