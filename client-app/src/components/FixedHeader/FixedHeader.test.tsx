@@ -6,7 +6,14 @@ import FixedHeader from './FixedHeader'
 global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve([]),
+    json: () =>
+      Promise.resolve({
+        roles: [],
+        skills: [],
+        domains: [],
+        employment: [],
+        locations: [],
+      }),
     text: () => Promise.resolve(''),
     status: 200,
     headers: {},
