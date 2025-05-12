@@ -12,13 +12,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     
-    env:
-      VITE_API_KEY: ci_test_key
-      API_KEY: ci_test_key
+    # env:
+    #   VITE_API_KEY: ci_test_key
+    #   API_KEY: ci_test_key
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - name: Create .env file for frontend
+        run: echo "VITE_API_KEY=ci_test_key" > .env
+        working-directory: ./client-app
+
+      - name: Create .env file for backend
+        run: echo "API_KEY=ci_test_key" > .env
+        working-directory: ./JobHuntX.API
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
