@@ -1,11 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, vi, expect, beforeEach, type Mock } from 'vitest';
 import JobList from './JobList';
-import { Job, Salary, Location, LocationType } from '../../api/generated';
+import { Job, Salary, Location, LocationType, Candidate } from '../../api/generated';
 import { createApiClient } from '../../api/clientFactory';
 
-vi.mock('../../api/clientFactory', async () => {
+vi.mock('../../api/clientFactory', async (importOriginal) => {
+  const actual = await importOriginal();
   return {
+    ...(actual as Record<string, any>),
     createApiClient: vi.fn(),
   };
 });
@@ -29,26 +31,51 @@ describe('JobList Component', () => {
     }),
   ];
 
+  const mockCandidates: Candidate[] = [
+    new Candidate({
+      id: 'c1',
+      name: 'Alice',
+      isSpecial: true,
+      skills: ['React', 'TypeScript'],
+      summary: 'Frontend specialist',
+      location: new Location({ city: 'Tokyo', country: 'Japan', type: LocationType._0 }),
+      profileUrl: 'https://example.com/alice'
+    }),
+    new Candidate({
+      id: 'c2',
+      name: 'Bob',
+      isSpecial: false,
+      skills: ['Go', 'Kubernetes'],
+      summary: 'Backend engineer',
+      location: new Location({ city: 'Osaka', country: 'Japan', type: LocationType._1 }),
+      profileUrl: 'https://example.com/bob'
+    }),
+  ];
+
   let jobsMock: Mock;
+  let candidatesMock: Mock;
 
   beforeEach(() => {
     jobsMock = vi.fn();
+    candidatesMock = vi.fn();
     (createApiClient as unknown as Mock).mockReturnValue({
       jobs: jobsMock,
+      candidates: candidatesMock,
     });
+    mockOnJobClick.mockClear();
   });
 
   it('renders loading skeleton while fetching jobs', async () => {
     jobsMock.mockResolvedValueOnce({ jobs: [], totalCount: 0 });
-
-    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} />);
+    candidatesMock.mockResolvedValueOnce([]);
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={true} />);
     expect(screen.getAllByRole('listitem')).toHaveLength(5);
   });
 
   it('renders job list when jobs are fetched', async () => {
     jobsMock.mockResolvedValueOnce({ jobs: mockJobs, totalCount: 2 });
-
-    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} />);
+    candidatesMock.mockResolvedValueOnce([]);
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={true} />);
     expect(await screen.findByText('Software Engineer')).toBeInTheDocument();
     expect(screen.getByText('Product Manager')).toBeInTheDocument();
   });
@@ -57,9 +84,8 @@ describe('JobList Component', () => {
     jobsMock
       .mockResolvedValueOnce({ jobs: [], totalCount: 0 }) // No jobs for searchKey
       .mockResolvedValueOnce({ jobs: mockJobs, totalCount: 2 }); // Suggested jobs
-
-    render(<JobList onJobClick={mockOnJobClick} searchKey="nonexistent" headerIsLarge={true} />);
-
+    candidatesMock.mockResolvedValue([]);
+    render(<JobList onJobClick={mockOnJobClick} searchKey="nonexistent" headerIsLarge={true} isJobList={true} />);
     expect(await screen.findByText('No jobs found. Please try a different search.')).toBeInTheDocument();
     expect(screen.getByText('Software Engineer')).toBeInTheDocument();
     expect(screen.getByText('Product Manager')).toBeInTheDocument();
@@ -67,12 +93,27 @@ describe('JobList Component', () => {
 
   it('calls onJobClick when a job is clicked', async () => {
     jobsMock.mockResolvedValueOnce({ jobs: mockJobs, totalCount: 2 });
-
-    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} />);
-
+    candidatesMock.mockResolvedValueOnce([]);
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={true} />);
     const jobItem = await screen.findByText('Software Engineer');
     fireEvent.click(jobItem);
-
     expect(mockOnJobClick).toHaveBeenCalledWith(mockJobs[0]);
+  });
+
+  it('renders candidate list when isJobList is false', async () => {
+    jobsMock.mockResolvedValueOnce({ jobs: [], totalCount: 0 });
+    candidatesMock.mockResolvedValueOnce(mockCandidates);
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={false} />);
+    expect(await screen.findByText('Alice')).toBeInTheDocument();
+    expect(screen.getByText('Bob')).toBeInTheDocument();
+    expect(screen.getByText(/Frontend specialist/)).toBeInTheDocument();
+    expect(screen.getByText(/Backend engineer/)).toBeInTheDocument();
+  });
+
+  it('renders empty state when no candidates found', async () => {
+    jobsMock.mockResolvedValueOnce({ jobs: [], totalCount: 0 });
+    candidatesMock.mockResolvedValueOnce([]);
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={false} />);
+    expect(await screen.findByText('No talent found.')).toBeInTheDocument();
   });
 });
