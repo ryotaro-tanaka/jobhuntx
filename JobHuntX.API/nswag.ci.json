@@ -2,7 +2,7 @@
   "runtime": "Net80",
   "documentGenerator": {
     "fromDocument": {
-      "input": "swagger.json"
+      "input": "./swagger.json"
     }
   },
   "codeGenerators": {
