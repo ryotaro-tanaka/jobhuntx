@@ -1,22 +1,25 @@
 version: '3.8'
 services:
   frontend:
-    image: node:18
-    working_dir: /app
-    volumes:
-      - ./client-app:/app
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
     ports:
       - "80:80"
     environment:
       - NODE_ENV=production
-    command: ["npm", "run", "build"]
+    # 本番は静的ファイルをnginx等で配信するのが一般的
+    # ここではDockerfileでビルドし、nginxで配信する場合の例
+    # nginx用のDockerfileが必要
 
   backend:
     image: mcr.microsoft.com/dotnet/aspnet:8.0
-    working_dir: /app
-    volumes:
-      - ./JobHuntX.API:/app
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile # ←発行用Dockerfileを作成推奨
     ports:
       - "5000:5000"
+    env_file:
+      - ./JobHuntX.API/.env
     environment:
       - ASPNETCORE_URLS=http://+:5000
