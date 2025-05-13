@@ -6,12 +6,10 @@ function JobDetail({ job }: { job: Job }) {
     return <p>No job selected.</p>;
   }
 
-  console.log('Job Details:', JSON.stringify(job, null, 2)); // Log the Job object as JSON
-
   const isHtml = (text: string) => /<\/?[a-z][\s\S]*>/i.test(text);
 
   return (
-    <div className="p-4">
+    <div className="p-8">
       <h2 className="text-xl font-bold">{job.title}</h2>
       <p className="mt-2 text-gray-600">{job.company}</p>
       {job.location && (

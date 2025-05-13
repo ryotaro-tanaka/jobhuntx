@@ -3,10 +3,10 @@
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
 ## 概要
-JobHuntX は、ASP.NET Core と React を使用して開発された求人情報スクレイピングアプリケーションです。このプロジェクトは、複数の求人サイトから情報を収集し、求人情報を効率的に管理・検索するためのツールを提供します。
+JobHuntX は、ASP.NET Core と React を使用して開発された求人情報集約アプリケーションです。このプロジェクトは、公開API・RSS・Webサイトなど複数の情報源から求人情報を収集し、効率的に求人情報を管理・検索するためのツールを提供します。
 
 ## 主な機能
-- 求人情報のスクレイピング
+- 求人情報の収集（API・RSS・Webサイト等）
 - 検索およびフィルタリング機能
 - ユーザーフレンドリーなインターフェース
 
@@ -15,17 +15,22 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
     ```bash
     git clone https://github.com/your-repository/JobHuntX.git
     ```
-2. API クライアントを生成します:
+1. 環境変数ファイルをセットアップします:
+    ```bash
+    cp JobHuntX.API/.env.sample JobHuntX.API/.env
+    cp client-app/.env.sample client-app/.env
+    ```
+1. API クライアントを生成します:
     ```bash
     cd JobHuntX/JobHuntX.API
-    dotnet nswag run nswag.json
+    dotnet nswag run nswag.local.json
     ```
-3. Docker Compose を使用してアプリケーションを起動します:
+1. Docker Compose を使用してアプリケーションを起動します:
     ```bash
     cd ../
     docker-compose up --build
     ```
-4. アプリケーションが起動したら、以下の URL にブラウザでアクセスします:
+1. アプリケーションが起動したら、以下の URL にブラウザでアクセスします:
     ```
     http://localhost:5173
     ```
@@ -38,7 +43,6 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 ![TypeScript](https://img.shields.io/badge/TypeScript--blue?logo=typescript&logoColor=white)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core--blue?logo=dotnet&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker--blue?logo=docker&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
 
 ### 🛠️ ツール & ユーティリティ
 
@@ -51,6 +55,7 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 ![NSwag](https://img.shields.io/badge/NSwag--blue?logo=openapiinitiative&logoColor=white)
 ![dotnet-format](https://img.shields.io/badge/dotnet%20format--blue?logo=dotnet&logoColor=white)
 ![xUnit](https://img.shields.io/badge/xUnit--blue?logo=.net&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
 
 ## dotnet-formatでのフォーマット
 
@@ -80,6 +85,21 @@ $ dotnet run --project JobHuntX.API & curl http://localhost:5000/swagger/v1/swag
 ```
 
 これにより、フロントエンドのAPI型が最新のAPI仕様から生成され、CIテストが `swagger.json` の不足や古さで失敗しなくなります。
+
+## テストの実行
+
+クライアント側のテストは以下のコマンドで実行できます:
+
+```bash
+$ cd client_app
+$ pnpm test
+```
+
+バックエンドのテストは `JobHuntX.Tests` プロジェクトを使って実行できます:
+
+```bash
+$ dotnet test JobHuntX.Tests
+```
 
 ## ライセンス
 このプロジェクトは [MIT ライセンス](./LICENSE) の下で提供されています。

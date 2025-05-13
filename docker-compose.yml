@@ -8,7 +8,7 @@ services:
       - ./client-app:/app
     ports:
       - "5173:5173" # Vite
-    environment:
+    environment: # .env は vite によって自動で読み込まれる
       - CHOKIDAR_USEPOLLING=true  # hot reload = true on WSL
     command: ["pnpm", "run", "dev"]
 
@@ -19,6 +19,8 @@ services:
       - .:/src
     ports:
       - "5000:5000"
+    env_file:
+      - ./JobHuntX.API/.env
     environment:
       - ASPNETCORE_URLS=http://+:5000 # dotnet watch 環境ではProgram.cs実行タイミングでこの環境変数を読み取れない
       - DOTNET_USE_POLLING_FILE_WATCHER=1  # WSLで変更検知を有効化

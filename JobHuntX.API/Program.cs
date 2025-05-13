@@ -1,4 +1,5 @@
 using JobHuntX.API.Extensions;
+using JobHuntX.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,9 @@ app.UseHttpsRedirection();
 
 // Enable CORS
 app.UseCors();
+
+// APIキー認証ミドルウェアを追加（Swaggerやルートは除外される）
+app.UseMiddleware<ApiKeyMiddleware>();
 
 // Program.csの読み込みタイミングではdocker-compose.ymlで指定した環境変数を取得できない。
 // docker-compose.ymlでdotnet watch runではく、dotnet runを実行する必要があるが、

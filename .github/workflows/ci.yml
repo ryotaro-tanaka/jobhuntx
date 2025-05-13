@@ -21,9 +21,6 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # - name: Clear NuGet cache
-      #   run: dotnet nuget locals all --clear
-
       - name: Restore .NET dependencies
         run: dotnet restore JobHuntX.API.sln
         working-directory: ${{ github.workspace }}
@@ -34,8 +31,20 @@ jobs:
       - name: Add .dotnet/tools to PATH
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
+      - name: Debug NSwag inputs
+        run: |
+          echo "Current dir: $(pwd)"
+          ls -la
+          cat swagger.json
+          cat nswag.ci.json
+        working-directory: ${{ github.workspace }}/JobHuntX.API
+
+      # - name: Generate API client (NSwag)
+      #   run: nswag run nswag.ci.json
+      #   working-directory: ${{ github.workspace }}/JobHuntX.API
+
       - name: Generate API client (NSwag)
-        run: nswag run nswag.ci.json
+        run: nswag run ./nswag.ci.json
         working-directory: ${{ github.workspace }}/JobHuntX.API
 
       - name: Run backend tests

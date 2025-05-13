@@ -16,15 +16,16 @@ public static class SampleCandidateHandler {
                     "Docker"
                 },
                 ProfileUrl = new Uri("https://www.linkedin.com/in/ryotaro-tanaka/"),
-                Summary = "This app was developed by this person.",
+                Summary = "This application was developed by this individual. I am willing to relocate or travel anywhere, provided there are suitable work opportunities. I am actively working towards obtaining permanent residency (PR) in Australia, and I am open to any PR pathway including but not limited to subclass 190 or 491, by showcasing my technical skills.",
                 Location = new Location {
                     Type = LocationType.Hybrid,
-                    City = null,
+                    City = "Everywhere",
                     Country = "Australia"
                 },
-                AvailableFrom = DateTime.Now
+                AvailableFrom = DateTime.Now,
+                IsSpecial = true
             }
         };
-        return Results.Ok(sampleCandidates); // Return Results.Ok directly
+        return Results.Ok(sampleCandidates);
     }
 }

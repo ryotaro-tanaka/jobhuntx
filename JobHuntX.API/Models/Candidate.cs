@@ -8,4 +8,5 @@ public class Candidate {
     public string? Summary { get; set; }
     public Location Location { get; set; } = new();
     public DateTime AvailableFrom { get; set; }
+    public bool IsSpecial { get; set; } = false;
 }

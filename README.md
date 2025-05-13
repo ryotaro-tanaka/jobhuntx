@@ -4,7 +4,7 @@
 
 
 ## Overview
-JobHuntX is a job information scraping application developed using ASP.NET Core and React. This project aims to collect information from multiple job sites and provide tools to efficiently manage and search job postings.
+JobHuntX is a job information aggregation application developed using ASP.NET Core and React. This project collects job postings from multiple sources—including public APIs, RSS feeds, and websites—and provides tools to efficiently search job information.
 
 ## Key Features
 - Job information scraping
@@ -16,17 +16,22 @@ JobHuntX is a job information scraping application developed using ASP.NET Core 
     ```bash
     git clone https://github.com/your-repository/JobHuntX.git
     ```
-2. Generate the API client:
+1. Set up environment variables:
+      ```bash
+      cp JobHuntX.API/.env.sample JobHuntX.API/.env
+      cp client-app/.env.sample client-app/.env
+      ```
+1. Generate the API client:
     ```bash
     cd JobHuntX/JobHuntX.API
-    dotnet nswag run nswag.json
+    dotnet nswag run nswag.local.json
     ```
-3. Start the application using Docker Compose:
+1. Start the application using Docker Compose:
     ```bash
     cd ../
     docker-compose up --build
     ```
-4. Once the application starts, access the following URL in your browser:
+1. Once the application starts, access the following URL in your browser:
     ```
     http://localhost:5173
     ```
@@ -39,7 +44,6 @@ JobHuntX is a job information scraping application developed using ASP.NET Core 
 ![TypeScript](https://img.shields.io/badge/TypeScript--blue?logo=typescript&logoColor=white)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core--blue?logo=dotnet&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker--blue?logo=docker&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
 
 ### 🛠️ Tooling & Utilities
 
@@ -52,6 +56,7 @@ JobHuntX is a job information scraping application developed using ASP.NET Core 
 ![NSwag](https://img.shields.io/badge/NSwag--blue?logo=openapiinitiative&logoColor=white)
 ![dotnet-format](https://img.shields.io/badge/dotnet%20format--blue?logo=dotnet&logoColor=white)
 ![xUnit](https://img.shields.io/badge/xUnit--blue?logo=.net&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
 
 
 ## Formatting with dotnet-format
@@ -72,13 +77,28 @@ $ cd ./JobHuntX.API
 $ dotnet nswag run nswag.local.json
 ```
 
+## Running Tests
+
+You can run client-side tests with:
+
+```bash
+$ cd client_app
+$ pnpm test
+```
+
+You can also run backend tests using the `JobHuntX.Tests` project:
+
+```bash
+$ dotnet test JobHuntX.Tests
+```
+
 ## Before Creating a Pull Request
 
 Before creating a pull request, **be sure to update the local `swagger.json`** for CI tests to pass:
 
 ```bash
 $ docker-compose up -d
-$ dotnet run --project JobHuntX.API & curl http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json
+$ curl http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json
 ```
 
 This ensures that the frontend API types can be generated from the latest API specification and that CI tests will not fail due to missing or outdated `swagger.json`.

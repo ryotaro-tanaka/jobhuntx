@@ -13,22 +13,29 @@ public static class ApplicationExtensions {
 
     public static void MapEndpoints(this WebApplication app) {
         app.MapGet("/api/jobs", async([FromQuery] string ? key) => {
-            var handler = new RemoteOkHandler();
+            var handler = new AggregateJobHandler();
             return await handler.GetJobs(key);
         })
-            .Produces<List<Job>>(StatusCodes.Status200OK)
+            .Produces<JobListResponse>(StatusCodes.Status200OK)
             .WithOpenApi();
 
         app.MapJobEndpoint<RemoteOkHandler>("/api/remoteok");
-        app.MapJobEndpoint<WeWorkRemotelyHandler>("/api/wework");
+        // app.MapJobEndpoint<WeWorkRemotelyHandler>("/api/wework");
         app.MapJobEndpoint<WeWorkRemotelyRSSHandler>("/api/weworkrss");
 
         app.MapGet("/api/sample", SampleJobHandler.GetJobs)
-            .Produces<List<Job>>(StatusCodes.Status200OK)
+            .Produces<JobListResponse>(StatusCodes.Status200OK)
             .WithOpenApi();
 
         app.MapGet("/api/candidates", SampleCandidateHandler.GetCandidates)
-            .Produces<List<Job>>(StatusCodes.Status200OK)
+            .Produces<List<Candidate>>(StatusCodes.Status200OK)
+            .WithOpenApi();
+
+        app.MapGet("/api/keywords", async (HttpContext context) => {
+            context.Response.Headers.CacheControl = "public, max-age=86400"; // 1 day
+            return await KeywordTagsHandler.GetKeywordTags();
+        })
+            .Produces<KeywordTags>(StatusCodes.Status200OK)
             .WithOpenApi();
 
         app.MapGet("/", () => "Welcome to JobHuntX.API!")
@@ -42,7 +49,7 @@ public static class ApplicationExtensions {
             var handler = new THandler();
             return await handler.GetJobs(key);
         })
-        .Produces<List<Job>>(StatusCodes.Status200OK)
+        .Produces<JobListResponse>(StatusCodes.Status200OK)
         .WithOpenApi();
     }
 }
