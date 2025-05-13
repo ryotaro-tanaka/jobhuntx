@@ -98,7 +98,7 @@ Before creating a pull request, **be sure to update the local `swagger.json`** f
 
 ```bash
 $ docker-compose up -d
-$ dotnet run --project JobHuntX.API & curl http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json
+$ curl http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json
 ```
 
 This ensures that the frontend API types can be generated from the latest API specification and that CI tests will not fail due to missing or outdated `swagger.json`.

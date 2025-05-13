@@ -16,14 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Copy backend .env.sample to .env
-        run: cp .env.sample .env
-        working-directory: ${{ github.workspace }}/JobHuntX.API
-
-      - name: Copy frontend .env.sample to .env
-        run: cp .env.sample .env
-        working-directory: ${{ github.workspace }}/client-app
-
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -39,20 +31,12 @@ jobs:
       - name: Add .dotnet/tools to PATH
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Show swagger.json before NSwag
-        run: cat swagger.json
-        working-directory: ${{ github.workspace }}/JobHuntX.API
-      
       - name: Debug NSwag inputs
         run: |
           echo "Current dir: $(pwd)"
           ls -la
           cat swagger.json
           cat nswag.ci.json
-        working-directory: ${{ github.workspace }}/JobHuntX.API
-      
-      - name: Validate swagger.json
-        run: jq . swagger.json
         working-directory: ${{ github.workspace }}/JobHuntX.API
 
       # - name: Generate API client (NSwag)

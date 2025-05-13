@@ -5,7 +5,7 @@ namespace JobHuntX.API.Middleware;
 public class ApiKeyMiddleware {
     private readonly RequestDelegate _next;
     private const string API_KEY_HEADER_NAME = "X-API-KEY";
-    private readonly string _configuredApiKey;
+    private readonly string? _configuredApiKey;
 
     public ApiKeyMiddleware(RequestDelegate next, IConfiguration configuration) {
         _next = next;
