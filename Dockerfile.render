@@ -1,0 +1,35 @@
+# ================================
+# Build frontend (React)
+# ================================
+FROM node:20-alpine AS frontend-build
+WORKDIR /app
+COPY client-app ./client-app
+WORKDIR /app/client-app
+RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN pnpm install && pnpm run build
+
+# ================================
+# Build backend (ASP.NET Core)
+# ================================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-build
+WORKDIR /src
+COPY . .
+# Web アプリケーションプロジェクトを publish
+RUN dotnet publish JobHuntX.API/JobHuntX.API.csproj -c Release -o /app/publish
+
+# ================================
+# Final stage
+# ================================
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+# ビルド済みアプリをコピー
+COPY --from=backend-build /app/publish .
+
+# フロントエンドの静的ファイルを wwwroot にコピー（Blazor同様の構成）
+COPY --from=frontend-build /app/client-app/dist ./wwwroot
+
+# 環境変数の読み込み（必要に応じて）
+# ENV ASPNETCORE_ENVIRONMENT=Production
+
+EXPOSE 80
+ENTRYPOINT ["dotnet", "JobHuntX.API.dll"]
