@@ -1,9 +1,24 @@
+# $ docker run -p 8080:5000 --env-file ./JobHuntX.API/.env jobhuntx:render
+
+# ================================
+# Build frontend (React)
+# ================================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS nswag-build
+WORKDIR /src
+COPY . .
+
+# NSwag による TypeScript クライアントの自動生成
+RUN dotnet tool install --global NSwag.ConsoleCore
+RUN /root/.dotnet/tools/nswag help
+WORKDIR /src/JobHuntX.API
+RUN /root/.dotnet/tools/nswag run nswag.ci.json
+
 # ================================
 # Build frontend (React)
 # ================================
 FROM node:20-alpine AS frontend-build
 WORKDIR /app
-COPY client-app ./client-app
+COPY --from=nswag-build /src/client-app ./client-app
 WORKDIR /app/client-app
 RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm install && pnpm run build
@@ -13,8 +28,7 @@ RUN pnpm install && pnpm run build
 # ================================
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-build
 WORKDIR /src
-COPY . .
-# Web アプリケーションプロジェクトを publish
+COPY --from=nswag-build /src ./
 RUN dotnet publish JobHuntX.API/JobHuntX.API.csproj -c Release -o /app/publish
 
 # ================================
@@ -22,14 +36,8 @@ RUN dotnet publish JobHuntX.API/JobHuntX.API.csproj -c Release -o /app/publish
 # ================================
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-# ビルド済みアプリをコピー
-COPY --from=backend-build /app/publish .
-
-# フロントエンドの静的ファイルを wwwroot にコピー（Blazor同様の構成）
+COPY --from=backend-build /app/publish ./
 COPY --from=frontend-build /app/client-app/dist ./wwwroot
-
-# 環境変数の読み込み（必要に応じて）
-# ENV ASPNETCORE_ENVIRONMENT=Production
 
 EXPOSE 80
 ENTRYPOINT ["dotnet", "JobHuntX.API.dll"]
