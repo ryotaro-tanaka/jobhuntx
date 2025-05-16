@@ -23,6 +23,13 @@ WORKDIR /app
 COPY --from=nswag-build /src/client-app ./client-app
 WORKDIR /app/client-app
 RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Render does not load environment variables at Vite build time, so define them here for the build process
+ARG VITE_API_BASE_URL
+ARG VITE_API_KEY
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_API_KEY=$VITE_API_KEY
+
 RUN pnpm install && pnpm run build
 
 # ================================
