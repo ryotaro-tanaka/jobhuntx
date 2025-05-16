@@ -1,4 +1,6 @@
-# $ docker run -p 8080:5000 --env-file ./JobHuntX.API/.env jobhuntx:render
+# $ docker build -f Dockerfile.render -t jobhuntx:render .
+# $ docker run -d -p 8080:5000 --env-file ./JobHuntX.API/.env jobhuntx:render
+# $ docker stop jobhuntx:render
 
 # ================================
 # Build frontend (React)
@@ -7,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS nswag-build
 WORKDIR /src
 COPY . .
 
-# NSwag による TypeScript クライアントの自動生成
+# TypeScript client auto-generation by NSwag
 RUN dotnet tool install --global NSwag.ConsoleCore
 RUN /root/.dotnet/tools/nswag help
 WORKDIR /src/JobHuntX.API
@@ -16,7 +18,7 @@ RUN /root/.dotnet/tools/nswag run nswag.ci.json
 # ================================
 # Build frontend (React)
 # ================================
-FROM node:20-alpine AS frontend-build
+FROM node:slim AS frontend-build
 WORKDIR /app
 COPY --from=nswag-build /src/client-app ./client-app
 WORKDIR /app/client-app

@@ -18,8 +18,12 @@ app.UseHttpsRedirection();
 // Enable CORS
 app.UseCors();
 
-// APIキー認証ミドルウェアを追加（Swaggerやルートは除外される）
+// middleware
 app.UseMiddleware<ApiKeyMiddleware>();
+
+// react rooting
+app.UseStaticFiles();
+app.MapFallbackToFile("index.html");
 
 // Program.csの読み込みタイミングではdocker-compose.ymlで指定した環境変数を取得できない。
 // docker-compose.ymlでdotnet watch runではく、dotnet runを実行する必要があるが、
