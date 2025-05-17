@@ -65,6 +65,56 @@ describe('JobList Component', () => {
     mockOnJobClick.mockClear();
   });
 
+  // --- 追加テストここから ---
+
+  it('shows LoadingSkeletonList when jobsLoading is true and isJobList is true', () => {
+    // jobsMock/candidatesMockはresolveしないことでローディング状態を維持
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={true} />);
+    // LoadingSkeletonListはlistitemを5つ描画
+    expect(screen.getAllByRole('listitem')).toHaveLength(5);
+  });
+
+  it('shows EmptyJobList and suggested jobs when jobs.length === 0 and isJobList is true', async () => {
+    jobsMock
+      .mockResolvedValueOnce({ jobs: [], totalCount: 0 }) // 検索結果なし
+      .mockResolvedValueOnce({ jobs: mockJobs, totalCount: 2 }); // サジェスト
+    candidatesMock.mockResolvedValue([]);
+    render(<JobList onJobClick={mockOnJobClick} searchKey="nonexistent" headerIsLarge={true} isJobList={true} />);
+    expect(await screen.findByText('No jobs found. Please try a different search.')).toBeInTheDocument();
+    expect(screen.getByText('Software Engineer')).toBeInTheDocument();
+    expect(screen.getByText('Product Manager')).toBeInTheDocument();
+  });
+
+  it('shows JobListItem for each job when jobs.length > 0 and isJobList is true', async () => {
+    jobsMock.mockResolvedValueOnce({ jobs: mockJobs, totalCount: 2 });
+    candidatesMock.mockResolvedValueOnce([]);
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={true} />);
+    expect(await screen.findByText('Software Engineer')).toBeInTheDocument();
+    expect(screen.getByText('Product Manager')).toBeInTheDocument();
+  });
+
+  it('shows LoadingSkeletonList when talentLoading is true and isJobList is false', () => {
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={false} />);
+    expect(screen.getAllByRole('listitem')).toHaveLength(5);
+  });
+
+  it('shows "No talent found." when candidates.length === 0 and isJobList is false', async () => {
+    jobsMock.mockResolvedValueOnce({ jobs: [], totalCount: 0 });
+    candidatesMock.mockResolvedValueOnce([]);
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={false} />);
+    expect(await screen.findByText('No talent found.')).toBeInTheDocument();
+  });
+
+  it('shows CandidateListItem for each candidate when candidates.length > 0 and isJobList is false', async () => {
+    jobsMock.mockResolvedValueOnce({ jobs: [], totalCount: 0 });
+    candidatesMock.mockResolvedValueOnce(mockCandidates);
+    render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={false} />);
+    expect(await screen.findByText('Alice')).toBeInTheDocument();
+    expect(screen.getByText('Bob')).toBeInTheDocument();
+  });
+
+  // --- 追加テストここまで ---
+
   it('renders loading skeleton while fetching jobs', async () => {
     jobsMock.mockResolvedValueOnce({ jobs: [], totalCount: 0 });
     candidatesMock.mockResolvedValueOnce([]);

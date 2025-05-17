@@ -5,7 +5,6 @@ import { createApiClient, LocationType } from '../../api/clientFactory';
 function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobClick: (job: Job) => void; searchKey: string | null, headerIsLarge: boolean, isJobList: boolean }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [suggestedJobs, setSuggestedJobs] = useState<Job[]>([]);
-  // const [loading, setLoading] = useState(true);
   const [jobsLoading, setJobsLoading] = useState(true);
   const [talentLoading, setTalentLoading] = useState(true);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
