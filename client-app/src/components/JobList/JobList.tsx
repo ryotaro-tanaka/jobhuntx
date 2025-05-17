@@ -11,7 +11,7 @@ function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobCli
   // talent pool
   useEffect(() => {
     const fetchCandidates = async () => {
-      setLoading(true);
+      // setLoading(true);
       try {
         const client = createApiClient();
         const data = await client.candidates();
@@ -19,7 +19,7 @@ function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobCli
       } catch (error) {
         console.error('Failed to fetch candidates:', error);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
     fetchCandidates();
