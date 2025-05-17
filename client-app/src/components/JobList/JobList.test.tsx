@@ -65,19 +65,16 @@ describe('JobList Component', () => {
     mockOnJobClick.mockClear();
   });
 
-  // --- 追加テストここから ---
-
   it('shows LoadingSkeletonList when jobsLoading is true and isJobList is true', () => {
-    // jobsMock/candidatesMockはresolveしないことでローディング状態を維持
+    // keep in mind that LoadingSkeletonList is a placeholder for loading state
     render(<JobList onJobClick={mockOnJobClick} searchKey={null} headerIsLarge={true} isJobList={true} />);
-    // LoadingSkeletonListはlistitemを5つ描画
     expect(screen.getAllByRole('listitem')).toHaveLength(5);
   });
 
   it('shows EmptyJobList and suggested jobs when jobs.length === 0 and isJobList is true', async () => {
     jobsMock
-      .mockResolvedValueOnce({ jobs: [], totalCount: 0 }) // 検索結果なし
-      .mockResolvedValueOnce({ jobs: mockJobs, totalCount: 2 }); // サジェスト
+      .mockResolvedValueOnce({ jobs: [], totalCount: 0 })
+      .mockResolvedValueOnce({ jobs: mockJobs, totalCount: 2 }); // suggested jobs
     candidatesMock.mockResolvedValue([]);
     render(<JobList onJobClick={mockOnJobClick} searchKey="nonexistent" headerIsLarge={true} isJobList={true} />);
     expect(await screen.findByText('No jobs found. Please try a different search.')).toBeInTheDocument();
@@ -112,8 +109,6 @@ describe('JobList Component', () => {
     expect(await screen.findByText('Alice')).toBeInTheDocument();
     expect(screen.getByText('Bob')).toBeInTheDocument();
   });
-
-  // --- 追加テストここまで ---
 
   it('renders loading skeleton while fetching jobs', async () => {
     jobsMock.mockResolvedValueOnce({ jobs: [], totalCount: 0 });
