@@ -38,7 +38,7 @@ public static class ApplicationExtensions {
             .Produces<KeywordTags>(StatusCodes.Status200OK)
             .WithOpenApi();
 
-        app.MapGet("/", () => "Welcome to JobHuntX.API!")
+        app.MapGet("/api/status", () => "Welcome to JobHuntX.API!")
             .Produces<string>(StatusCodes.Status200OK)
             .WithOpenApi();
     }

@@ -1,0 +1,52 @@
+# $ docker build -f Dockerfile.render -t jobhuntx:render .
+# $ docker run -d -p 8080:5000 --env-file ./JobHuntX.API/.env jobhuntx:render
+# $ docker stop jobhuntx:render
+
+# ================================
+# Build frontend (React)
+# ================================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS nswag-build
+WORKDIR /src
+COPY . .
+
+# TypeScript client auto-generation by NSwag
+RUN dotnet tool install --global NSwag.ConsoleCore
+RUN /root/.dotnet/tools/nswag help
+WORKDIR /src/JobHuntX.API
+RUN /root/.dotnet/tools/nswag run nswag.ci.json
+
+# ================================
+# Build frontend (React)
+# ================================
+FROM node:slim AS frontend-build
+WORKDIR /app
+COPY --from=nswag-build /src/client-app ./client-app
+WORKDIR /app/client-app
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Render does not load environment variables at Vite build time, so define them here for the build process
+ARG VITE_API_BASE_URL
+ARG VITE_API_KEY
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_API_KEY=$VITE_API_KEY
+
+RUN pnpm install && pnpm run build
+
+# ================================
+# Build backend (ASP.NET Core)
+# ================================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-build
+WORKDIR /src
+COPY --from=nswag-build /src ./
+RUN dotnet publish JobHuntX.API/JobHuntX.API.csproj -c Release -o /app/publish
+
+# ================================
+# Final stage
+# ================================
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=backend-build /app/publish ./
+COPY --from=frontend-build /app/client-app/dist ./wwwroot
+
+EXPOSE 80
+ENTRYPOINT ["dotnet", "JobHuntX.API.dll"]
