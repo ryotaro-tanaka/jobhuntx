@@ -5,13 +5,15 @@ import { createApiClient, LocationType } from '../../api/clientFactory';
 function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobClick: (job: Job) => void; searchKey: string | null, headerIsLarge: boolean, isJobList: boolean }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [suggestedJobs, setSuggestedJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
+  const [jobsLoading, setJobsLoading] = useState(true);
+  const [talentLoading, setTalentLoading] = useState(true);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 
   // talent pool
   useEffect(() => {
     const fetchCandidates = async () => {
-      // setLoading(true);
+      setTalentLoading(true);
       try {
         const client = createApiClient();
         const data = await client.candidates();
@@ -19,7 +21,7 @@ function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobCli
       } catch (error) {
         console.error('Failed to fetch candidates:', error);
       } finally {
-        // setLoading(false);
+        setTalentLoading(false);
       }
     };
     fetchCandidates();
@@ -28,7 +30,7 @@ function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobCli
   // jobs pool
   useEffect(() => {
     const fetchJobs = async () => {
-      setLoading(true);
+      setJobsLoading(true);
       try {
         const client = createApiClient();
         const data = await client.jobs(searchKey ?? undefined);
@@ -44,7 +46,7 @@ function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobCli
       } catch (error) {
         console.error('Failed to fetch jobs:', error);
       } finally {
-        setLoading(false);
+        setJobsLoading(false);
       }
     };
 
@@ -61,10 +63,10 @@ function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobCli
         role="list"
         aria-label={isJobList ? "Job Listings" : "Talent Listings"}
       >
-        {loading ? (
-          <LoadingSkeletonList />
-        ) : isJobList ? (
-          jobs.length === 0 ? (
+        {isJobList ? (
+          jobsLoading ? (
+            <LoadingSkeletonList />
+          ) : jobs.length === 0 ? (
             <>
               <EmptyJobList />
               {suggestedJobs.map((job) => (
@@ -77,7 +79,9 @@ function JobList({ onJobClick, searchKey, headerIsLarge, isJobList }: { onJobCli
             ))
           )
         ) : (
-          candidates.length === 0 ? (
+          talentLoading ? (
+            <LoadingSkeletonList />
+          ) : candidates.length === 0 ? (
             <li>
               <p className="mt-4 text-gray-600">No talent found.</p>
             </li>
