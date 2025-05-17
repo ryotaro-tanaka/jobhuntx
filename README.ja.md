@@ -2,6 +2,10 @@
 
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
+![JobHuntX Demo](docs/demo.gif)
+
+[🚀 **パブリックデモ**](https://jobhuntx.onrender.com/)
+
 ## 概要
 JobHuntX は、ASP.NET Core と React を使用して開発された求人情報集約アプリケーションです。このプロジェクトは、公開API・RSS・Webサイトなど複数の情報源から求人情報を収集し、効率的に求人情報を管理・検索するためのツールを提供します。
 
@@ -9,6 +13,7 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 - 求人情報の収集（API・RSS・Webサイト等）
 - 検索およびフィルタリング機能
 - ユーザーフレンドリーなインターフェース
+- CI/CDパイプライン
 
 ## セットアップ
 1. リポジトリをクローンします:
@@ -56,6 +61,7 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 ![dotnet-format](https://img.shields.io/badge/dotnet%20format--blue?logo=dotnet&logoColor=white)
 ![xUnit](https://img.shields.io/badge/xUnit--blue?logo=.net&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
+![Render](https://img.shields.io/badge/Render--blue?logo=render&logoColor=white)
 
 ## dotnet-formatでのフォーマット
 
@@ -100,6 +106,14 @@ $ pnpm test
 ```bash
 $ dotnet test JobHuntX.Tests
 ```
+
+## デプロイ
+
+パブリックデモは Render サービス上で `release/render-deploy` ブランチおよび `Dockerfile.render` を使用してデプロイされています。
+
+- **デモURL:** https://jobhuntx.onrender.com/
+- **デプロイ用ブランチ:** `release/render-deploy`
+- **Dockerfile:** `Dockerfile.render`
 
 ## ライセンス
 このプロジェクトは [MIT ライセンス](./LICENSE) の下で提供されています。

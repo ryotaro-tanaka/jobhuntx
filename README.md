@@ -2,14 +2,18 @@
 
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
+![JobHuntX Demo](docs/demo.gif)
+
+[🚀 **Public Demo is Live!**](https://jobhuntx.onrender.com/)
 
 ## Overview
 JobHuntX is a job information aggregation application developed using ASP.NET Core and React. This project collects job postings from multiple sources—including public APIs, RSS feeds, and websites—and provides tools to efficiently search job information.
 
 ## Key Features
-- Job information scraping
+- Job information aggregation (from APIs, RSS feeds, and websites)
 - Search and filtering functionality
 - User-friendly interface
+- Automated CI/CD pipeline
 
 ## Setup
 1. Clone the repository:
@@ -57,6 +61,7 @@ JobHuntX is a job information aggregation application developed using ASP.NET Co
 ![dotnet-format](https://img.shields.io/badge/dotnet%20format--blue?logo=dotnet&logoColor=white)
 ![xUnit](https://img.shields.io/badge/xUnit--blue?logo=.net&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
+![Render](https://img.shields.io/badge/Render--blue?logo=render&logoColor=white)
 
 
 ## Formatting with dotnet-format
@@ -102,6 +107,14 @@ $ curl http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json
 ```
 
 This ensures that the frontend API types can be generated from the latest API specification and that CI tests will not fail due to missing or outdated `swagger.json`.
+
+## Deployment
+
+The public demo is deployed on Render using the `release/render-deploy` branch and the `Dockerfile.render` configuration.
+
+- **Demo URL:** https://jobhuntx.onrender.com/
+- **Deployment branch:** `release/render-deploy`
+- **Dockerfile:** `Dockerfile.render`
 
 ## License
 This project is provided under the [MIT License](./LICENSE).
