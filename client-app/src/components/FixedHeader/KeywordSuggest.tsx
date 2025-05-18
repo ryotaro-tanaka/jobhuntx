@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Client, KeywordTags } from 'api/generated';
 import { createApiClient } from '../../api/clientFactory';
+import { sendSearchReport } from 'utils/analytics';
 
 type Props = {
   isLarge: boolean;
@@ -74,6 +75,7 @@ export default function KeywordSuggest({isLarge, value, onChange, onSelect, onBl
         const selected = suggestions[highlightedIndex];
         onChange(selected);
         onSelect(selected);
+        sendSearchReport(selected, 'suggestion');
         setShowSuggestions(false);
         setHighlightedIndex(-1);
       }
@@ -83,6 +85,7 @@ export default function KeywordSuggest({isLarge, value, onChange, onSelect, onBl
   const handleSuggestionClick = (s: string) => {
     onChange(s);
     onSelect(s);
+    sendSearchReport(s, 'suggestion');
     setShowSuggestions(false);
     setHighlightedIndex(-1);
   };

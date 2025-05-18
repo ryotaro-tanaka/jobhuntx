@@ -3,6 +3,7 @@ import logoLarge from 'assets/logo-wide.svg'
 import logoSmall from 'assets/logo.svg'
 import searchIcon from 'assets/search.svg'
 import KeywordSuggest from './KeywordSuggest';
+import { sendSearchReport } from 'utils/analytics';
 
 function FixedHeader({ onSearch, isLarge, setIsLarge, isJobList, setIsJobList }: { onSearch: (key: string | null) => void, isLarge: boolean, setIsLarge: (isLarge: boolean) => void, isJobList: boolean, setIsJobList: (v: boolean) => void }) {
   const [searchKeyStr, setSearchKeyStr] = useState<string>('');
@@ -18,7 +19,11 @@ function FixedHeader({ onSearch, isLarge, setIsLarge, isJobList, setIsJobList }:
   };
 
   const handleSearch = () => {
-    onSearch(searchKeyStr.trim() === '' ? null : searchKeyStr);
+    const keyword = searchKeyStr.trim();
+    if (keyword !== '') {
+      sendSearchReport(keyword, 'manual');
+    }
+    onSearch(keyword === '' ? null : keyword);
   };
 
   return (
