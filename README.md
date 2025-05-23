@@ -116,5 +116,51 @@ The public demo is deployed on Render using the `release/render-deploy` branch a
 - **Deployment branch:** `release/render-deploy`
 - **Dockerfile:** `Dockerfile.render`
 
+## Architecture
+
+### **Backend**
+
+This application organizes backend data retrieval and processing logic using the "Handler" pattern.
+
+![diagram backend](docs/diagram-backend.png)
+
+#### Components
+
+* HandlerBase (abstract class):  
+    Provides common functionality (caching, error handling, filtering, etc.) and serves as a base for concrete handlers.
+* Individual Handlers  
+    Concrete classes responsible for each job source.
+* AggregateJobHandler  
+    Integrates multiple Individual Handlers to build a unified job list.
+* Utilities  
+    Cross-cutting concerns (caching, logging, filtering, utilities) are separated into independent classes to ensure reusability and single responsibility.
+
+### **Frontend**
+
+The frontend is structured using a combination of the **Container/Presentational pattern** and **state management with Hooks + Context**. The main goal is to achieve separation of concerns, improving readability and scalability.
+
+![diagram frontend](docs/diagram-frontend.png)
+
+#### Components
+
+* Hooks  
+    * useJobSearch:  
+    Centralizes management of search state, selected job, header size, and display mode (job/talent). Also handles side effects such as API calls.
+* State  
+    State values managed by useJobSearch, shared across multiple components.
+* Context  
+    * JobSearchProvider:  
+    Wraps state in context, making it accessible to child components.
+    * useJobContext:  
+    Custom hook for concise access and updates to state.
+* Container Components  
+    * XXXContainer:  
+    Handles state and logic (context access, handler definitions), passing necessary props to presentational components.
+* Presentational Components  
+    * XXX:  
+    UI components focused solely on display and user interaction, without logic or side effects.
+* App.tsx  
+    The entry point of the application, providing state via JobSearchProvider and arranging main container components.
+
 ## License
 This project is provided under the [MIT License](./LICENSE).
