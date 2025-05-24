@@ -129,11 +129,11 @@ This application organizes backend data retrieval and processing logic using the
 * HandlerBase (abstract class):  
     Provides common functionality (caching, error handling, filtering, etc.) and serves as a base for concrete handlers.
 * Individual Handlers  
-    Concrete classes responsible for each job source.
+    Concrete classes that handle job fetching and parsing from individual sources (e.g., RSS, API, websites).
 * AggregateJobHandler  
     Integrates multiple Individual Handlers to build a unified job list.
 * Utilities  
-    Cross-cutting concerns (caching, logging, filtering, utilities) are separated into independent classes to ensure reusability and single responsibility.
+    Cross-cutting concerns such as caching, logging, and filtering are encapsulated in separate utility classes to ensure reusability and single responsibility.
 
 ### **Frontend**
 
@@ -160,7 +160,7 @@ The frontend is structured using a combination of the **Container/Presentational
     * XXX:  
     UI components focused solely on display and user interaction, without logic or side effects.
 * App.tsx  
-    The entry point of the application, providing state via JobSearchProvider and arranging main container components.
+    The entry point of the application. It wraps the app with ```JobSearchProvider``` and composes the top-level container components.
 
 ## License
 This project is provided under the [MIT License](./LICENSE).
