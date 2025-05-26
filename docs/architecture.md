@@ -1,3 +1,6 @@
+<!-- https://mermaid.live/ -->
+
+* forntend
 ```mermaid
 flowchart TD
   subgraph Hooks
@@ -57,6 +60,7 @@ flowchart TD
 
 ```
 
+* backend
 ```mermaid
 flowchart TD
   subgraph Handlers
