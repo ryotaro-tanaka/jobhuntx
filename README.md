@@ -118,6 +118,9 @@ The public demo is deployed on Render using the `release/render-deploy` branch a
 
 ## Architecture
 
+> ⚠️ **Note:** This project is currently undergoing a major refactoring to improve architecture and maintainability.  
+> The diagrams and descriptions below reflect the intended structure, but some parts of the codebase may still be in transition.
+
 ### **Backend**
 
 This application organizes backend data retrieval and processing logic using the "Handler" pattern.
