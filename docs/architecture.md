@@ -1,6 +1,6 @@
 <!-- https://mermaid.live/ -->
 
-* forntend
+* frontend
 ```mermaid
 flowchart TD
   subgraph Hooks
