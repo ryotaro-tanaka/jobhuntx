@@ -1,0 +1,21 @@
+# .geminiignore - Optimization for AI Context
+# This file defines files and directories that Gemini CLI should ignore.
+# It works in addition to .gitignore.
+
+# Exclude large lockfiles that are tracked by Git
+client-app/pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Exclude binary and media assets to save tokens and improve scan speed
+docs/assets/
+*.gif
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.ico
+*.pdf
+
+# Exclude large generated documentation or diagrams if any
+*.drawio
