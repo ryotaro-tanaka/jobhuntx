@@ -1,16 +1,16 @@
-import { Job } from '../../api/generated';
-import JobDetail from './JobDetail';
-import closeIcon from '../../assets/close.svg';
+import { Job } from '../../api/generated'
+import JobDetail from './JobDetail'
+import closeIcon from '../../assets/close.svg'
 
 type JobDetailModalProps = {
-  job: Job;
-  onClose: () => void;
-};
+  job: Job
+  onClose: () => void
+}
 
 export default function JobDetailModal({ job, onClose }: JobDetailModalProps) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 md:items-center"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -18,24 +18,24 @@ export default function JobDetailModal({ job, onClose }: JobDetailModalProps) {
     >
       <div
         className="
-          w-full h-full
-          md:w-[90vw] md:min-w-[768px] md:h-[90vh]
-          bg-white rounded-lg shadow-lg overflow-hidden
+          size-full overflow-hidden
+          rounded-lg bg-white shadow-lg
+          md:h-[90vh] md:w-[90vw] md:min-w-[768px]
         "
         role="document"
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 p-2"
+          className="absolute right-2 top-2 p-2 text-gray-500 hover:text-gray-700"
           onClick={onClose}
           aria-label="close"
         >
-          <img src={closeIcon} alt="close" className="w-6 h-6" />
+          <img src={closeIcon} alt="close" className="size-6" />
         </button>
         <div className="h-full overflow-y-auto">
           <JobDetail job={job} />
         </div>
       </div>
     </div>
-  );
+  )
 }

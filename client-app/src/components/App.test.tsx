@@ -1,10 +1,15 @@
 import { render, screen } from '@testing-library/react'
 import App from './App'
+import { JobSearchProvider } from '../contexts/JobSearchContext'
 
 // UI test (component test)
 describe('<App />', () => {
   it('display sub components', async () => {
-    render(<App />)
+    render(
+      <JobSearchProvider>
+        <App />
+      </JobSearchProvider>
+    )
 
     expect(screen.getByRole('banner')).toBeInTheDocument()
     expect(await screen.findByRole('main')).toBeInTheDocument()
