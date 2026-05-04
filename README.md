@@ -2,7 +2,7 @@
 
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
-![JobHuntX Demo](docs/demo.gif)
+![JobHuntX Demo](docs/assets/demo.gif)
 
 [🚀 **Public Demo is Live!**](https://jobhuntx.onrender.com/)
 
@@ -122,7 +122,7 @@ The public demo is deployed on Render using the `release/render-deploy` branch a
 
 This application organizes backend data retrieval and processing logic using the "Handler" pattern.
 
-![diagram backend](docs/diagram-backend.png)
+![diagram backend](docs/assets/diagram-backend.png)
 
 #### Components
 
@@ -139,7 +139,7 @@ This application organizes backend data retrieval and processing logic using the
 
 The frontend is structured using a combination of the **Container/Presentational pattern** and **state management with Hooks + Context**. The main goal is to achieve separation of concerns, improving readability and scalability.
 
-![diagram frontend](docs/diagram-frontend.png)
+![diagram frontend](docs/assets/diagram-frontend.png)
 
 #### Components
 

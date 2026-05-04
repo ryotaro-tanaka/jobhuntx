@@ -2,7 +2,7 @@
 
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
-![JobHuntX Demo](docs/demo.gif)
+![JobHuntX Demo](docs/assets/demo.gif)
 
 [🚀 **パブリックデモ**](https://jobhuntx.onrender.com/)
 
@@ -117,14 +117,11 @@ $ dotnet test JobHuntX.Tests
 
 ## アーキテクチャ
 
-> ⚠️ **注意:** 本プロジェクトは現在、アーキテクチャと保守性向上のため大規模なリファクタリング中です。  
-> 以下の図や説明は意図する構成を示していますが、コードベースの一部は移行途中の場合があります。
-
 ### **バックエンド**
 
 本アプリケーションでは、バックエンドのデータ取得・処理ロジックを「ハンドラーパターン」で整理しています。
 
-![diagram backend](docs/diagram-backend.png)
+![diagram backend](docs/assets/diagram-backend.png)
 
 #### 構成要素
 
@@ -141,7 +138,7 @@ $ dotnet test JobHuntX.Tests
 
 フロントエンドは、**コンテナ／プレゼンテーションパターン**と**Hooks＋Contextによる状態管理**を組み合わせた構成です。主な目的は関心の分離（Separation of Concerns）を実現し、可読性と拡張性を高めることです。
 
-![diagram frontend](docs/diagram-frontend.png)
+![diagram frontend](docs/assets/diagram-frontend.png)
 
 #### 構成要素
 
