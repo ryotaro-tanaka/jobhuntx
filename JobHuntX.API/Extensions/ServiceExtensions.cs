@@ -1,3 +1,4 @@
+using JobHuntX.API.Handlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,5 +17,16 @@ public static class ServiceExtensions {
                         .AllowAnyMethod();
             });
         });
+    }
+
+    public static void RegisterHandlers(this IServiceCollection services) {
+        services.AddScoped<RemoteOkHandler>();
+        services.AddScoped<WeWorkRemotelyRSSHandler>();
+
+        // Register as IJobHandler for AggregateJobHandler
+        services.AddScoped<IJobHandler>(sp => sp.GetRequiredService<RemoteOkHandler>());
+        services.AddScoped<IJobHandler>(sp => sp.GetRequiredService<WeWorkRemotelyRSSHandler>());
+
+        services.AddScoped<AggregateJobHandler>();
     }
 }
