@@ -30,11 +30,12 @@ JobHuntX is a job information aggregation application developed using ASP.NET Co
     cd JobHuntX/JobHuntX.API
     dotnet nswag run nswag.local.json
     ```
-1. Start the application using Docker Compose:
+4. Start the application using Docker Compose (Ensure Docker Desktop is running):
     ```bash
     cd ../
-    docker-compose up --build
+    docker compose up --build
     ```
+
 1. Once the application starts, access the following URL in your browser:
     ```
     http://localhost:5173

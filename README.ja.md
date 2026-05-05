@@ -30,10 +30,10 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
     cd JobHuntX/JobHuntX.API
     dotnet nswag run nswag.local.json
     ```
-1. Docker Compose を使用してアプリケーションを起動します:
+1. Docker Compose を使用してアプリケーションを起動します（Docker Desktop が起動していることを確認してください）:
     ```bash
     cd ../
-    docker-compose up --build
+    docker compose up --build
     ```
 1. アプリケーションが起動したら、以下の URL にブラウザでアクセスします:
     ```
