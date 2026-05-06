@@ -1,5 +1,5 @@
 {
-  "runtime": "Net80",
+  "runtime": "Default",
   "documentGenerator": {
     "fromDocument": {
       "json": "swagger.json"
