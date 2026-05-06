@@ -1,5 +1,7 @@
 # JobHuntX
 
+English | [日本語](README.ja.md)
+
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
 ![JobHuntX Demo](docs/assets/demo.gif)
@@ -25,17 +27,15 @@ JobHuntX is a job information aggregation application developed using ASP.NET Co
       cp JobHuntX.API/.env.sample JobHuntX.API/.env
       cp client-app/.env.sample client-app/.env
       ```
-1. Generate the API client:
+1. Start the application using Docker Compose (Ensure Docker Desktop is running):
     ```bash
-    cd JobHuntX/JobHuntX.API
+    docker compose up --build -d
+    ```
+1. Generate the API client (Required for the first time or when API changes):
+    ```bash
+    cd JobHuntX.API
     dotnet nswag run nswag.local.json
     ```
-4. Start the application using Docker Compose (Ensure Docker Desktop is running):
-    ```bash
-    cd ../
-    docker compose up --build
-    ```
-
 1. Once the application starts, access the following URL in your browser:
     ```
     http://localhost:5173

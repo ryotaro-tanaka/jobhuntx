@@ -1,5 +1,7 @@
 # JobHuntX
 
+[English](README.md) | 日本語
+
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
 ![JobHuntX Demo](docs/assets/demo.gif)
@@ -25,15 +27,14 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
     cp JobHuntX.API/.env.sample JobHuntX.API/.env
     cp client-app/.env.sample client-app/.env
     ```
-1. API クライアントを生成します:
-    ```bash
-    cd JobHuntX/JobHuntX.API
-    dotnet nswag run nswag.local.json
-    ```
 1. Docker Compose を使用してアプリケーションを起動します（Docker Desktop が起動していることを確認してください）:
     ```bash
-    cd ../
-    docker compose up --build
+    docker compose up --build -d
+    ```
+1. API クライアントを生成します（初回起動時、または API モデル変更時に必要です）:
+    ```bash
+    cd JobHuntX.API
+    dotnet nswag run nswag.local.json
     ```
 1. アプリケーションが起動したら、以下の URL にブラウザでアクセスします:
     ```
