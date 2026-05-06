@@ -8,12 +8,8 @@ namespace JobHuntX.API.Handlers;
 public class AggregateJobHandler {
     private readonly List<IJobHandler> _handlers;
 
-    public AggregateJobHandler() {
-        _handlers = new List<IJobHandler>
-        {
-            new RemoteOkHandler(),
-            new WeWorkRemotelyRSSHandler(),
-        };
+    public AggregateJobHandler(IEnumerable<IJobHandler> handlers) {
+        _handlers = handlers.ToList();
     }
 
     public async Task<IResult> GetJobs([FromQuery] string? key) {

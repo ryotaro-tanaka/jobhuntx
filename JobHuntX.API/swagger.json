@@ -89,6 +89,25 @@
         }
       }
     },
+    "/api/sample": {
+      "get": {
+        "tags": [
+          "JobHuntX.API"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/keywords": {
       "get": {
         "tags": [
@@ -108,7 +127,7 @@
         }
       }
     },
-    "/": {
+    "/api/status": {
       "get": {
         "tags": [
           "JobHuntX.API"
@@ -142,25 +161,6 @@
                   "items": {
                     "$ref": "#/components/schemas/Candidate"
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/sample": {
-      "get": {
-        "tags": [
-          "SampleJobHandler"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JobListResponse"
                 }
               }
             }

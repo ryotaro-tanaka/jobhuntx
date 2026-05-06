@@ -1,0 +1,12 @@
+{
+  "name": "jobhuntx",
+  "private": true,
+  "scripts": {
+    "test": "dotnet test && cd client-app && pnpm test",
+    "test:backend": "dotnet test",
+    "test:frontend": "cd client-app && pnpm test",
+    "nswag": "cd JobHuntX.API && dotnet nswag run nswag.local.json",
+    "swagger:update": "curl -s http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json",
+    "pretest": "dotnet tool restore"
+  }
+}

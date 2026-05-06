@@ -1,8 +1,10 @@
 # JobHuntX
 
+[English](README.md) | 日本語
+
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
-![JobHuntX Demo](docs/demo.gif)
+![JobHuntX Demo](docs/assets/demo.gif)
 
 [🚀 **パブリックデモ**](https://jobhuntx.onrender.com/)
 
@@ -25,15 +27,14 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
     cp JobHuntX.API/.env.sample JobHuntX.API/.env
     cp client-app/.env.sample client-app/.env
     ```
-1. API クライアントを生成します:
+1. Docker Compose を使用してアプリケーションを起動します（Docker Desktop が起動していることを確認してください）:
     ```bash
-    cd JobHuntX/JobHuntX.API
-    dotnet nswag run nswag.local.json
+    docker compose up --build -d
     ```
-1. Docker Compose を使用してアプリケーションを起動します:
+1. API クライアントを生成します（初回起動時、または API モデル変更時に必要です）:
     ```bash
-    cd ../
-    docker-compose up --build
+    cd JobHuntX.API
+    dotnet nswag run nswag.local.json
     ```
 1. アプリケーションが起動したら、以下の URL にブラウザでアクセスします:
     ```
@@ -117,14 +118,11 @@ $ dotnet test JobHuntX.Tests
 
 ## アーキテクチャ
 
-> ⚠️ **注意:** 本プロジェクトは現在、アーキテクチャと保守性向上のため大規模なリファクタリング中です。  
-> 以下の図や説明は意図する構成を示していますが、コードベースの一部は移行途中の場合があります。
-
 ### **バックエンド**
 
 本アプリケーションでは、バックエンドのデータ取得・処理ロジックを「ハンドラーパターン」で整理しています。
 
-![diagram backend](docs/diagram-backend.png)
+![diagram backend](docs/assets/diagram-backend.png)
 
 #### 構成要素
 
@@ -141,7 +139,7 @@ $ dotnet test JobHuntX.Tests
 
 フロントエンドは、**コンテナ／プレゼンテーションパターン**と**Hooks＋Contextによる状態管理**を組み合わせた構成です。主な目的は関心の分離（Separation of Concerns）を実現し、可読性と拡張性を高めることです。
 
-![diagram frontend](docs/diagram-frontend.png)
+![diagram frontend](docs/assets/diagram-frontend.png)
 
 #### 構成要素
 

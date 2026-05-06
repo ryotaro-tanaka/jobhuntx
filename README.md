@@ -1,8 +1,10 @@
 # JobHuntX
 
+English | [日本語](README.ja.md)
+
 ![Tests](https://github.com/ryotaro-tanaka/JobHuntX/actions/workflows/ci.yml/badge.svg)
 
-![JobHuntX Demo](docs/demo.gif)
+![JobHuntX Demo](docs/assets/demo.gif)
 
 [🚀 **Public Demo is Live!**](https://jobhuntx.onrender.com/)
 
@@ -25,15 +27,14 @@ JobHuntX is a job information aggregation application developed using ASP.NET Co
       cp JobHuntX.API/.env.sample JobHuntX.API/.env
       cp client-app/.env.sample client-app/.env
       ```
-1. Generate the API client:
+1. Start the application using Docker Compose (Ensure Docker Desktop is running):
     ```bash
-    cd JobHuntX/JobHuntX.API
-    dotnet nswag run nswag.local.json
+    docker compose up --build -d
     ```
-1. Start the application using Docker Compose:
+1. Generate the API client (Required for the first time or when API changes):
     ```bash
-    cd ../
-    docker-compose up --build
+    cd JobHuntX.API
+    dotnet nswag run nswag.local.json
     ```
 1. Once the application starts, access the following URL in your browser:
     ```
@@ -118,14 +119,11 @@ The public demo is deployed on Render using the `release/render-deploy` branch a
 
 ## Architecture
 
-> ⚠️ **Note:** This project is currently undergoing a major refactoring to improve architecture and maintainability.  
-> The diagrams and descriptions below reflect the intended structure, but some parts of the codebase may still be in transition.
-
 ### **Backend**
 
 This application organizes backend data retrieval and processing logic using the "Handler" pattern.
 
-![diagram backend](docs/diagram-backend.png)
+![diagram backend](docs/assets/diagram-backend.png)
 
 #### Components
 
@@ -142,7 +140,7 @@ This application organizes backend data retrieval and processing logic using the
 
 The frontend is structured using a combination of the **Container/Presentational pattern** and **state management with Hooks + Context**. The main goal is to achieve separation of concerns, improving readability and scalability.
 
-![diagram frontend](docs/diagram-frontend.png)
+![diagram frontend](docs/assets/diagram-frontend.png)
 
 #### Components
 

@@ -12,8 +12,7 @@ public static class ApplicationExtensions {
     }
 
     public static void MapEndpoints(this WebApplication app) {
-        app.MapGet("/api/jobs", async([FromQuery] string ? key) => {
-            var handler = new AggregateJobHandler();
+        app.MapGet("/api/jobs", async (AggregateJobHandler handler, [FromQuery] string? key) => {
             return await handler.GetJobs(key);
         })
             .Produces<JobListResponse>(StatusCodes.Status200OK)
@@ -23,7 +22,7 @@ public static class ApplicationExtensions {
         // app.MapJobEndpoint<WeWorkRemotelyHandler>("/api/wework");
         app.MapJobEndpoint<WeWorkRemotelyRSSHandler>("/api/weworkrss");
 
-        app.MapGet("/api/sample", SampleJobHandler.GetJobs)
+        app.MapGet("/api/sample", () => SampleJobHandler.GetJobs())
             .Produces<JobListResponse>(StatusCodes.Status200OK)
             .WithOpenApi();
 
@@ -44,9 +43,8 @@ public static class ApplicationExtensions {
     }
 
     private static void MapJobEndpoint<THandler>(this WebApplication app, string route)
-        where THandler : IJobHandler, new() {
-        app.MapGet(route, async([FromQuery] string ? key) => {
-            var handler = new THandler();
+        where THandler : class, IJobHandler {
+        app.MapGet(route, async (THandler handler, [FromQuery] string? key) => {
             return await handler.GetJobs(key);
         })
         .Produces<JobListResponse>(StatusCodes.Status200OK)

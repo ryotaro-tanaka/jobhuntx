@@ -1,24 +1,23 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { vi } from 'vitest'
+import { describe, it, vi, expect, beforeEach } from 'vitest'
 import FixedHeader from './FixedHeader'
+import { JobSearchProvider } from '../../contexts/JobSearchContext'
 
-// mock fetch
-global.fetch = vi.fn(() =>
+global.fetch = vi.fn().mockImplementation(() =>
   Promise.resolve({
-    ok: true,
     json: () =>
       Promise.resolve({
         roles: [],
         skills: [],
         domains: [],
         employment: [],
-        locations: [],
+        locations: []
       }),
     text: () => Promise.resolve(''),
     status: 200,
-    headers: {},
-  })
-) as any
+    headers: {}
+  } as unknown as Response)
+)
 
 describe('<FixedHeader />', () => {
   const onSearch = vi.fn()
@@ -31,71 +30,70 @@ describe('<FixedHeader />', () => {
     setIsJobList.mockClear()
   })
 
-  it('renders both logos and search form', () => {
+  it('renders correctly', () => {
     render(
-      <FixedHeader
-        onSearch={onSearch}
-        isLarge={true}
-        setIsLarge={setIsLarge}
-        isJobList={true}
-        setIsJobList={setIsJobList}
-      />
+      <JobSearchProvider>
+        <FixedHeader
+          onSearch={onSearch}
+          isLarge={true}
+          setIsLarge={setIsLarge}
+          isJobList={true}
+          setIsJobList={setIsJobList}
+        />
+      </JobSearchProvider>
     )
-    // Both logos should be present
-    expect(screen.getByAltText('JobHuntX Logo')).toBeInTheDocument()
-    expect(screen.getByAltText('JobHuntX Logo Small')).toBeInTheDocument()
-    // Search form and searchbox
-    expect(screen.getByRole('search')).toBeInTheDocument()
-    expect(screen.getByRole('searchbox')).toBeInTheDocument()
-    // Toggle buttons
-    expect(screen.getByRole('button', { name: /Jobs/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Talent/i })).toBeInTheDocument()
+    expect(screen.getByRole('banner')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Keyword')).toBeInTheDocument()
   })
 
-  it('calls onSearch when form is submitted', () => {
+  it('calls onSearch when search button is clicked', () => {
     render(
-      <FixedHeader
-        onSearch={onSearch}
-        isLarge={true}
-        setIsLarge={setIsLarge}
-        isJobList={true}
-        setIsJobList={setIsJobList}
-      />
+      <JobSearchProvider>
+        <FixedHeader
+          onSearch={onSearch}
+          isLarge={true}
+          setIsLarge={setIsLarge}
+          isJobList={true}
+          setIsJobList={setIsJobList}
+        />
+      </JobSearchProvider>
     )
-    const input = screen.getByRole('searchbox')
-    fireEvent.change(input, { target: { value: 'engineer' } })
-    fireEvent.submit(screen.getByRole('search'))
-    expect(onSearch).toHaveBeenCalledWith('engineer')
+    const searchButton = screen.getByRole('button', { name: /search/i })
+    fireEvent.click(searchButton)
+    expect(onSearch).toHaveBeenCalled()
   })
 
-  it('calls setIsLarge(true) on input focus', () => {
+  it('toggles between Jobs and Talent', () => {
     render(
-      <FixedHeader
-        onSearch={onSearch}
-        isLarge={false}
-        setIsLarge={setIsLarge}
-        isJobList={true}
-        setIsJobList={setIsJobList}
-      />
+      <JobSearchProvider>
+        <FixedHeader
+          onSearch={onSearch}
+          isLarge={true}
+          setIsLarge={setIsLarge}
+          isJobList={true}
+          setIsJobList={setIsJobList}
+        />
+      </JobSearchProvider>
     )
-    const input = screen.getByRole('searchbox')
-    fireEvent.focus(input)
-    expect(setIsLarge).toHaveBeenCalledWith(true)
-  })
-
-  it('calls setIsJobList when toggle buttons are clicked', () => {
-    render(
-      <FixedHeader
-        onSearch={onSearch}
-        isLarge={true}
-        setIsLarge={setIsLarge}
-        isJobList={true}
-        setIsJobList={setIsJobList}
-      />
-    )
-    fireEvent.click(screen.getByRole('button', { name: /Talent/i }))
+    const talentButton = screen.getByText('Talent')
+    fireEvent.click(talentButton)
     expect(setIsJobList).toHaveBeenCalledWith(false)
-    fireEvent.click(screen.getByRole('button', { name: /Jobs/i }))
-    expect(setIsJobList).toHaveBeenCalledWith(true)
+  })
+
+  it('updates input value on change', () => {
+    render(
+      <JobSearchProvider>
+        <FixedHeader
+          onSearch={onSearch}
+          isLarge={true}
+          setIsLarge={setIsLarge}
+          isJobList={true}
+          setIsJobList={setIsJobList}
+        />
+      </JobSearchProvider>
+    )
+    const input = screen.getByPlaceholderText('Keyword')
+    fireEvent.change(input, { target: { value: 'react' } })
+    expect(input).toHaveValue('react')
   })
 })

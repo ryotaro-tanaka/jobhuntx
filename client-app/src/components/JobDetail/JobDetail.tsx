@@ -1,12 +1,12 @@
-import { Job } from '../../api/generated';
-import DOMPurify from 'dompurify';
+import { Job } from '../../api/generated'
+import DOMPurify from 'dompurify'
 
 function JobDetail({ job }: { job: Job }) {
   if (!job) {
-    return <p>No job selected.</p>;
+    return <p>No job selected.</p>
   }
 
-  const isHtml = (text: string) => /<\/?[a-z][\s\S]*>/i.test(text);
+  const isHtml = (text: string) => /<\/?[a-z][\s\S]*>/i.test(text)
 
   return (
     <div className="p-8">
@@ -24,17 +24,27 @@ function JobDetail({ job }: { job: Job }) {
       {job.salary && (
         <p className="mt-2 text-sm text-gray-500">
           {job.salary.min != null && job.salary.max != null
-            ? `${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()} ${job.salary.currencyCode}`
+            ? `${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()} ${
+                job.salary.currencyCode
+              }`
             : job.salary.min != null
-            ? `${job.salary.min.toLocaleString()} ${job.salary.currencyCode} or more`
-            : job.salary.max != null
-            ? `${job.salary.max.toLocaleString()} ${job.salary.currencyCode} or less`
-            : null}
+              ? `${job.salary.min.toLocaleString()} ${
+                  job.salary.currencyCode
+                } or more`
+              : job.salary.max != null
+                ? `${job.salary.max.toLocaleString()} ${
+                    job.salary.currencyCode
+                  } or less`
+                : null}
         </p>
       )}
       <div className="mt-4 text-gray-800">
         {job.description && isHtml(job.description) ? (
-          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description) }} />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(job.description)
+            }}
+          />
         ) : (
           <p>{job.description}</p>
         )}
@@ -43,12 +53,13 @@ function JobDetail({ job }: { job: Job }) {
         Posted by: {job.posterName || job.company || 'unknown'}
       </p>
       <p className="mt-1 text-sm text-gray-500">
-        Posted on: {job.postedDate ? new Date(job.postedDate).toLocaleDateString() : 'N/A'}
+        Posted on:{' '}
+        {job.postedDate ? new Date(job.postedDate).toLocaleDateString() : 'N/A'}
       </p>
       {job.url && (
         <div className="mt-6">
           <button
-            className="flex items-center justify-center px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white focus:outline-none"
+            className="flex items-center justify-center rounded-full bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 focus:outline-none"
             onClick={() => window.open(job.url, '_blank')}
           >
             Open Original Job Posting
@@ -56,7 +67,7 @@ function JobDetail({ job }: { job: Job }) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
-export default JobDetail;
+export default JobDetail
