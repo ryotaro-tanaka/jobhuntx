@@ -22,24 +22,36 @@ JobHuntX is a job information aggregation application developed using ASP.NET Co
     ```bash
     git clone https://github.com/your-repository/JobHuntX.git
     ```
-1. Set up environment variables:
-      ```bash
-      cp JobHuntX.API/.env.sample JobHuntX.API/.env
-      cp client-app/.env.sample client-app/.env
-      ```
-1. Start the application using Docker Compose (Ensure Docker Desktop is running):
+1. Run the initialization script (sets up env variables and restores dependencies):
+    ```bash
+    npm run init
+    ```
+1. Start the application using Docker Compose:
     ```bash
     docker compose up --build -d
-    ```
-1. Generate the API client (Required for the first time or when API changes):
-    ```bash
-    cd JobHuntX.API
-    dotnet nswag run nswag.local.json
     ```
 1. Once the application starts, access the following URL in your browser:
     ```
     http://localhost:5173
     ```
+
+## Development Commands
+
+Human designers mainly use these three commands:
+
+| Command | Description |
+| :--- | :--- |
+| `npm run init` | One-time setup (environment, dependencies) |
+| `npm run dev` | Start the entire application |
+| `npm run validate` | **Final check before submission (Lint + Type Check + Test)** |
+
+Other detailed operations (API sync, code formatting) are handled autonomously by the AI agent.
+
+## Development Workflow
+
+1.  **Start Development**: Use `npm run dev` to start the app and provide instructions while checking behavior in the browser.
+2.  **API Synchronization**: When the AI modifies the backend, it autonomously runs `npm run sync` to reflect types in the frontend.
+3.  **Quality Verification**: Run `npm run validate` before finishing a task or creating a PR to ensure project-wide consistency.
 
 ## Tech Stack
 
@@ -64,50 +76,6 @@ JobHuntX is a job information aggregation application developed using ASP.NET Co
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
 ![Render](https://img.shields.io/badge/Render--blue?logo=render&logoColor=white)
 
-
-## Formatting with dotnet-format
-
-You can format the `JobHuntX.API` project using the `dotnet-format` command:
-
-```bash
-$ cd JobHuntX.API
-$ dotnet tool run dotnet-format
-```
-
-## Generating API Types with NSwag
-
-After modifying models, you can use `nswag` to automatically define API types for the frontend:
-
-```bash
-$ cd ./JobHuntX.API
-$ dotnet nswag run nswag.local.json
-```
-
-## Running Tests
-
-You can run client-side tests with:
-
-```bash
-$ cd client_app
-$ pnpm test
-```
-
-You can also run backend tests using the `JobHuntX.Tests` project:
-
-```bash
-$ dotnet test JobHuntX.Tests
-```
-
-## Before Creating a Pull Request
-
-Before creating a pull request, **be sure to update the local `swagger.json`** for CI tests to pass:
-
-```bash
-$ docker-compose up -d
-$ curl http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json
-```
-
-This ensures that the frontend API types can be generated from the latest API specification and that CI tests will not fail due to missing or outdated `swagger.json`.
 
 ## Deployment
 
