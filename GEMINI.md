@@ -16,10 +16,11 @@ Before any implementation:
 1. **Inspect**: Read related files and current implementation.
 2. **Plan**: Explain the planned change and impact.
 3. **Act**: Implement surgical changes.
-After implementation:
-1. **Verify**: Run `dotnet test` or `pnpm test`.
-2. **Sync**: Update `swagger.json` and regenerate NSwag client if API models changed.
-3. **Safety Check**: Check `git status` to ensure no sensitive files are staged.
+After implementation (Autonomous Steps):
+1. **Format**: Always run `npm run format` to ensure style consistency.
+2. **Sync**: If API models changed, run `npm run sync` to update the client.
+3. **Verify**: Run `npm run check` (Lint/Typecheck) or `npm run validate` (Full) to confirm correctness.
+4. **Safety Check**: Check `git status` to ensure no sensitive files are staged.
 
 ## Backend Rules
 ### Architecture: Handler Pattern
@@ -38,12 +39,13 @@ After implementation:
 - **Must Not**: Introduce new global state or context without justification.
 
 ## Development Workflow
-### API Contract Synchronization
-If C# DTOs or Controller endpoints are modified:
-1. Run the backend and export `swagger.json`.
-2. Run NSwag regeneration: `cd JobHuntX.API && dotnet nswag run nswag.local.json`.
-3. Fix any resulting type errors in the Frontend immediately.
+### AI-Autonomous Responsibilities
+As an AI agent, you are responsible for maintaining the project's technical integrity without bothering the human designer for routine tasks:
+- **Style**: Never leave a task without running `npm run format`.
+- **Contract**: If you touch C# DTOs or Controllers, you MUST run `npm run sync` and fix any resulting TypeScript errors.
+- **Quality**: Use `npm run check` frequently during development to catch type errors early. Use `npm run validate` as your final definition of "Done".
 
 ### Testing Requirement
-- **Must**: Add or update xUnit tests for backend handler logic.
-- **Must**: Add or update Vitest tests for frontend hooks or components.
+- **Must**: Add or update xUnit tests for backend handler logic (`npm run test:backend`).
+- **Must**: Add or update Vitest tests for frontend hooks or components (`npm run test:frontend`).
+- **Must**: Ensure all tests and type checks pass via `npm run validate`.
