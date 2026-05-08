@@ -26,30 +26,30 @@ JobHuntX is a job information aggregation application developed using ASP.NET Co
     ```bash
     npm run init
     ```
-1. Start the application using Docker Compose:
+3. Start the application using Docker Compose:
     ```bash
     docker compose up --build -d
     ```
-1. Once the application starts, access the following URL in your browser:
+4. Once the application starts, access the following URL in your browser:
     ```
     http://localhost:5173
     ```
 
 ## Development Commands
 
-Human designers mainly use these three commands:
+Human designers mainly use these commands:
 
 | Command | Description |
 | :--- | :--- |
 | `npm run init` | One-time setup (environment, dependencies) |
-| `npm run dev` | Start the entire application |
+| `docker compose up` | Start the entire application |
 | `npm run validate` | **Final check before submission (Lint + Type Check + Test)** |
 
 Other detailed operations (API sync, code formatting) are handled autonomously by the AI agent.
 
 ## Development Workflow
 
-1.  **Start Development**: Use `npm run dev` to start the app and provide instructions while checking behavior in the browser.
+1.  **Start Development**: Start the app using `docker compose up` and provide instructions while checking behavior in the browser.
 2.  **API Synchronization**: When the AI modifies the backend, it autonomously runs `npm run sync` to reflect types in the frontend.
 3.  **Quality Verification**: Run `npm run validate` before finishing a task or creating a PR to ensure project-wide consistency.
 
