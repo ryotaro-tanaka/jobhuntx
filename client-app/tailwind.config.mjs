@@ -5,11 +5,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['Inter', 'sans-serif']
       },
       colors: {
-        primary: '#4f46e5',
-      },
+        primary: '#4f46e5'
+      }
     }
   },
   plugins: []

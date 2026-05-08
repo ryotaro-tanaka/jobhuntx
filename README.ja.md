@@ -22,91 +22,37 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
     ```bash
     git clone https://github.com/your-repository/JobHuntX.git
     ```
-1. 環境変数ファイルをセットアップします:
+1. 初期化スクリプトを実行します（環境変数のセットアップや依存関係の復元を行います）:
     ```bash
-    cp JobHuntX.API/.env.sample JobHuntX.API/.env
-    cp client-app/.env.sample client-app/.env
+    npm run init
     ```
-1. Docker Compose を使用してアプリケーションを起動します（Docker Desktop が起動していることを確認してください）:
+3. アプリケーションを起動します:
     ```bash
     docker compose up --build -d
     ```
-1. API クライアントを生成します（初回起動時、または API モデル変更時に必要です）:
-    ```bash
-    cd JobHuntX.API
-    dotnet nswag run nswag.local.json
-    ```
-1. アプリケーションが起動したら、以下の URL にブラウザでアクセスします:
+4. アプリケーションが起動したら、以下の URL にブラウザでアクセスします:
     ```
     http://localhost:5173
     ```
 
-## 技術スタック
+## 開発用コマンド
 
-### 🧱 コア技術
+人間（設計者）が主に使用するコマンドは以下の通りです。
 
-![React](https://img.shields.io/badge/React--blue?logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript--blue?logo=typescript&logoColor=white)
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core--blue?logo=dotnet&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker--blue?logo=docker&logoColor=white)
+| コマンド | 内容 |
+| :--- | :--- |
+| `npm run init` | 初回セットアップ（環境変数・依存関係） |
+| `docker compose up` | アプリ全体を起動 |
+| `npm run validate` | **提出・完了前の最終チェック（Lint + 型チェック + テスト）** |
 
-### 🛠️ ツール & ユーティリティ
+その他の詳細な操作（API同期やコード整形）は、AIエージェントが自律的に実行します。
 
-![Vite](https://img.shields.io/badge/Vite--blue?logo=vite&logoColor=white)
-![Vitest](https://img.shields.io/badge/Vitest--blue?logo=vitest&logoColor=white)
-![Testing Library](https://img.shields.io/badge/Testing%20Library--blue?logo=testinglibrary&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS--blue?logo=tailwindcss&logoColor=white)
-![ESLint](https://img.shields.io/badge/ESLint--blue?logo=eslint&logoColor=white)
-![Prettier](https://img.shields.io/badge/Prettier--blue?logo=prettier&logoColor=white)
-![NSwag](https://img.shields.io/badge/NSwag--blue?logo=openapiinitiative&logoColor=white)
-![dotnet-format](https://img.shields.io/badge/dotnet%20format--blue?logo=dotnet&logoColor=white)
-![xUnit](https://img.shields.io/badge/xUnit--blue?logo=.net&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions--blue?logo=githubactions&logoColor=white)
-![Render](https://img.shields.io/badge/Render--blue?logo=render&logoColor=white)
+## 開発ワークフロー
 
-## dotnet-formatでのフォーマット
+1.  **開発開始**: `docker compose up` でアプリを起動し、ブラウザで動作を確認しながら指示を出します。
+2.  **APIの同期**: AIがバックエンドを修正した場合、AIが自律的に `npm run sync` を実行してフロントエンドに型を反映します。
+3.  **品質確認**: 開発の区切りやプルリクエスト作成前に `npm run validate` を実行し、プロジェクト全体に矛盾がないか確認します。
 
-`JobHuntX.API` プロジェクトは `dotnet-format` コマンドを使用してフォーマットを整形できます:
-
-```bash
-$ cd JobHuntX.API
-$ dotnet tool run dotnet-format
-```
-
-## NSwagでのAPI型生成
-
-モデルを変更した後、`nswag` を使用してフロントエンド側のAPI型を自動生成できます:
-
-```bash
-$ cd ./JobHuntX.API
-$ dotnet nswag run nswag.local.json
-```
-
-## プルリクエスト作成前の注意
-
-プルリクエストを作成する前に、**CIテストが通るよう必ずローカルの `swagger.json` を最新化してください**:
-
-```bash
-$ docker-compose up -d
-$ dotnet run --project JobHuntX.API & curl http://localhost:5000/swagger/v1/swagger.json > JobHuntX.API/swagger.json
-```
-
-これにより、フロントエンドのAPI型が最新のAPI仕様から生成され、CIテストが `swagger.json` の不足や古さで失敗しなくなります。
-
-## テストの実行
-
-クライアント側のテストは以下のコマンドで実行できます:
-
-```bash
-$ cd client_app
-$ pnpm test
-```
-
-バックエンドのテストは `JobHuntX.Tests` プロジェクトを使って実行できます:
-
-```bash
-$ dotnet test JobHuntX.Tests
-```
 
 ## デプロイ
 

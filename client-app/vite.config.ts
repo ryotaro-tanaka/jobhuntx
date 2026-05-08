@@ -7,7 +7,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 export default defineConfig({
   server: {
     host: true, // 必須: 外部からアクセス可能にする
-    port: 5173,
+    port: 5173
   },
   plugins: [react(), tsconfigPaths()],
   test: {

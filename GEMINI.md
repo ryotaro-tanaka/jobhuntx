@@ -1,49 +1,36 @@
 # JobHuntX - AI Instruction Rules
 
 ## Security & Safety (STRICT)
-- **Must Not**: Commit or stage `.env` files. Ensure they remain ignored by git.
-- **Must Not**: Execute `git push`. Remote synchronization must be handled by the user.
+- **Must Not**: Commit or stage `.env` files.
+- **Must Not**: Execute `git push`.
 - **Must Not**: Log, print, or expose secrets, API keys, or credentials.
 
-## Project Context
-JobHuntX is a job aggregator. 
-- **Backend**: ASP.NET Core 8.0, Handler Pattern.
-- **Frontend**: React 18 (Vite), TypeScript, Tailwind CSS.
-- **Contract**: NSwag generated client connects Frontend and Backend.
+## Execution Discipline
+### Scope & Consistency (CRITICAL)
+- **Strict Scope**: If specific files are targeted for modification, do not edit outside that range.
+- **Reporting**: Report any concerns regarding system-wide consistency or side effects before execution and wait for user instructions.
 
-## Execution Discipline (Must Follow)
-Before any implementation:
-1. **Inspect**: Read related files and current implementation.
-2. **Plan**: Explain the planned change and impact.
-3. **Act**: Implement surgical changes.
-After implementation:
-1. **Verify**: Run `dotnet test` or `pnpm test`.
-2. **Sync**: Update `swagger.json` and regenerate NSwag client if API models changed.
-3. **Safety Check**: Check `git status` to ensure no sensitive files are staged.
+### Language Policy
+- **Code & Config**: Use **English** for source code, comments, commit messages, and configuration files (including `.env`).
+- **Documentation**: Use **Japanese** for personal development notes, implementation plans, and strategy documents.
+- **Localization**: Maintain `README.ja.md` in Japanese.
 
-## Backend Rules
-### Architecture: Handler Pattern
-- **Must**: Implement all job fetching via `IJobHandler`.
-- **Must**: Register handlers through DI container.
-- **Must Not**: Use `new` to instantiate handlers (except for tests).
-- **Must Not**: Add source-specific parsing logic outside of its dedicated handler.
-- **Must Not**: Modify `HandlerBase` or `AggregateJobHandler` without explicit instruction.
+### Post-Implementation (Project Specific)
+Run the following autonomously as needed (Refer to categories in `package.json`):
+1. **Format**: `npm run format` (Maintains style)
+2. **Sync**: Ensure backend is running, then run `npm run sync` after C# DTO changes to update TypeScript models.
+3. **Verify**: Use `npm run check` for quick checks, or `npm run validate` for full verification (including tests).
 
-## Frontend Rules
-### Architecture: Logic Separation
-- **Must**: Extract all data fetching and complex state management into custom hooks.
-- **Must**: Keep UI components focused on rendering (receiving data via props).
-- **Must Not**: Fetch data directly inside UI components (e.g., `useEffect` with fetch).
-- **Must Not**: Use `any`. Use strict TypeScript types.
-- **Must Not**: Introduce new global state or context without justification.
+## Architecture Rules
+### Backend (Handler Pattern)
+- **Fetching**: Implement all job fetching logic via `IJobHandler`.
+- **Encapsulation**: Do not include source-specific parsing logic outside of its dedicated handler.
+- **Protected**: Do not modify `HandlerBase` or `AggregateJobHandler` without explicit instructions.
 
-## Development Workflow
-### API Contract Synchronization
-If C# DTOs or Controller endpoints are modified:
-1. Run the backend and export `swagger.json`.
-2. Run NSwag regeneration: `cd JobHuntX.API && dotnet nswag run nswag.local.json`.
-3. Fix any resulting type errors in the Frontend immediately.
+### Frontend (Logic Separation)
+- **Hooks**: Extract data fetching and complex state management into custom hooks.
+- **Components**: Focus on rendering (receiving data via props).
+- **No Direct Fetch**: Do not call `fetch` or API clients directly inside UI components (e.g., in `useEffect`).
 
-### Testing Requirement
-- **Must**: Add or update xUnit tests for backend handler logic.
-- **Must**: Add or update Vitest tests for frontend hooks or components.
+### Testing
+- **Requirement**: Update or add xUnit (Backend) or Vitest (Frontend) tests when modifying handlers, hooks, or components.
