@@ -20,19 +20,19 @@ JobHuntX は、ASP.NET Core と React を使用して開発された求人情報
 ## セットアップ
 1. リポジトリをクローンします:
     ```bash
-    git clone https://github.com/your-repository/JobHuntX.git
+    git clone https://github.com/ryotaro-tanaka/JobHuntX.git
     ```
-1. 初期化スクリプトを実行します（環境変数のセットアップや依存関係の復元を行います）:
+2. アプリケーションを起動します:
+    ```bash
+    docker compose up --build
+    ```
+    - バックエンドAPI（Swagger）: `http://localhost:5001/swagger`
+    - フロントエンド: `http://localhost:5173`
+    - **注意**: 初回起動時に `JobHuntX.API/` 内に `.env` ファイルが自動生成されます。実際のAPIキーが必要な場合は、生成されたファイルを編集してください。
+
+3. (オプション) Dockerを使用しない場合の初期化スクリプト:
     ```bash
     npm run init
-    ```
-3. アプリケーションを起動します:
-    ```bash
-    docker compose up --build -d
-    ```
-4. アプリケーションが起動したら、以下の URL にブラウザでアクセスします:
-    ```
-    http://localhost:5173
     ```
 
 ## 開発用コマンド

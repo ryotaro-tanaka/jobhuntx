@@ -8,3 +8,9 @@ WORKDIR /src
 
 # Ensure dotnet tools can be restored if the config file is present
 # Note: This is a placeholder for future enhancements in Phase 2
+
+# Copy and set up entrypoint script
+COPY ./docker/backend/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
