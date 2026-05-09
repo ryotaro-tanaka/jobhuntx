@@ -20,6 +20,10 @@ services:
     working_dir: /src
     volumes:
       - .:/src
+      - /src/JobHuntX.API/bin
+      - /src/JobHuntX.API/obj
+      - /src/JobHuntX.Tests/bin
+      - /src/JobHuntX.Tests/obj
     ports:
       - "5001:5000"
     # env_file は entrypoint.sh 内でロードするため削除 (ファイル未生成時の起動エラー防止)
