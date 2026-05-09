@@ -13,7 +13,9 @@ services:
     command: ["pnpm", "run", "dev"]
 
   backend:
-    image: mcr.microsoft.com/dotnet/sdk:8.0
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
     working_dir: /src
     volumes:
       - .:/src
