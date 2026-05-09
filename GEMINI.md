@@ -9,6 +9,7 @@
 ### Scope & Consistency (CRITICAL)
 - **Strict Scope**: If specific files are targeted for modification, do not edit outside that range.
 - **Reporting**: Report any concerns regarding system-wide consistency or side effects before execution and wait for user instructions.
+- **Docker First**: Always assume the application is running in Docker. Commands like `npm run sync`, `npm run format`, and `npm run validate` should be executed from the host but will automatically proxy into the container.
 
 ### Language Policy
 - **Code & Config**: Use **English** for source code, comments, commit messages, and configuration files (including `.env`).
@@ -16,10 +17,10 @@
 - **Localization**: Maintain `README.ja.md` in Japanese.
 
 ### Post-Implementation (Project Specific)
-Run the following autonomously as needed (Refer to categories in `package.json`):
+Run the following autonomously from the **host** (they will proxy into Docker):
 1. **Format**: `npm run format` (Maintains style)
 2. **Sync**: Ensure backend is running, then run `npm run sync` after C# DTO changes to update TypeScript models.
-3. **Verify**: Use `npm run check` for quick checks, or `npm run validate` for full verification (including tests).
+3. **Verify**: Use `npm run check` for quick checks, or `npm run validate` for full verification.
 
 ## Architecture Rules
 ### Backend (Handler Pattern)
