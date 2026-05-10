@@ -6,6 +6,7 @@ services:
     working_dir: /app
     volumes:
       - ./client-app:/app
+      - /app/node_modules
     ports:
       - "5173:5173" # Vite
     environment: # .env は vite によって自動で読み込まれる
@@ -13,14 +14,19 @@ services:
     command: ["pnpm", "run", "dev"]
 
   backend:
-    image: mcr.microsoft.com/dotnet/sdk:8.0
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
     working_dir: /src
     volumes:
       - .:/src
+      - /src/JobHuntX.API/bin
+      - /src/JobHuntX.API/obj
+      - /src/JobHuntX.Tests/bin
+      - /src/JobHuntX.Tests/obj
     ports:
-      - "5000:5000"
-    env_file:
-      - ./JobHuntX.API/.env
+      - "5001:5000"
+    # env_file は entrypoint.sh 内でロードするため削除 (ファイル未生成時の起動エラー防止)
     environment:
       - ASPNETCORE_URLS=http://+:5000 # dotnet watch 環境ではProgram.cs実行タイミングでこの環境変数を読み取れない
       - DOTNET_USE_POLLING_FILE_WATCHER=1  # WSLで変更検知を有効化

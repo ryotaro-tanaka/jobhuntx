@@ -19,3 +19,6 @@ docs/assets/
 
 # Exclude large generated documentation or diagrams if any
 *.drawio
+
+# Allow Gemini to read specific files ignored by Git
+!*output*

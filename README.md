@@ -20,19 +20,19 @@ JobHuntX is a job information aggregation application developed using ASP.NET Co
 ## Setup
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-repository/JobHuntX.git
+    git clone https://github.com/ryotaro-tanaka/JobHuntX.git
     ```
-1. Run the initialization script (sets up env variables and restores dependencies):
+2. Start the application using Docker Compose:
+    ```bash
+    docker compose up --build
+    ```
+    - The backend API (Swagger) will be available at `http://localhost:5001/swagger`.
+    - The frontend will be available at `http://localhost:5173`.
+    - **Note**: A `.env` file is automatically generated in `JobHuntX.API/` on the first run. You may need to manually update it with your actual API keys.
+
+3. (Optional) Run initialization script if not using Docker:
     ```bash
     npm run init
-    ```
-3. Start the application using Docker Compose:
-    ```bash
-    docker compose up --build -d
-    ```
-4. Once the application starts, access the following URL in your browser:
-    ```
-    http://localhost:5173
     ```
 
 ## Development Commands

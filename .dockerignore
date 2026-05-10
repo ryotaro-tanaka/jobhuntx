@@ -1,25 +1,26 @@
 # Node.js関連
-client-app/node_modules
-client-app/build
-client-app/.env*
-client-app/npm-debug.log*
-client-app/yarn-debug.log*
-client-app/yarn-error.log*
-client-app/vite.config.ts.timestamp-*
+**/node_modules
+**/build
+**/dist
+**/.env*
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/vite.config.ts.timestamp-*
 
 # .NET関連
-JobHuntX.API/bin
-JobHuntX.API/obj
-JobHuntX.API/*.user
-JobHuntX.API/*.suo
-JobHuntX.API/*.log
-JobHuntX.API/*.tlog
-JobHuntX.API/.vs
-JobHuntX.API/.idea
-JobHuntX.API/*.dll
-JobHuntX.API/*.exe
-JobHuntX.API/*.pdb
-JobHuntX.API/*.cache
+**/bin
+**/obj
+**/*.user
+**/*.suo
+**/*.log
+**/*.tlog
+**/.vs
+**/.idea
+**/*.dll
+**/*.exe
+**/*.pdb
+**/*.cache
 
 # Git関連
 .git
